@@ -937,7 +937,6 @@ function renderMediaItem(m) {
     <div class="media-item-header" onclick="toggleEdit('${m.id}')">
       <div>
         <span class="drag-handle" draggable="true" onclick="event.stopPropagation()" title="ドラッグして並び替え">⠿</span>
-        <span class="media-item-id">${m.id}</span>
         <span class="media-item-title">${escHtml(m.name)}</span>
         <span class="badge badge-primary" style="margin-left:4px">${m.deliveryTime||''}</span>
       </div>
@@ -947,10 +946,6 @@ function renderMediaItem(m) {
       </div>
     </div>
     <div class="media-edit-form ${isOpen ? 'open' : ''}" id="edit-form-${m.id}">
-      <div class="form-row">
-        <label>ID（自動採番・変更可）</label>
-        <input type="text" id="edit-id-${m.id}" value="${escHtml(m.id)}" style="max-width:100px">
-      </div>
       <div class="form-row">
         <label>媒体名</label>
         <input type="text" id="edit-name-${m.id}" value="${escHtml(m.name)}">
@@ -973,7 +968,7 @@ function renderMediaItem(m) {
         </div>
       </div>
       <div class="form-row">
-        <label>配信条件名（配信予約ページの「配信条件選択」の選択肢テキストと完全一致。未入力時は媒体名で検索）</label>
+        <label>カラム名</label>
         <input type="text" id="edit-segid-${m.id}" value="${escHtml(m.segmentId||'')}" placeholder="例: アフィリ通信">
       </div>
       <div class="form-row">
@@ -1002,7 +997,7 @@ function toggleEdit(id) {
 }
 
 function saveMediaItem(oldId) {
-  const newId = $(`edit-id-${oldId}`).value.trim();
+  const newId = oldId;
   const name = $(`edit-name-${oldId}`).value.trim();
   const ds = ($(`edit-ds-${oldId}`) ? $(`edit-ds-${oldId}`).value.trim() : '') || 'MM';
   const idx = mediaList.findIndex(m => m.id === oldId);
@@ -1014,15 +1009,12 @@ function saveMediaItem(oldId) {
   const segmentId = ($(`edit-segid-${oldId}`) ? $(`edit-segid-${oldId}`).value.trim() : '');
   const fromName = ($(`edit-fromname-${oldId}`) ? $(`edit-fromname-${oldId}`).value.trim() : '');
 
-  if (!newId) { toast('IDを入力してください'); return; }
   if (!name) { toast('媒体名を入力してください'); return; }
-  if (newId !== oldId && mediaList.some(m => m.id === newId)) { toast('そのIDは既に使用されています'); return; }
-
   if (idx === -1) { toast('エラー: 媒体が見つかりません'); return; }
 
   mediaList[idx] = { id: newId, sortOrder: sort, name, deliverySystem: ds, deliveryTime: `${hour}:${min}`, header, footer, segmentId, fromName };
   saveMedia(mediaList);
-  openEditId = newId !== oldId ? null : newId;
+  openEditId = newId;
   renderAdminList();
   renderSelect();
   toast('保存しました');
