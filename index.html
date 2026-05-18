@@ -706,7 +706,9 @@ function getFileBaseName() {
 }
 
 function downloadText() {
-  downloadFile(getFullText(), `${getFileBaseName()}.txt`, 'text/plain');
+  const subject = el.subjectInput.value.trim();
+  const content = `件名：\n${subject}\n\n本文：\n${getFullText()}`;
+  downloadFile(content, `${getFileBaseName()}.txt`, 'text/plain');
 }
 
 function downloadHtml() {
