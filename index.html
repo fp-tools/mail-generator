@@ -133,6 +133,24 @@ button:disabled{opacity:.5;cursor:not-allowed}
 .badge-primary{background:#e0e0ff;color:#4949FF}
 .badge-gray{background:#f3f4f6;color:#6b7280}
 hr{border:none;border-top:1px solid #eee;margin:16px 0}
+
+/* ===== Bookmarklet Modal ===== */
+.bm-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;align-items:center;justify-content:center}
+.bm-overlay.show{display:flex}
+.bm-modal{background:#fff;border-radius:14px;width:min(680px,calc(100vw - 32px));max-height:85vh;display:flex;flex-direction:column;box-shadow:0 12px 40px rgba(0,0,0,.3)}
+.bm-modal-hd{padding:16px 20px;border-bottom:1px solid #eee;display:flex;align-items:center;justify-content:space-between}
+.bm-modal-hd h3{font-size:15px;font-weight:700;color:#333}
+.bm-modal-bd{padding:16px 20px;overflow-y:auto;flex:1}
+.bm-modal-ft{padding:12px 20px;border-top:1px solid #eee;display:flex;gap:8px;justify-content:flex-end;align-items:center}
+.bm-note{font-size:12px;color:#555;line-height:1.8;margin-bottom:12px;background:#f0f0ff;border-radius:8px;padding:10px 14px}
+.bm-code{width:100%;height:140px;font-family:monospace;font-size:11px;border:1.5px solid #ddd;border-radius:8px;padding:10px;resize:vertical;background:#f8f8f8;color:#333}
+.bm-copy-ok{font-size:12px;color:#16a34a;margin-right:auto}
+/* MM action section */
+.mm-section{display:none;align-items:center;gap:8px;flex-wrap:wrap;width:100%;border-top:1px solid #eee;padding-top:10px;margin-top:6px}
+.mm-section.show{display:flex}
+.mm-label{font-size:12px;color:#888;font-weight:600;width:100%}
+.btn-mm{background:#fff3e0;color:#e65100;border:1.5px solid #ffb74d;border-radius:8px;font-size:12px;font-weight:600;padding:7px 14px;cursor:pointer;transition:all .15s;font-family:inherit}
+.btn-mm:hover{background:#ffe0b2}
 </style>
 </head>
 <body>
@@ -258,6 +276,12 @@ hr{border:none;border-top:1px solid #eee;margin:16px 0}
       <button class="btn-primary" id="downloadHtmlBtn">HTML DL</button>
       <button class="btn-secondary" id="copyBtn">クリップボードにコピー</button>
       <div class="copy-success" id="copySuccess">コピーしました！</div>
+      <div class="mm-section" id="mmSection">
+        <span class="mm-label">メールマーケティング</span>
+        <button class="btn-mm" id="bmTextBtn">MM本文登録（テキスト）</button>
+        <button class="btn-mm" id="bmHtmlBtn">MM本文登録（HTML）</button>
+        <button class="btn-mm" id="bmReserveBtn">配信予約セット</button>
+      </div>
     </div>
   </div>
 
@@ -285,6 +309,27 @@ hr{border:none;border-top:1px solid #eee;margin:16px 0}
 </main>
 </div><!-- /adminView -->
 
+<!-- Bookmarklet Modal -->
+<div class="bm-overlay" id="bmOverlay" onclick="if(event.target===this)hideBmModal()">
+  <div class="bm-modal">
+    <div class="bm-modal-hd">
+      <h3 id="bmTitle">ブックマークレット</h3>
+      <button class="btn-secondary btn-sm" onclick="hideBmModal()">✕</button>
+    </div>
+    <div class="bm-modal-bd">
+      <div class="bm-note">
+        以下のコードをコピーし、配信機の対象ページを開いてブラウザのアドレスバーに貼り付けてEnterキーを押してください。
+      </div>
+      <textarea class="bm-code" id="bmCode" readonly spellcheck="false"></textarea>
+    </div>
+    <div class="bm-modal-ft">
+      <span class="bm-copy-ok" id="bmCopyOk" style="display:none">コピーしました！</span>
+      <button class="btn-primary" id="bmCopyBtn">コードをコピー</button>
+      <button class="btn-secondary" onclick="hideBmModal()">閉じる</button>
+    </div>
+  </div>
+</div>
+
 <!-- Toast -->
 <div id="toast"></div>
 
@@ -297,6 +342,7 @@ hr{border:none;border-top:1px solid #eee;margin:16px 0}
     "columnName": "FiveStars",
     "name": "FIVE STARS weekly",
     "deliveryTime": "10:00",
+    "deliverySystem": "MM",
     "header": "１２３４５６７８９０１２３４５６７８９０１２３４５６７８９０\n\n\n▼件名：\n\n\n【PR】インフォトップ：FIVE STARS weekly　［2026.07.00］\n\nこのメールは、インフォトップにご登録のある方に配信しております。\n\n▼配信停止のご希望はこちら\nhttps://www.infotop.jp/mailmagazine/stop.html?m=1&c=all&i=<<:SETTINGITEM_識別子:>>\n",
     "footer": "━━━━━━━━━━━━━━━━━━━━━━━━━\n■配信停止をご希望の場合■\n--------------------------------------------------\n※「FIVE STARS weekly」の配信の停止を希望の場合は\n下記ページより「配信停止ボタン」をクリックください。\n　\nhttps://www.infotop.jp/mailmagazine/stop.html?m=1&c=all&i=<<:SETTINGITEM_識別子:>>\n\n※ご申請から配信停止の反映までに\n24時間程度かかることがございますのでご了承ください。\n\n--------------------------------------------------\n■商品について■\n--------------------------------------------------\nメール中に掲載されている商品について各リンク先の販売者の責任商品です。\nお問合せ等は各販売者へ直接ご連絡ください。\n\n【商品についてのお問合せ方法】\n各商品の販売ページに記載がございます、\n「特定商取引法に基づく表記」のお問合せ先に直接ご連絡ください。\nhttp://faq.infotop.jp/customer/393\n\n--------------------------------------------------\n■発行について■\n--------------------------------------------------\n・インフォトップにご登録頂きました会員様で\nＤＭの配信を受け取る設定となっているお客様にお届けしております。\n\n発行/インフォトップ< http://www.infotop.jp/ >\n運営会社/株式会社ファーストペンギン\nお問合せ/  https://www.infotop.jp/html/support/user/\n〒162-0846　東京都新宿区市谷左内町21番地 市谷左内坂ビル1階\n━━━━━━━━━━━━━━━━━━━━━━━━━\nCopyright (C)  infotop . All Rights Reserved."
   },
@@ -306,6 +352,7 @@ hr{border:none;border-top:1px solid #eee;margin:16px 0}
     "columnName": "JV",
     "name": "JV用",
     "deliveryTime": "10:00",
+    "deliverySystem": "MM",
     "header": "\n\n\n※件名：\n\n\n\n【PR】\n\n※本メールはインフォトップにご登録頂いているユーザーにお送りしています。\n\n▼配信停止のご希望はこちら\n\n",
     "footer": "※このメールマガジンに記載されている内容は広告主の提供でお届けしています。\n本稿の文責・配信内容につきましては、外部サイトに記載された\n「特定商取引法に基づく表示」の広告主に直接お問合せください。\n\n※今回の配信につきましては利益や効果を保証するものではございません。\n内容等をよくご理解した上でお申込みいただく必要がございます。\n予めご了承ください。\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━\n■配信停止をご希望の場合■\n----------------------------------------------------\n※インフォトップからのメールの配信停止をご希望の場合は、\n下記ページより「配信停止ボタン」をクリックください。\n\n\n※ご申請から配信停止の反映までに24時間程お時間が掛かる場合が\nございますのでご了承ください。\n\n----------------------------------------------------\n■発行について■\n----------------------------------------------------\n・インフォトップにご登録頂きました会員様でＤＭの配信を受け取る設定と\nなっているお客様にお届けしております。\n\n発行/インフォトップ<http://www.infotop.jp/>\n運営会社/株式会社ファーストペンギン　　\nお問合せ/  https://www.infotop.jp/html/support/user/\n〒162-0846 東京都新宿区市谷左内町21番地 市谷左内坂ビル1階\n━━━━━━━━━━━━━━━━━━━━━━━━━━\nCopyright (C)  infotop . All Rights Reserved."
   },
@@ -315,6 +362,7 @@ hr{border:none;border-top:1px solid #eee;margin:16px 0}
     "columnName": "MoneyJournal",
     "name": "マネー実践ジャーナル",
     "deliveryTime": "10:00",
+    "deliverySystem": "MM",
     "header": "件名：\n\n\n\n【PR】インフォトップ：マネー実践ジャーナル　［2026.02.〇］\n\nこのメールは、インフォトップにご登録のある方に配信しております。\n▼配信停止のご希望はこちら\nhttps://www.infotop.jp/mailmagazine/stop.html?m=187&c=u&i=<<:SETTINGITEM_識別子:>>\n\n◆◇◆◇◆◇◆◇◆◇◆◇◆◇◆◇\nいつもご愛読いただきありがとうございます。\n「お金に関する知識や稼ぎ方」を毎回お届けしております！\n◇◆◇◆◇◆◇◆◇◆◇◆◇◆◇◆\n",
     "footer": "━━━━━━━━━━━━━━━━━━━━━━━━━\n■配信停止をご希望の場合■\n--------------------------------------------------\n※「マネー実践ジャーナル」の配信の停止を希望の場合は\n下記ページより「配信停止ボタン」をクリックください。\nhttps://www.infotop.jp/mailmagazine/stop.html?m=187&c=u&i=<<:SETTINGITEM_識別子:>>\n\n※ご申請から配信停止の反映までに\n24時間程度かかることがございますのでご了承ください。\n\n--------------------------------------------------\n■商品について■\n--------------------------------------------------\nメール中に掲載されている商品について各リンク先の販売者の責任商品です。\nお問合せ等は各販売者へ直接ご連絡ください。\n\n【商品についてのお問合せ方法】\n各商品の販売ページに記載がございます、\n「特定商取引法に基づく表記」のお問合せ先に直接ご連絡ください。\nhttp://faq.infotop.jp/customer/393\n\n--------------------------------------------------\n■発行について■\n--------------------------------------------------\n・インフォトップにご登録頂きました会員様で\nＤＭの配信を受け取る設定となっているお客様にお届けしております。\n\n発行/インフォトップ< http://www.infotop.jp/ >\n運営会社/株式会社ファーストペンギン\nお問合せ/  https://www.infotop.jp/html/support/user/\n〒162-0846　東京都新宿区市谷左内町21番地 市谷左内坂ビル1階\n━━━━━━━━━━━━━━━━━━━━━━━━━\nCopyright (C)  infotop . All Rights Reserved."
   },
@@ -324,6 +372,7 @@ hr{border:none;border-top:1px solid #eee;margin:16px 0}
     "columnName": "OkuRent",
     "name": "億レント講座",
     "deliveryTime": "10:00",
+    "deliverySystem": "MM",
     "header": "件名：\n\n【PR】インフォトップ：億レント講座 ［2026.00.00］\n\nこのメールは、インフォトップにご登録のある方に配信しております。\n\n▼配信停止のご希望はこちら\nhttps://www.infotop.jp/mailmagazine/stop.html?m=2&c=u&i=<<:SETTINGITEM_識別子:>>\n\n━━━━━━━━━━━━━━━\n",
     "footer": "※このメールマガジンに記載されている内容は広告主の提供でお届けしています。\n　本稿の文責・配信内容につきましては、外部サイトに記載された\n「特定商取引法に基づく表示」の広告主に直接お問合せください。\n\n※今回の配信につきましては利益や効果を保証するものではございません。\n　内容等をよくご理解した上でお申込みいただく必要がございます。\n　予めご了承ください。\n\n\n--------------------------------------------------\n■配信停止をご希望の場合■\n--------------------------------------------------\n※「億レント講座」の配信停止を希望の場合は、\n下記ページより「配信停止ボタン」をクリックください。\nhttps://www.infotop.jp/mailmagazine/stop.html?m=2&c=u&i=<<:SETTINGITEM_識別子:>>\n\n※ご申請から配信停止の反映までに\n24時間程度かかることがございますのでご了承ください。\n\n--------------------------------------------------\n■商品について\n--------------------------------------------------\nメール中に掲載されている商品について各リンク先の販売者の責任商品です。\nお問合せ等は各販売者へ直接ご連絡ください。\n\n【商品についてのお問合せ方法】\n各商品の販売ページに記載がございます、\n「特定商取引法に基づく表記」のお問合せ先に直接ご連絡ください。\nhttp://faq.infotop.jp/customer/393\n\n--------------------------------------------------\n■発行について■\n--------------------------------------------------\n・インフォトップにご登録頂きました会員様で\nＤＭの配信を受け取る設定となっているお客様にお届けしております。\n\n発行/インフォトップ< http://www.infotop.jp/ >\n運営会社/株式会社ファーストペンギン\nお問合せ/  https://www.infotop.jp/html/support/user/\n〒162-0846 東京都新宿区市谷左内町21番地 市谷左内坂ビル1階\n━━━━━━━━━━━━━━━\nCopyright (C)  infotop . All Rights Reserved."
   },
@@ -333,6 +382,7 @@ hr{border:none;border-top:1px solid #eee;margin:16px 0}
     "columnName": "Kurashi",
     "name": "暮らしアップデート習慣",
     "deliveryTime": "10:00",
+    "deliverySystem": "MM",
     "header": "件名：\n\n\n\n【PR】インフォトップ：暮らしアップデート習慣　［2026.02.〇］\n\nこのメールは、インフォトップにご登録のある方に配信しております。\n▼配信停止のご希望はこちら\nhttps://www.infotop.jp/mailmagazine/stop.html?m=188&c=u&i=<<:SETTINGITEM_識別子:>>\n\n○●-----------------------------------------------●○\n\nいつもご愛顧いただきありがとうございます。\n本日も<<:氏名:>>様の暮らしをアップデートする、特別な情報をお届けいたします！\n\n○●-----------------------------------------------●○\n",
     "footer": "━━━━━━━━━━━━━━━━━━━━━━━━━\n■配信停止をご希望の場合■\n--------------------------------------------------\n※「暮らしアップデート習慣」の配信の停止を希望の場合は\n下記ページより「配信停止ボタン」をクリックください。\nhttps://www.infotop.jp/mailmagazine/stop.html?m=188&c=u&i=<<:SETTINGITEM_識別子:>>\n\n※ご申請から配信停止の反映までに\n24時間程度かかることがございますのでご了承ください。\n\n--------------------------------------------------\n■商品について■\n--------------------------------------------------\nメール中に掲載されている商品について各リンク先の販売者の責任商品です。\nお問合せ等は各販売者へ直接ご連絡ください。\n\n【商品についてのお問合せ方法】\n各商品の販売ページに記載がございます、\n「特定商取引法に基づく表記」のお問合せ先に直接ご連絡ください。\nhttp://faq.infotop.jp/customer/393\n\n--------------------------------------------------\n■発行について■\n--------------------------------------------------\n・インフォトップにご登録頂きました会員様で\nＤＭの配信を受け取る設定となっているお客様にお届けしております。\n\n発行/インフォトップ< http://www.infotop.jp/ >\n運営会社/株式会社ファーストペンギン\nお問合せ/  https://www.infotop.jp/html/support/user/\n〒162-0846　東京都新宿区市谷左内町21番地 市谷左内坂ビル1階\n━━━━━━━━━━━━━━━━━━━━━━━━━\nCopyright (C)  infotop . All Rights Reserved."
   },
@@ -342,6 +392,7 @@ hr{border:none;border-top:1px solid #eee;margin:16px 0}
     "columnName": "infotopPlus",
     "name": "infotop plus",
     "deliveryTime": "10:00",
+    "deliverySystem": "MM",
     "header": "件名：\n\n【PR】インフォトップ：infotop plus　[2026.00.00]\n\nこのメールは、インフォトップにご登録のある方に配信しております。\n\n▼配信停止のご希望はこちら\n",
     "footer": "（※このテンプレートはデータ破損により内容が不完全です。管理画面で修正してください）"
   },
@@ -351,6 +402,7 @@ hr{border:none;border-top:1px solid #eee;margin:16px 0}
     "columnName": "infotopSP",
     "name": "infotop通信SP配信号",
     "deliveryTime": "10:00",
+    "deliverySystem": "MM",
     "header": "件名：\n\n【PR】インフォトップ：infotop通信SP配信号　[2023.00.00]\n\nこのメールは、インフォトップにご登録のある方に配信しております。\n\n▼配信停止のご希望はこちら\n",
     "footer": "（※このテンプレートはデータ破損により内容が不完全です。管理画面で修正してください）"
   },
@@ -360,6 +412,7 @@ hr{border:none;border-top:1px solid #eee;margin:16px 0}
     "columnName": "Affili",
     "name": "アフィリ通信",
     "deliveryTime": "10:00",
+    "deliverySystem": "MM",
     "header": "件名：\n\n【PR】インフォトップ：アフィリ通信　[2026.00.00]\n\nこのメールは、インフォトップにご登録のある方に配信しております。\n\n▼配信停止のご希望はこちら\nhttps://www.infotop.jp/mailmagazine/stop.html?m=15&c=a&i=<<:SETTINGITEM_識別子:>>\n",
     "footer": "（※このテンプレートはデータ破損により内容が不完全です。管理画面で修正してください）"
   },
@@ -369,6 +422,7 @@ hr{border:none;border-top:1px solid #eee;margin:16px 0}
     "columnName": "InfotopGaigo",
     "name": "インフォトップ通信号外",
     "deliveryTime": "10:00",
+    "deliverySystem": "MM",
     "header": "件名：\n\n【PR】インフォトップ：インフォトップ通信号外　[2026.00.00]\n\nこのメールは、インフォトップにご登録のある方に配信しております。\n\n▼配信停止のご希望はこちら\nhttps://www.infotop.jp/mailmagazine/stop.html?m=40&c=all&i=<<:SETTINGITEM_識別子:>>\n",
     "footer": "（※このテンプレートはデータ破損により内容が不完全です。管理画面で修正してください）"
   },
@@ -378,6 +432,7 @@ hr{border:none;border-top:1px solid #eee;margin:16px 0}
     "columnName": "ZeroYen",
     "name": "インフォトップ通信号外【0円広場】",
     "deliveryTime": "10:00",
+    "deliverySystem": "MM",
     "header": "件名：\n\n【PR】インフォトップ：0円広場　[2025.00.00]\n\nこのメールは、インフォトップにご登録のある方に配信しております。\n\n▼配信停止のご希望はこちら\nhttps://www.infotop.jp/mailmagazine/stop.html?m=40&c=all&i=<<:SETTINGITEM_識別子:>>\n",
     "footer": "（※このテンプレートはデータ破損により内容が不完全です。管理画面で修正してください）"
   },
@@ -387,6 +442,7 @@ hr{border:none;border-top:1px solid #eee;margin:16px 0}
     "columnName": "TradeAce",
     "name": "トレードエース通信号外広告",
     "deliveryTime": "10:00",
+    "deliverySystem": "MM",
     "header": "件名：\n\n【PR】インフォトップ：トレードエース通信　[2026.00.00]\n\nこのメールは、インフォトップにご登録のある方に配信しております。\n\n▼配信停止のご希望はこちら\n",
     "footer": "（※このテンプレートはデータ破損により内容が不完全です。管理画面で修正してください）"
   },
@@ -396,6 +452,7 @@ hr{border:none;border-top:1px solid #eee;margin:16px 0}
     "columnName": "UserTsushin",
     "name": "ユーザー通信",
     "deliveryTime": "10:00",
+    "deliverySystem": "MM",
     "header": "件名：\n\n【PR】インフォトップ：ユーザー通信　[2026.00.00]\n\nこのメールは、インフォトップにご登録のある方に配信しております。\n\n▼配信停止のご希望はこちら\n",
     "footer": "（※このテンプレートはデータ破損により内容が不完全です。管理画面で修正してください）"
   },
@@ -405,6 +462,7 @@ hr{border:none;border-top:1px solid #eee;margin:16px 0}
     "columnName": "Ranking",
     "name": "ランキング",
     "deliveryTime": "10:00",
+    "deliverySystem": "MM",
     "header": "【ランキング】\n",
     "footer": "（※このテンプレートはデータ破損により内容が不完全です。管理画面で修正してください）"
   },
@@ -414,6 +472,7 @@ hr{border:none;border-top:1px solid #eee;margin:16px 0}
     "columnName": "ToshiTraining",
     "name": "投資トレーニング通信号外広告",
     "deliveryTime": "10:00",
+    "deliverySystem": "MM",
     "header": "件名：\n\n【PR】インフォトップ：投資トレーニング通信【号外】　[2026.00.00]\n\nこのメールは、インフォトップにご登録のある方に配信しております。\n\n▼配信停止のご希望はこちら\n",
     "footer": "（※このテンプレートはデータ破損により内容が不完全です。管理画面で修正してください）"
   },
@@ -423,6 +482,7 @@ hr{border:none;border-top:1px solid #eee;margin:16px 0}
     "columnName": "Hanbaisha",
     "name": "販売者通信",
     "deliveryTime": "10:00",
+    "deliverySystem": "MM",
     "header": "件名：\n\n【PR】インフォトップ：販売者通信　[2026.00.00]\n\nこのメールは、インフォトップにご登録のある方に配信しております。\n\n▼配信停止のご希望はこちら\n",
     "footer": "（※このテンプレートはデータ破損により内容が不完全です。管理画面で修正してください）"
   }
@@ -576,12 +636,14 @@ function handleMediaChange() {
     el.footerCard.style.display = 'none';
     el.headerText.value = '';
     el.footerText.value = '';
+    updateMmSection();
     return;
   }
   el.headerText.value = currentMedia.header || '';
   el.footerText.value = currentMedia.footer || '';
   el.headerCard.style.display = 'block';
   el.footerCard.style.display = 'block';
+  updateMmSection();
 }
 
 // ========== Date Functions ==========
@@ -836,6 +898,10 @@ function renderMediaItem(m) {
         <input type="text" id="edit-col-${m.id}" value="${escHtml(m.columnName||'')}">
       </div>
       <div class="form-row">
+        <label>配信システム（MM=メールマーケティング、他システムは任意の識別子）</label>
+        <input type="text" id="edit-ds-${m.id}" value="${escHtml(m.deliverySystem||'MM')}" style="max-width:140px">
+      </div>
+      <div class="form-row">
         <label>配信時刻</label>
         <div class="delivery-time-row">
           <select id="edit-hour-${m.id}">${
@@ -873,6 +939,7 @@ function saveMediaItem(oldId) {
   const newId = $(`edit-id-${oldId}`).value.trim();
   const name = $(`edit-name-${oldId}`).value.trim();
   const col = $(`edit-col-${oldId}`).value.trim();
+  const ds = ($(`edit-ds-${oldId}`) ? $(`edit-ds-${oldId}`).value.trim() : '') || 'MM';
   const sort = parseInt($(`edit-sort-${oldId}`).value) || 0;
   const hour = $(`edit-hour-${oldId}`).value;
   const min = $(`edit-min-${oldId}`).value;
@@ -886,7 +953,7 @@ function saveMediaItem(oldId) {
   const idx = mediaList.findIndex(m => m.id === oldId);
   if (idx === -1) { toast('エラー: 媒体が見つかりません'); return; }
 
-  mediaList[idx] = { id: newId, sortOrder: sort, columnName: col, name, deliveryTime: `${hour}:${min}`, header, footer };
+  mediaList[idx] = { id: newId, sortOrder: sort, columnName: col, name, deliverySystem: ds, deliveryTime: `${hour}:${min}`, header, footer };
   saveMedia(mediaList);
   openEditId = newId !== oldId ? null : newId;
   renderAdminList();
@@ -912,7 +979,7 @@ function deleteMediaItem(id) {
 
 function addNewMedia() {
   const id = getNextId(mediaList);
-  const newMedia = { id, sortOrder: mediaList.length + 1, columnName: '', name: '新規媒体', deliveryTime: '10:00', header: '', footer: '' };
+  const newMedia = { id, sortOrder: mediaList.length + 1, columnName: '', name: '新規媒体', deliverySystem: 'MM', deliveryTime: '10:00', header: '', footer: '' };
   mediaList.push(newMedia);
   saveMedia(mediaList);
   openEditId = id;
@@ -968,6 +1035,118 @@ function handleBodyChange() {
   if (originalBodyText) updateDiff();
 }
 
+// ========== Bookmarklet ==========
+function isMMMedia(m) {
+  return !!m && (!m.deliverySystem || m.deliverySystem === 'MM');
+}
+
+function updateMmSection() {
+  $('mmSection').classList.toggle('show', isMMMedia(currentMedia));
+}
+
+function extractSubject() {
+  const hdr = el.headerText.value;
+  const lines = hdr.split('\n');
+  let found = false;
+  for (let i = 0; i < lines.length; i++) {
+    if (/^[▼▽]?件名[：:]/.test(lines[i].trim())) {
+      const after = lines[i].replace(/^.*件名[：:]/, '').trim();
+      if (after) return after;
+      found = true;
+      continue;
+    }
+    if (found && lines[i].trim()) return lines[i].trim();
+  }
+  const bodyLines = el.bodyText.value.split('\n');
+  return (bodyLines.find(l => l.trim()) || '').trim();
+}
+
+function getBmTitle() {
+  const d = el.dateInput.value.trim();
+  const mmdd = d.length === 8 ? d.slice(4) : '';
+  return mmdd + (currentMedia ? (currentMedia.columnName || '') : '');
+}
+
+function buildBmHtmlContent() {
+  const h = escHtml(el.headerText.value);
+  const b = escHtml(el.bodyText.value);
+  const f = escHtml(el.footerText.value);
+  return `<!DOCTYPE html>\n<html lang="ja">\n<head>\n<meta charset="UTF-8">\n<title>HTMLメール</title>\n</head>\n<body>\n<pre style="font-family:sans-serif;font-size:14px;line-height:1.8;white-space:pre-wrap">${[h,b,f].filter(x=>x.trim()).join('\n\n')}</pre>\n</body>\n</html>`;
+}
+
+function generateBmText() {
+  const t = getBmTitle();
+  const s = extractSubject();
+  const b = getFullText();
+  const code = [
+    `var t=${JSON.stringify(t)},s=${JSON.stringify(s)},b=${JSON.stringify(b)};`,
+    `var q=function(sel){return document.querySelector(sel);};`,
+    `var n=q('[name="name"]');if(n)n.value=t;`,
+    `var tt=q('[name="temptitle"]');if(tt)tt.value=s;`,
+    `var r1=q('[name="mailtype"][value="1"]');if(r1)r1.click();`,
+    `var r2=document.getElementById('msgtextRad');if(r2)r2.click();`,
+    `setTimeout(function(){`,
+    `var ta=document.getElementById('messageText');if(ta)ta.value=b;`,
+    `alert('テキスト本文を入力しました。内容を確認して保存してください。');`,
+    `},400);`
+  ].join('');
+  return `javascript:(function(){${code}})();`;
+}
+
+function generateBmHtml() {
+  const t = getBmTitle();
+  const s = extractSubject();
+  const h = buildBmHtmlContent();
+  const code = [
+    `var t=${JSON.stringify(t)},s=${JSON.stringify(s)},h=${JSON.stringify(h)};`,
+    `var q=function(sel){return document.querySelector(sel);};`,
+    `var n=q('[name="name"]');if(n)n.value=t;`,
+    `var tt=q('[name="temptitle"]');if(tt)tt.value=s;`,
+    `var r1=q('[name="mailtype"][value="1"]');if(r1)r1.click();`,
+    `var r2=document.getElementById('msghtmlRad');if(r2)r2.click();`,
+    `setTimeout(function(){`,
+    `if(window.CKEDITOR&&CKEDITOR.instances.strHtmlMsg){CKEDITOR.instances.strHtmlMsg.setData(h);}`,
+    `else{var e=document.getElementById('strHtmlMsg');if(e)e.value=h;}`,
+    `alert('HTML本文を入力しました。内容を確認して保存してください。');`,
+    `},500);`
+  ].join('');
+  return `javascript:(function(){${code}})();`;
+}
+
+function generateBmReserve() {
+  const t = getBmTitle();
+  const col = currentMedia ? (currentMedia.columnName || '') : '';
+  const mName = currentMedia ? (currentMedia.name || '') : '';
+  const d = el.dateInput.value.trim();
+  const delivTime = currentMedia ? (currentMedia.deliveryTime || '10:00') : '10:00';
+  const rdt = d.length === 8 ? `${d.slice(0,4)}-${d.slice(4,6)}-${d.slice(6,8)} ${delivTime}` : '';
+  const code = [
+    `var t=${JSON.stringify(t)},c=${JSON.stringify(col)},n=${JSON.stringify(mName)},dt=${JSON.stringify(rdt)};`,
+    `var q=function(sel){return document.querySelector(sel);};`,
+    `var tf=q('[name="title"]');if(tf)tf.value=t;`,
+    `var ls=q('select[name="list_id"]');`,
+    `if(ls)Array.from(ls.options).forEach(function(o){if(c&&o.text.indexOf(c)>-1){ls.value=o.value;ls.dispatchEvent(new Event('change'));}});`,
+    `var fn=q('[name="from_name"]');if(fn)fn.value=n;`,
+    `var mb=q('select[name="mail_body_id"]');`,
+    `if(mb)Array.from(mb.options).forEach(function(o){if(t&&o.text.indexOf(t)>-1){mb.value=o.value;}});`,
+    `var st=q('[name="status_2"]');if(st){st.checked=true;st.dispatchEvent(new Event('change'));}`,
+    `var rd=q('[name="reserve_datetime"]');if(rd)rd.value=dt;`,
+    `alert('配信予約フォームを入力しました。内容を確認して登録してください。');`
+  ].join('');
+  return `javascript:(function(){${code}})();`;
+}
+
+function showBmModal(title, code) {
+  $('bmTitle').textContent = title;
+  $('bmCode').value = code;
+  $('bmCopyOk').style.display = 'none';
+  $('bmOverlay').classList.add('show');
+}
+
+function hideBmModal() {
+  $('bmOverlay').classList.remove('show');
+}
+
 // ========== Init ==========
 function init() {
   mediaList = loadMedia();
@@ -1021,6 +1200,30 @@ function init() {
   el.exportBtn.addEventListener('click', exportData);
   el.importBtn.addEventListener('click', () => el.importFile.click());
   el.importFile.addEventListener('change', e => { importData(e.target.files[0]); e.target.value = ''; });
+
+  // Bookmarklet buttons
+  $('bmTextBtn').addEventListener('click', () => {
+    if (!currentMedia) { toast('媒体を選択してください'); return; }
+    showBmModal('MM本文登録（テキスト）', generateBmText());
+  });
+  $('bmHtmlBtn').addEventListener('click', () => {
+    if (!currentMedia) { toast('媒体を選択してください'); return; }
+    showBmModal('MM本文登録（HTML）', generateBmHtml());
+  });
+  $('bmReserveBtn').addEventListener('click', () => {
+    if (!currentMedia) { toast('媒体を選択してください'); return; }
+    showBmModal('配信予約セット', generateBmReserve());
+  });
+  $('bmCopyBtn').addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText($('bmCode').value);
+      const ok = $('bmCopyOk');
+      ok.style.display = 'inline';
+      setTimeout(() => { ok.style.display = 'none'; }, 2500);
+    } catch(e) {
+      toast('コピーに失敗しました');
+    }
+  });
 }
 
 // Expose globals for inline onclick handlers
@@ -1029,6 +1232,7 @@ window.saveMediaItem = saveMediaItem;
 window.deleteMediaItem = deleteMediaItem;
 window.usePreset = usePreset;
 window.deletePreset = deletePreset;
+window.hideBmModal = hideBmModal;
 
 document.addEventListener('DOMContentLoaded', init);
 </script>
