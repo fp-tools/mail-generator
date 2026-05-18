@@ -189,7 +189,11 @@ hr{border:none;border-top:1px solid #eee;margin:16px 0}
       </div>
       <div id="dateError" style="color:#dc2626;font-size:12px;margin-bottom:6px"></div>
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-        <label for="subjectInput" style="white-space:nowrap;font-size:13px;min-width:2.5em">件名</label>
+        <label for="advertiserInput" style="white-space:nowrap;font-size:13px;min-width:3.5em">広告主</label>
+        <input type="text" id="advertiserInput" placeholder="例: hikidashi（ファイル名: MMDD（広告主）媒体名、未入力時はMMDD_媒体名）" style="flex:1">
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <label for="subjectInput" style="white-space:nowrap;font-size:13px;min-width:3.5em">件名</label>
         <input type="text" id="subjectInput" placeholder="配信メールの件名（MM本文登録ブックマークレットで自動入力されます）" style="flex:1">
       </div>
       <textarea class="header-footer-textarea" id="headerText"></textarea>
@@ -240,14 +244,6 @@ hr{border:none;border-top:1px solid #eee;margin:16px 0}
     <div class="card-body">
       <div id="charCheckResult" class="char-check-result" style="margin-bottom:10px"></div>
       <textarea class="body-textarea" id="bodyText" placeholder="本文を入力してください"></textarea>
-    </div>
-  </div>
-
-  <!-- 広告主情報 -->
-  <div class="card">
-    <div class="card-header"><h2>広告主情報</h2></div>
-    <div class="card-body">
-      <textarea class="header-footer-textarea" id="advertisersText" placeholder="広告主のお問合せ先・注意事項など（テキストDL・HTML DLに含まれます）"></textarea>
     </div>
   </div>
 
@@ -526,7 +522,7 @@ const el = {
   headerText: $('headerText'),
   bodyText: $('bodyText'),
   footerText: $('footerText'),
-  advertisersText: $('advertisersText'),
+  advertiserInput: $('advertiserInput'),
   diffContainer: $('diffContainer'),
   diffChangeCount: $('diffChangeCount'),
   diffBeforeText: $('diffBeforeText'),
@@ -685,7 +681,7 @@ function replaceDate() {
 
 // ========== Download / Copy ==========
 function getFullText() {
-  return [el.headerText.value, el.bodyText.value, el.advertisersText.value, el.footerText.value]
+  return [el.headerText.value, el.bodyText.value, el.footerText.value]
     .filter(t => t.trim()).join('\n\n');
 }
 
@@ -699,18 +695,20 @@ function downloadFile(content, filename, type) {
   URL.revokeObjectURL(url);
 }
 
-function downloadText() {
+function getFileBaseName() {
   const d = el.dateInput.value.trim();
   const mmdd = d.length === 8 ? d.slice(4) : (d || 'nodate');
   const mediaName = currentMedia ? currentMedia.name : 'mail';
-  downloadFile(getFullText(), `${mmdd}_${mediaName}.txt`, 'text/plain');
+  const adv = el.advertiserInput.value.trim();
+  return adv ? `${mmdd}（${adv}）${mediaName}` : `${mmdd}_${mediaName}`;
+}
+
+function downloadText() {
+  downloadFile(getFullText(), `${getFileBaseName()}.txt`, 'text/plain');
 }
 
 function downloadHtml() {
-  const d = el.dateInput.value.trim();
-  const mmdd = d.length === 8 ? d.slice(4) : (d || 'nodate');
-  const mediaName = currentMedia ? currentMedia.name : 'mail';
-  downloadFile(buildBmHtmlContent(), `${mmdd}_${mediaName}.html`, 'text/html');
+  downloadFile(buildBmHtmlContent(), `${getFileBaseName()}.html`, 'text/html');
 }
 
 async function copyToClipboard() {
@@ -725,7 +723,7 @@ async function copyToClipboard() {
 
 // ========== Character Check ==========
 function checkDepChars() {
-  const allText = el.headerText.value + el.bodyText.value + el.advertisersText.value + el.footerText.value;
+  const allText = el.headerText.value + el.bodyText.value + el.footerText.value;
   const found = DEPENDENT_CHARS.filter(c => allText.includes(c));
   el.charCheckResult.style.display = 'block';
   if (found.length > 0) {
@@ -979,6 +977,10 @@ function renderMediaItem(m) {
         <input type="text" id="edit-segid-${m.id}" value="${escHtml(m.segmentId||'')}" placeholder="例: アフィリ通信">
       </div>
       <div class="form-row">
+        <label>From表示名（配信予約フォームの「From表示名」に自動入力）</label>
+        <input type="text" id="edit-fromname-${m.id}" value="${escHtml(m.fromName||'')}">
+      </div>
+      <div class="form-row">
         <label>ヘッダー <button type="button" class="btn-outline btn-sm" style="margin-left:8px;font-size:11px;padding:3px 8px" onclick="insertDateTagTo('edit-header-${m.id}')">日付挿入 202x.xx.xx</button></label>
         <textarea id="edit-header-${m.id}" style="height:160px">${escHtml(m.header||'')}</textarea>
       </div>
@@ -1010,6 +1012,7 @@ function saveMediaItem(oldId) {
   const header = $(`edit-header-${oldId}`).value;
   const footer = $(`edit-footer-${oldId}`).value;
   const segmentId = ($(`edit-segid-${oldId}`) ? $(`edit-segid-${oldId}`).value.trim() : '');
+  const fromName = ($(`edit-fromname-${oldId}`) ? $(`edit-fromname-${oldId}`).value.trim() : '');
 
   if (!newId) { toast('IDを入力してください'); return; }
   if (!name) { toast('媒体名を入力してください'); return; }
@@ -1017,7 +1020,7 @@ function saveMediaItem(oldId) {
 
   if (idx === -1) { toast('エラー: 媒体が見つかりません'); return; }
 
-  mediaList[idx] = { id: newId, sortOrder: sort, name, deliverySystem: ds, deliveryTime: `${hour}:${min}`, header, footer, segmentId };
+  mediaList[idx] = { id: newId, sortOrder: sort, name, deliverySystem: ds, deliveryTime: `${hour}:${min}`, header, footer, segmentId, fromName };
   saveMedia(mediaList);
   openEditId = newId !== oldId ? null : newId;
   renderAdminList();
@@ -1060,7 +1063,7 @@ function copyMediaItem(id) {
 
 function addNewMedia() {
   const id = getNextId(mediaList);
-  const newMedia = { id, sortOrder: mediaList.length + 1, name: '新規媒体', deliverySystem: 'MM', deliveryTime: '10:00', header: '', footer: '', segmentId: '' };
+  const newMedia = { id, sortOrder: mediaList.length + 1, name: '新規媒体', deliverySystem: 'MM', deliveryTime: '10:00', header: '', footer: '', segmentId: '', fromName: '' };
   mediaList.push(newMedia);
   saveMedia(mediaList);
   openEditId = id;
@@ -1163,7 +1166,7 @@ function getBmTitle() {
 
 function buildBmHtmlContent() {
   const toHtml = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
-  const content = [el.headerText.value, el.bodyText.value, el.advertisersText.value, el.footerText.value]
+  const content = [el.headerText.value, el.bodyText.value, el.footerText.value]
     .filter(x => x.trim()).map(toHtml).join('<br><br>');
   return `<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -1261,6 +1264,7 @@ function generateBmReserve() {
   const t = getBmTitle();
   const mName = currentMedia ? (currentMedia.name || '') : '';
   const segId = currentMedia ? (currentMedia.segmentId || '') : '';
+  const fromName = currentMedia ? (currentMedia.fromName || '') : '';
   const d = el.dateInput.value.trim();
   const delivTime = currentMedia ? (currentMedia.deliveryTime || '10:00') : '10:00';
   const [hourStr, minStr] = delivTime.split(':');
@@ -1268,11 +1272,12 @@ function generateBmReserve() {
   const min = parseInt(minStr, 10);
   const dateStr = d.length === 8 ? `${d.slice(0,4)}/${d.slice(4,6)}/${d.slice(6,8)}` : '';
   const code = [
-    `var t=${JSON.stringify(t)},n=${JSON.stringify(mName)},sid=${JSON.stringify(segId)},ds=${JSON.stringify(dateStr)},h=${hour},m=${min};`,
+    `var t=${JSON.stringify(t)},n=${JSON.stringify(mName)},sid=${JSON.stringify(segId)},fn=${JSON.stringify(fromName)},ds=${JSON.stringify(dateStr)},h=${hour},m=${min};`,
     `var q=function(sel){return document.querySelector(sel);};`,
     `var tf=q('[name="name"]');if(tf)tf.value=t;`,
     `var seg=q('select[name="segmentid"]');`,
-    `if(seg){var segTgt=sid||n;Array.from(seg.options).forEach(function(o){if(o.text.trim()===segTgt.trim()){seg.value=o.value;seg.dispatchEvent(new Event('change'));}});}`,
+    `if(seg){var segTgt=sid||n;Array.from(seg.options).forEach(function(o){if(o.text.trim()===segTgt.trim()){seg.value=o.value;}});}`,
+    `var fnf=q('[name="fromname"]');if(fnf&&fn)fnf.value=fn;`,
     `var tmpl=q('select[name="templateid"]');`,
     `var tmplFound=false;`,
     `if(tmpl&&t){Array.from(tmpl.options).forEach(function(o){if(!tmplFound&&o.text.indexOf(t)>-1){tmpl.value=o.value;tmplFound=true;}});}`,
