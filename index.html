@@ -975,8 +975,8 @@ function renderMediaItem(m) {
         </div>
       </div>
       <div class="form-row">
-        <label>配信条件ID（配信予約ページ「配信条件選択」のoption value番号）</label>
-        <input type="text" id="edit-segid-${m.id}" value="${escHtml(m.segmentId||'')}" style="max-width:100px" placeholder="例: 171">
+        <label>配信条件名（配信予約ページの「配信条件選択」の選択肢テキストと完全一致。未入力時は媒体名で検索）</label>
+        <input type="text" id="edit-segid-${m.id}" value="${escHtml(m.segmentId||'')}" placeholder="例: アフィリ通信">
       </div>
       <div class="form-row">
         <label>ヘッダー <button type="button" class="btn-outline btn-sm" style="margin-left:8px;font-size:11px;padding:3px 8px" onclick="insertDateTagTo('edit-header-${m.id}')">日付挿入 202x.xx.xx</button></label>
@@ -1272,7 +1272,7 @@ function generateBmReserve() {
     `var q=function(sel){return document.querySelector(sel);};`,
     `var tf=q('[name="name"]');if(tf)tf.value=t;`,
     `var seg=q('select[name="segmentid"]');`,
-    `if(seg){if(sid){seg.value=sid;}else if(n){Array.from(seg.options).forEach(function(o){if(o.text.indexOf(n)>-1){seg.value=o.value;}});}}`,
+    `if(seg){var segTgt=sid||n;Array.from(seg.options).forEach(function(o){if(o.text.trim()===segTgt.trim()){seg.value=o.value;seg.dispatchEvent(new Event('change'));}});}`,
     `var tmpl=q('select[name="templateid"]');`,
     `var tmplFound=false;`,
     `if(tmpl&&t){Array.from(tmpl.options).forEach(function(o){if(!tmplFound&&o.text.indexOf(t)>-1){tmpl.value=o.value;tmplFound=true;}});}`,
