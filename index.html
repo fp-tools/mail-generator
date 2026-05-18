@@ -135,22 +135,14 @@ button:disabled{opacity:.5;cursor:not-allowed}
 hr{border:none;border-top:1px solid #eee;margin:16px 0}
 
 /* ===== Bookmarklet Modal ===== */
-.bm-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;align-items:center;justify-content:center}
-.bm-overlay.show{display:flex}
-.bm-modal{background:#fff;border-radius:14px;width:min(680px,calc(100vw - 32px));max-height:85vh;display:flex;flex-direction:column;box-shadow:0 12px 40px rgba(0,0,0,.3)}
-.bm-modal-hd{padding:16px 20px;border-bottom:1px solid #eee;display:flex;align-items:center;justify-content:space-between}
-.bm-modal-hd h3{font-size:15px;font-weight:700;color:#333}
-.bm-modal-bd{padding:16px 20px;overflow-y:auto;flex:1}
-.bm-modal-ft{padding:12px 20px;border-top:1px solid #eee;display:flex;gap:8px;justify-content:flex-end;align-items:center}
-.bm-note{font-size:12px;color:#555;line-height:1.8;margin-bottom:12px;background:#f0f0ff;border-radius:8px;padding:10px 14px}
-.bm-code{width:100%;height:140px;font-family:monospace;font-size:11px;border:1.5px solid #ddd;border-radius:8px;padding:10px;resize:vertical;background:#f8f8f8;color:#333}
-.bm-copy-ok{font-size:12px;color:#16a34a;margin-right:auto}
 /* MM action section */
-.mm-section{display:none;align-items:center;gap:8px;flex-wrap:wrap;width:100%;border-top:1px solid #eee;padding-top:10px;margin-top:6px}
+.mm-section{display:none;align-items:flex-start;gap:8px;flex-wrap:wrap;width:100%;border-top:1px solid #eee;padding-top:10px;margin-top:6px}
 .mm-section.show{display:flex}
 .mm-label{font-size:12px;color:#888;font-weight:600;width:100%}
-.btn-mm{background:#fff3e0;color:#e65100;border:1.5px solid #ffb74d;border-radius:8px;font-size:12px;font-weight:600;padding:7px 14px;cursor:pointer;transition:all .15s;font-family:inherit}
-.btn-mm:hover{background:#ffe0b2}
+.mm-drag-hint{font-size:11px;color:#5d4037;width:100%;padding:6px 12px;background:#fff8e1;border-radius:6px;border:1px solid #ffe082;line-height:1.7}
+.btn-mm{background:#fff3e0;color:#e65100;border:1.5px solid #ffb74d;border-radius:8px;font-size:12px;font-weight:600;padding:7px 14px;cursor:grab;transition:all .15s;text-decoration:none;display:inline-block;font-family:inherit;user-select:none}
+.btn-mm:hover{background:#ffe0b2;text-decoration:none;color:#e65100}
+.btn-mm:active{cursor:grabbing}
 </style>
 </head>
 <body>
@@ -278,9 +270,10 @@ hr{border:none;border-top:1px solid #eee;margin:16px 0}
       <div class="copy-success" id="copySuccess">コピーしました！</div>
       <div class="mm-section" id="mmSection">
         <span class="mm-label">メールマーケティング</span>
-        <button class="btn-mm" id="bmTextBtn">MM本文登録（テキスト）</button>
-        <button class="btn-mm" id="bmHtmlBtn">MM本文登録（HTML）</button>
-        <button class="btn-mm" id="bmReserveBtn">配信予約セット</button>
+        <div class="mm-drag-hint">📌 ブックマークバーへドラッグして登録 → 配信システムのページで使用<br>クリックするとコードをコピーします（アドレスバーに貼り付けても使用可）</div>
+        <a class="btn-mm" id="bmTextLink" href="javascript:void(0)" draggable="true" onclick="copyBmLinkHref(event,this)">📝 MM本文登録（テキスト）</a>
+        <a class="btn-mm" id="bmHtmlLink" href="javascript:void(0)" draggable="true" onclick="copyBmLinkHref(event,this)">🌐 MM本文登録（HTML）</a>
+        <a class="btn-mm" id="bmReserveLink" href="javascript:void(0)" draggable="true" onclick="copyBmLinkHref(event,this)">📅 配信予約セット</a>
       </div>
     </div>
   </div>
@@ -308,27 +301,6 @@ hr{border:none;border-top:1px solid #eee;margin:16px 0}
   </div>
 </main>
 </div><!-- /adminView -->
-
-<!-- Bookmarklet Modal -->
-<div class="bm-overlay" id="bmOverlay" onclick="if(event.target===this)hideBmModal()">
-  <div class="bm-modal">
-    <div class="bm-modal-hd">
-      <h3 id="bmTitle">ブックマークレット</h3>
-      <button class="btn-secondary btn-sm" onclick="hideBmModal()">✕</button>
-    </div>
-    <div class="bm-modal-bd">
-      <div class="bm-note">
-        以下のコードをコピーし、配信機の対象ページを開いてブラウザのアドレスバーに貼り付けてEnterキーを押してください。
-      </div>
-      <textarea class="bm-code" id="bmCode" readonly spellcheck="false"></textarea>
-    </div>
-    <div class="bm-modal-ft">
-      <span class="bm-copy-ok" id="bmCopyOk" style="display:none">コピーしました！</span>
-      <button class="btn-primary" id="bmCopyBtn">コードをコピー</button>
-      <button class="btn-secondary" onclick="hideBmModal()">閉じる</button>
-    </div>
-  </div>
-</div>
 
 <!-- Toast -->
 <div id="toast"></div>
@@ -644,6 +616,7 @@ function handleMediaChange() {
   el.headerCard.style.display = 'block';
   el.footerCard.style.display = 'block';
   updateMmSection();
+  updateBmLinks();
 }
 
 // ========== Date Functions ==========
@@ -665,6 +638,7 @@ function setTodayDate() {
 function syncPickerToInput() {
   const v = el.datePicker.value; // YYYY-MM-DD
   if (v) el.dateInput.value = v.replace(/-/g, '');
+  updateBmLinks();
 }
 
 function syncInputToPicker() {
@@ -673,6 +647,7 @@ function syncInputToPicker() {
     el.datePicker.value = `${v.slice(0,4)}-${v.slice(4,6)}-${v.slice(6,8)}`;
     el.dateError.textContent = '';
   }
+  updateBmLinks();
 }
 
 function replaceDate() {
@@ -683,6 +658,7 @@ function replaceDate() {
   const fmt = formatDateString(s);
   el.headerText.value = el.headerText.value.replace(DATE_PATTERN, fmt);
   toast(`日付を ${fmt} に置換しました`);
+  updateBmLinks();
 }
 
 // ========== Download / Copy ==========
@@ -1033,6 +1009,7 @@ function handleBodyChange() {
     return;
   }
   if (originalBodyText) updateDiff();
+  updateBmLinks();
 }
 
 // ========== Bookmarklet ==========
@@ -1146,15 +1123,25 @@ function generateBmReserve() {
   return `javascript:(function(){${code}})();`;
 }
 
-function showBmModal(title, code) {
-  $('bmTitle').textContent = title;
-  $('bmCode').value = code;
-  $('bmCopyOk').style.display = 'none';
-  $('bmOverlay').classList.add('show');
+function updateBmLinks() {
+  if (!isMMMedia(currentMedia)) return;
+  const a1 = $('bmTextLink');
+  const a2 = $('bmHtmlLink');
+  const a3 = $('bmReserveLink');
+  if (a1) a1.href = generateBmText();
+  if (a2) a2.href = generateBmHtml();
+  if (a3) a3.href = generateBmReserve();
 }
 
-function hideBmModal() {
-  $('bmOverlay').classList.remove('show');
+function copyBmLinkHref(e, a) {
+  e.preventDefault();
+  const code = a.getAttribute('href');
+  if (!code || !code.startsWith('javascript:(')) {
+    toast('先に媒体・日付・本文を入力してください'); return;
+  }
+  navigator.clipboard.writeText(code).then(() => {
+    toast('コードをコピーしました。アドレスバーに貼り付けて使用できます。');
+  }).catch(() => toast('コピーに失敗しました'));
 }
 
 // ========== Init ==========
@@ -1211,29 +1198,7 @@ function init() {
   el.importBtn.addEventListener('click', () => el.importFile.click());
   el.importFile.addEventListener('change', e => { importData(e.target.files[0]); e.target.value = ''; });
 
-  // Bookmarklet buttons
-  $('bmTextBtn').addEventListener('click', () => {
-    if (!currentMedia) { toast('媒体を選択してください'); return; }
-    showBmModal('MM本文登録（テキスト）', generateBmText());
-  });
-  $('bmHtmlBtn').addEventListener('click', () => {
-    if (!currentMedia) { toast('媒体を選択してください'); return; }
-    showBmModal('MM本文登録（HTML）', generateBmHtml());
-  });
-  $('bmReserveBtn').addEventListener('click', () => {
-    if (!currentMedia) { toast('媒体を選択してください'); return; }
-    showBmModal('配信予約セット', generateBmReserve());
-  });
-  $('bmCopyBtn').addEventListener('click', async () => {
-    try {
-      await navigator.clipboard.writeText($('bmCode').value);
-      const ok = $('bmCopyOk');
-      ok.style.display = 'inline';
-      setTimeout(() => { ok.style.display = 'none'; }, 2500);
-    } catch(e) {
-      toast('コピーに失敗しました');
-    }
-  });
+  // Bookmarklet drag links — hrefs are updated dynamically via updateBmLinks()
 }
 
 // Expose globals for inline onclick handlers
@@ -1242,7 +1207,7 @@ window.saveMediaItem = saveMediaItem;
 window.deleteMediaItem = deleteMediaItem;
 window.usePreset = usePreset;
 window.deletePreset = deletePreset;
-window.hideBmModal = hideBmModal;
+window.copyBmLinkHref = copyBmLinkHref;
 window.insertDateTagTo = insertDateTagTo;
 
 document.addEventListener('DOMContentLoaded', init);
