@@ -698,9 +698,7 @@ function downloadText() {
 }
 
 function downloadHtml() {
-  const body = buildBmHtmlContent();
-  const html = `<!DOCTYPE html>\n<html lang="ja">\n<head>\n<meta charset="UTF-8">\n</head>\n<body>\n${body}\n</body>\n</html>`;
-  downloadFile(html, 'mail.html', 'text/html');
+  downloadFile(buildBmHtmlContent(), 'mail.html', 'text/html');
 }
 
 async function copyToClipboard() {
@@ -1123,7 +1121,8 @@ function buildBmHtmlContent() {
   const h = escHtml(el.headerText.value);
   const b = escHtml(el.bodyText.value);
   const f = escHtml(el.footerText.value);
-  return `<pre style="font-family:sans-serif;font-size:14px;line-height:1.8;white-space:pre-wrap">${[h,b,f].filter(x=>x.trim()).join('\n\n')}</pre>`;
+  const pre = `<pre style="font-family:sans-serif;font-size:14px;line-height:1.8;white-space:pre-wrap">${[h,b,f].filter(x=>x.trim()).join('\n\n')}</pre>`;
+  return `<!DOCTYPE html>\n<html lang="ja">\n<head>\n<meta charset="UTF-8">\n</head>\n<body>\n${pre}\n</body>\n</html>`;
 }
 
 function generateBmText() {
@@ -1249,7 +1248,7 @@ function init() {
   el.closeDiffBtn.addEventListener('click', () => el.diffContainer.classList.remove('show'));
   el.updateBeforeBtn.addEventListener('click', () => {
     originalBodyText = el.bodyText.value;
-    el.diffContainer.classList.remove('show');
+    updateDiff();
     toast('比較基準を更新しました（本文更新）');
   });
 
