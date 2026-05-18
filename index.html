@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mail Generator</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"Hiragino Kaku Gothic ProN","Meiryo",sans-serif;font-size:15px;color:#222;background:#f5f6fa;min-height:100vh}
+a{color:#4949FF}
+
+/* ===== Layout ===== */
+.app-header{background:#4949FF;color:#fff;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(73,73,255,.3)}
+.app-header h1{font-size:20px;font-weight:700;letter-spacing:.5px}
+.header-actions{display:flex;gap:8px}
+
+main{max-width:920px;margin:0 auto;padding:24px 16px}
+.view{display:none}
+.view.active{display:block}
+
+/* ===== Card ===== */
+.card{background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:20px;overflow:hidden}
+.card-header{padding:14px 20px;background:#f0f0ff;border-bottom:1px solid #e0e0ff;display:flex;align-items:center;justify-content:space-between}
+.card-header h2{font-size:15px;font-weight:600;color:#333}
+.card-body{padding:16px 20px}
+
+/* ===== Form elements ===== */
+label{display:block;font-size:13px;font-weight:600;color:#555;margin-bottom:5px}
+input[type=text],input[type=date],select,textarea{
+  width:100%;padding:9px 12px;border:1.5px solid #ddd;border-radius:8px;
+  font-size:14px;font-family:inherit;color:#222;
+  transition:border-color .2s;outline:none;background:#fff
+}
+input[type=text]:focus,input[type=date]:focus,select:focus,textarea:focus{border-color:#4949FF;box-shadow:0 0 0 3px rgba(73,73,255,.12)}
+textarea{resize:vertical;line-height:1.6;font-family:"MS Gothic","Courier New",monospace;font-size:13px}
+textarea.body-textarea{height:460px}
+textarea.header-footer-textarea{height:180px;background:#fafafa}
+select{cursor:pointer;background:#fff}
+
+/* ===== Buttons ===== */
+button{cursor:pointer;border:none;border-radius:8px;font-size:13px;font-weight:600;padding:8px 16px;transition:all .15s;font-family:inherit}
+.btn-primary{background:#4949FF;color:#fff}
+.btn-primary:hover{background:#3535cc}
+.btn-secondary{background:#6b7280;color:#fff}
+.btn-secondary:hover{background:#4b5563}
+.btn-success{background:#16a34a;color:#fff}
+.btn-success:hover{background:#15803d}
+.btn-danger{background:#dc2626;color:#fff}
+.btn-danger:hover{background:#b91c1c}
+.btn-outline{background:#fff;color:#4949FF;border:1.5px solid #4949FF}
+.btn-outline:hover{background:#f0f0ff}
+.btn-sm{padding:5px 10px;font-size:12px}
+.btn-tag{background:#e0e0ff;color:#4949FF;padding:4px 10px;font-size:12px;border-radius:6px;margin:0 2px}
+.btn-tag:hover{background:#c8c8ff}
+button:disabled{opacity:.5;cursor:not-allowed}
+
+/* ===== Inline groups ===== */
+.inline-group{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.inline-group > *{flex-shrink:0}
+.inline-group > input{flex:1;min-width:120px}
+
+/* ===== Date area ===== */
+.date-row{display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap}
+.date-row input{width:130px}
+
+/* ===== Nametag area ===== */
+.nametag-insert{margin-bottom:10px;display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.nametag-insert span{font-size:12px;color:#666;margin-right:4px}
+
+.nametag-replace{display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;margin-bottom:10px}
+.nametag-replace .form-item{flex:1;min-width:160px}
+.nametag-replace label{margin-bottom:4px}
+
+/* ===== Diff area ===== */
+.diff-container{display:none;border:1.5px solid #ddd;border-radius:10px;overflow:hidden;margin-bottom:16px}
+.diff-container.show{display:block}
+.diff-header{background:#f8f8f8;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #ddd}
+.diff-header span{font-size:13px;color:#555}
+.diff-body{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.diff-col{padding:12px;overflow-x:auto}
+.diff-col:first-child{border-right:1px solid #ddd;background:#fff8f8}
+.diff-col:last-child{background:#f8fff8}
+.diff-col h3{font-size:11px;font-weight:700;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px}
+.diff-col:first-child h3{color:#c62828}
+.diff-col:last-child h3{color:#2e7d32}
+.diff-text{font-family:monospace;font-size:12px;white-space:pre-wrap;word-break:break-all;line-height:1.6;max-height:240px;overflow-y:auto}
+.diff-deleted{background:#ffebee;text-decoration:line-through;color:#c62828;padding:0 2px;border-radius:2px}
+.diff-added{background:#e8f5e9;color:#2e7d32;font-weight:700;padding:0 2px;border-radius:2px}
+
+/* ===== Char check result ===== */
+.char-check-result{display:none;padding:10px 14px;border-radius:8px;font-size:13px;margin-top:8px}
+.char-check-result.ok{background:#dcfce7;color:#15803d;border:1px solid #86efac}
+.char-check-result.error{background:#fee2e2;color:#b91c1c;border:1px solid #fca5a5}
+
+/* ===== Copy success ===== */
+.copy-success{display:none;padding:8px 14px;background:#dcfce7;color:#15803d;border-radius:8px;font-size:13px;border:1px solid #86efac}
+
+/* ===== Preset list ===== */
+.preset-list{display:none}
+.preset-item{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border:1px solid #e5e7eb;border-radius:8px;margin-bottom:6px;background:#fafafa;font-size:13px}
+.preset-item-text{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.preset-item-actions{display:flex;gap:6px;flex-shrink:0;margin-left:8px}
+
+/* ===== Admin ===== */
+.admin-toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.media-item{border:1.5px solid #e5e7eb;border-radius:10px;overflow:hidden;margin-bottom:12px}
+.media-item-header{padding:12px 16px;background:#f9fafb;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none}
+.media-item-header:hover{background:#f0f0ff}
+.media-item-title{font-weight:600;font-size:14px;color:#333}
+.media-item-id{font-size:12px;color:#888;margin-right:8px}
+.media-item-actions{display:flex;gap:6px}
+.media-edit-form{display:none;padding:16px;border-top:1px solid #e5e7eb;background:#fff}
+.media-edit-form.open{display:block}
+.media-edit-form .form-row{margin-bottom:14px}
+.media-edit-form label{font-size:12px;font-weight:600;color:#666;margin-bottom:4px}
+.media-edit-form input[type=text]{max-width:320px}
+.delivery-time-row{display:flex;gap:8px;align-items:center}
+.delivery-time-row select{width:80px}
+.media-edit-form .btn-row{display:flex;gap:8px;margin-top:16px;padding-top:16px;border-top:1px solid #eee}
+
+/* ===== Toast ===== */
+#toast{position:fixed;bottom:24px;right:24px;background:#222;color:#fff;padding:12px 20px;border-radius:10px;font-size:13px;z-index:9999;opacity:0;transform:translateY(20px);transition:all .3s;pointer-events:none}
+#toast.show{opacity:1;transform:translateY(0)}
+
+/* ===== Util ===== */
+.text-muted{color:#888;font-size:12px}
+.mt-2{margin-top:8px}
+.mb-1{margin-bottom:4px}
+.mb-2{margin-bottom:8px}
+.section-title{font-size:14px;font-weight:700;color:#444;margin-bottom:12px}
+.empty-state{text-align:center;padding:32px;color:#aaa;font-size:14px}
+.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700}
+.badge-primary{background:#e0e0ff;color:#4949FF}
+.badge-gray{background:#f3f4f6;color:#6b7280}
+hr{border:none;border-top:1px solid #eee;margin:16px 0}
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <h1>Mail Generator</h1>
+  <div class="header-actions">
+    <button class="btn-outline btn-sm" id="adminBtn">管理画面</button>
+  </div>
+</header>
+
+<!-- ========== MAIN VIEW ========== -->
+<div id="mainView" class="view active">
+<main>
+
+  <!-- 媒体選択 -->
+  <div class="card">
+    <div class="card-body">
+      <label for="mediaSelect">媒体を選択</label>
+      <select id="mediaSelect">
+        <option value="">-- 媒体を選択してください --</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- ヘッダー -->
+  <div class="card" id="headerCard" style="display:none">
+    <div class="card-header">
+      <h2>ヘッダー</h2>
+    </div>
+    <div class="card-body">
+      <div class="date-row">
+        <input type="text" id="dateInput" placeholder="例: 20260517" maxlength="8" style="width:140px">
+        <input type="date" id="datePicker" style="width:150px">
+        <button class="btn-secondary btn-sm" id="todayBtn">今日</button>
+        <button class="btn-outline btn-sm" id="replaceDateBtn">日付置換</button>
+      </div>
+      <div id="dateError" style="color:#dc2626;font-size:12px;margin-bottom:6px"></div>
+      <textarea class="header-footer-textarea" id="headerText"></textarea>
+    </div>
+  </div>
+
+  <!-- 本文 -->
+  <div class="card">
+    <div class="card-header">
+      <h2>本文</h2>
+      <div class="nametag-insert">
+        <span>挿入:</span>
+        <button class="btn-tag" data-tag="[[名前]]">[[名前]]</button>
+        <button class="btn-tag" data-tag="[[姓]]">[[姓]]</button>
+        <button class="btn-tag" data-tag="[[名]]">[[名]]</button>
+      </div>
+    </div>
+    <div class="card-body">
+      <textarea class="body-textarea" id="bodyText" placeholder="本文を入力してください"></textarea>
+    </div>
+  </div>
+
+  <!-- Diff表示 -->
+  <div class="diff-container" id="diffContainer">
+    <div class="diff-header">
+      <span>差分表示 — <strong id="diffChangeCount">0</strong> 箇所変更</span>
+      <div style="display:flex;gap:8px">
+        <button class="btn-outline btn-sm" id="updateBeforeBtn">現在を基準にする</button>
+        <button class="btn-secondary btn-sm" id="closeDiffBtn">閉じる</button>
+      </div>
+    </div>
+    <div class="diff-body">
+      <div class="diff-col">
+        <h3>変更前</h3>
+        <div class="diff-text" id="diffBeforeText"></div>
+      </div>
+      <div class="diff-col">
+        <h3>変更後</h3>
+        <div class="diff-text" id="diffAfterText"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ネームタグ置換 -->
+  <div class="card">
+    <div class="card-header"><h2>ネームタグ置換</h2></div>
+    <div class="card-body">
+      <div class="nametag-replace">
+        <div class="form-item">
+          <label>検索テキスト</label>
+          <input type="text" id="searchText" placeholder="例: 山田太郎">
+        </div>
+        <div class="form-item">
+          <label>置換タグ</label>
+          <select id="replaceTag">
+            <option value="">-- タグを選択 --</option>
+            <option value="[[名前]]">[[名前]]（フルネーム）</option>
+            <option value="[[姓]]">[[姓]]（姓のみ）</option>
+            <option value="[[名]]">[[名]]（名のみ）</option>
+          </select>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;padding-bottom:1px">
+          <label style="visibility:hidden;font-size:12px">　</label>
+          <div style="display:flex;gap:6px">
+            <button class="btn-primary btn-sm" id="replaceAllBtn">一括置換</button>
+            <button class="btn-outline btn-sm" id="savePresetBtn">プリセット保存</button>
+          </div>
+        </div>
+      </div>
+      <div id="replaceResult" style="display:none;font-size:13px;margin-bottom:8px"></div>
+      <div id="presetList" class="preset-list"></div>
+    </div>
+  </div>
+
+  <!-- フッター -->
+  <div class="card" id="footerCard" style="display:none">
+    <div class="card-header"><h2>フッター</h2></div>
+    <div class="card-body">
+      <textarea class="header-footer-textarea" id="footerText"></textarea>
+    </div>
+  </div>
+
+  <!-- アクションボタン -->
+  <div class="card">
+    <div class="card-body" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+      <button class="btn-primary" id="downloadTextBtn">テキストDL</button>
+      <button class="btn-primary" id="downloadHtmlBtn">HTML DL</button>
+      <button class="btn-secondary" id="copyBtn">クリップボードにコピー</button>
+      <button class="btn-outline" id="checkCharsBtn">機種依存文字チェック</button>
+      <div class="copy-success" id="copySuccess">コピーしました！</div>
+    </div>
+    <div id="charCheckResult" class="char-check-result" style="margin:0 20px 16px"></div>
+  </div>
+
+</main>
+</div><!-- /mainView -->
+
+<!-- ========== ADMIN VIEW ========== -->
+<div id="adminView" class="view">
+<main>
+  <div class="card">
+    <div class="card-header">
+      <h2>媒体管理</h2>
+      <button class="btn-secondary btn-sm" id="backToMainBtn">← メインへ戻る</button>
+    </div>
+    <div class="card-body">
+      <div class="admin-toolbar">
+        <button class="btn-primary" id="addMediaBtn">+ 媒体を追加</button>
+        <button class="btn-outline" id="exportBtn">JSONエクスポート</button>
+        <button class="btn-outline" id="importBtn">JSONインポート</button>
+        <input type="file" id="importFile" accept=".json" style="display:none">
+      </div>
+      <div id="mediaListContainer"></div>
+    </div>
+  </div>
+</main>
+</div><!-- /adminView -->
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<!-- ========== DEFAULT TEMPLATE DATA ========== -->
+<script type="application/json" id="defaultTemplates">
+[
+  {
+    "id": "01",
+    "sortOrder": 1,
+    "columnName": "FiveStars",
+    "name": "FIVE STARS weekly",
+    "deliveryTime": "10:00",
+    "header": "１２３４５６７８９０１２３４５６７８９０１２３４５６７８９０\n\n\n▼件名：\n\n\n【PR】インフォトップ：FIVE STARS weekly　［2026.07.00］\n\nこのメールは、インフォトップにご登録のある方に配信しております。\n\n▼配信停止のご希望はこちら\nhttps://www.infotop.jp/mailmagazine/stop.html?m=1&c=all&i=<<:SETTINGITEM_識別子:>>\n",
+    "footer": "━━━━━━━━━━━━━━━━━━━━━━━━━\n■配信停止をご希望の場合■\n--------------------------------------------------\n※「FIVE STARS weekly」の配信の停止を希望の場合は\n下記ページより「配信停止ボタン」をクリックください。\n　\nhttps://www.infotop.jp/mailmagazine/stop.html?m=1&c=all&i=<<:SETTINGITEM_識別子:>>\n\n※ご申請から配信停止の反映までに\n24時間程度かかることがございますのでご了承ください。\n\n--------------------------------------------------\n■商品について■\n--------------------------------------------------\nメール中に掲載されている商品について各リンク先の販売者の責任商品です。\nお問合せ等は各販売者へ直接ご連絡ください。\n\n【商品についてのお問合せ方法】\n各商品の販売ページに記載がございます、\n「特定商取引法に基づく表記」のお問合せ先に直接ご連絡ください。\nhttp://faq.infotop.jp/customer/393\n\n--------------------------------------------------\n■発行について■\n--------------------------------------------------\n・インフォトップにご登録頂きました会員様で\nＤＭの配信を受け取る設定となっているお客様にお届けしております。\n\n発行/インフォトップ< http://www.infotop.jp/ >\n運営会社/株式会社ファーストペンギン\nお問合せ/  https://www.infotop.jp/html/support/user/\n〒162-0846　東京都新宿区市谷左内町21番地 市谷左内坂ビル1階\n━━━━━━━━━━━━━━━━━━━━━━━━━\nCopyright (C)  infotop . All Rights Reserved."
+  },
+  {
+    "id": "02",
+    "sortOrder": 2,
+    "columnName": "JV",
+    "name": "JV用",
+    "deliveryTime": "10:00",
+    "header": "\n\n\n※件名：\n\n\n\n【PR】\n\n※本メールはインフォトップにご登録頂いているユーザーにお送りしています。\n\n▼配信停止のご希望はこちら\n\n",
+    "footer": "※このメールマガジンに記載されている内容は広告主の提供でお届けしています。\n本稿の文責・配信内容につきましては、外部サイトに記載された\n「特定商取引法に基づく表示」の広告主に直接お問合せください。\n\n※今回の配信につきましては利益や効果を保証するものではございません。\n内容等をよくご理解した上でお申込みいただく必要がございます。\n予めご了承ください。\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━\n■配信停止をご希望の場合■\n----------------------------------------------------\n※インフォトップからのメールの配信停止をご希望の場合は、\n下記ページより「配信停止ボタン」をクリックください。\n\n\n※ご申請から配信停止の反映までに24時間程お時間が掛かる場合が\nございますのでご了承ください。\n\n----------------------------------------------------\n■発行について■\n----------------------------------------------------\n・インフォトップにご登録頂きました会員様でＤＭの配信を受け取る設定と\nなっているお客様にお届けしております。\n\n発行/インフォトップ<http://www.infotop.jp/>\n運営会社/株式会社ファーストペンギン　　\nお問合せ/  https://www.infotop.jp/html/support/user/\n〒162-0846 東京都新宿区市谷左内町21番地 市谷左内坂ビル1階\n━━━━━━━━━━━━━━━━━━━━━━━━━━\nCopyright (C)  infotop . All Rights Reserved."
+  },
+  {
+    "id": "03",
+    "sortOrder": 3,
+    "columnName": "MoneyJournal",
+    "name": "マネー実践ジャーナル",
+    "deliveryTime": "10:00",
+    "header": "件名：\n\n\n\n【PR】インフォトップ：マネー実践ジャーナル　［2026.02.〇］\n\nこのメールは、インフォトップにご登録のある方に配信しております。\n▼配信停止のご希望はこちら\nhttps://www.infotop.jp/mailmagazine/stop.html?m=187&c=u&i=<<:SETTINGITEM_識別子:>>\n\n◆◇◆◇◆◇◆◇◆◇◆◇◆◇◆◇\nいつもご愛読いただきありがとうございます。\n「お金に関する知識や稼ぎ方」を毎回お届けしております！\n◇◆◇◆◇◆◇◆◇◆◇◆◇◆◇◆\n",
+    "footer": "━━━━━━━━━━━━━━━━━━━━━━━━━\n■配信停止をご希望の場合■\n--------------------------------------------------\n※「マネー実践ジャーナル」の配信の停止を希望の場合は\n下記ページより「配信停止ボタン」をクリックください。\nhttps://www.infotop.jp/mailmagazine/stop.html?m=187&c=u&i=<<:SETTINGITEM_識別子:>>\n\n※ご申請から配信停止の反映までに\n24時間程度かかることがございますのでご了承ください。\n\n--------------------------------------------------\n■商品について■\n--------------------------------------------------\nメール中に掲載されている商品について各リンク先の販売者の責任商品です。\nお問合せ等は各販売者へ直接ご連絡ください。\n\n【商品についてのお問合せ方法】\n各商品の販売ページに記載がございます、\n「特定商取引法に基づく表記」のお問合せ先に直接ご連絡ください。\nhttp://faq.infotop.jp/customer/393\n\n--------------------------------------------------\n■発行について■\n--------------------------------------------------\n・インフォトップにご登録頂きました会員様で\nＤＭの配信を受け取る設定となっているお客様にお届けしております。\n\n発行/インフォトップ< http://www.infotop.jp/ >\n運営会社/株式会社ファーストペンギン\nお問合せ/  https://www.infotop.jp/html/support/user/\n〒162-0846　東京都新宿区市谷左内町21番地 市谷左内坂ビル1階\n━━━━━━━━━━━━━━━━━━━━━━━━━\nCopyright (C)  infotop . All Rights Reserved."
+  },
+  {
+    "id": "04",
+    "sortOrder": 4,
+    "columnName": "OkuRent",
+    "name": "億レント講座",
+    "deliveryTime": "10:00",
+    "header": "件名：\n\n【PR】インフォトップ：億レント講座 ［2026.00.00］\n\nこのメールは、インフォトップにご登録のある方に配信しております。\n\n▼配信停止のご希望はこちら\nhttps://www.infotop.jp/mailmagazine/stop.html?m=2&c=u&i=<<:SETTINGITEM_識別子:>>\n\n━━━━━━━━━━━━━━━\n",
+    "footer": "※このメールマガジンに記載されている内容は広告主の提供でお届けしています。\n　本稿の文責・配信内容につきましては、外部サイトに記載された\n「特定商取引法に基づく表示」の広告主に直接お問合せください。\n\n※今回の配信につきましては利益や効果を保証するものではございません。\n　内容等をよくご理解した上でお申込みいただく必要がございます。\n　予めご了承ください。\n\n\n--------------------------------------------------\n■配信停止をご希望の場合■\n--------------------------------------------------\n※「億レント講座」の配信停止を希望の場合は、\n下記ページより「配信停止ボタン」をクリックください。\nhttps://www.infotop.jp/mailmagazine/stop.html?m=2&c=u&i=<<:SETTINGITEM_識別子:>>\n\n※ご申請から配信停止の反映までに\n24時間程度かかることがございますのでご了承ください。\n\n--------------------------------------------------\n■商品について\n--------------------------------------------------\nメール中に掲載されている商品について各リンク先の販売者の責任商品です。\nお問合せ等は各販売者へ直接ご連絡ください。\n\n【商品についてのお問合せ方法】\n各商品の販売ページに記載がございます、\n「特定商取引法に基づく表記」のお問合せ先に直接ご連絡ください。\nhttp://faq.infotop.jp/customer/393\n\n--------------------------------------------------\n■発行について■\n--------------------------------------------------\n・インフォトップにご登録頂きました会員様で\nＤＭの配信を受け取る設定となっているお客様にお届けしております。\n\n発行/インフォトップ< http://www.infotop.jp/ >\n運営会社/株式会社ファーストペンギン\nお問合せ/  https://www.infotop.jp/html/support/user/\n〒162-0846 東京都新宿区市谷左内町21番地 市谷左内坂ビル1階\n━━━━━━━━━━━━━━━\nCopyright (C)  infotop . All Rights Reserved."
+  },
+  {
+    "id": "05",
+    "sortOrder": 5,
+    "columnName": "Kurashi",
+    "name": "暮らしアップデート習慣",
+    "deliveryTime": "10:00",
+    "header": "件名：\n\n\n\n【PR】インフォトップ：暮らしアップデート習慣　［2026.02.〇］\n\nこのメールは、インフォトップにご登録のある方に配信しております。\n▼配信停止のご希望はこちら\nhttps://www.infotop.jp/mailmagazine/stop.html?m=188&c=u&i=<<:SETTINGITEM_識別子:>>\n\n○●-----------------------------------------------●○\n\nいつもご愛顧いただきありがとうございます。\n本日も<<:氏名:>>様の暮らしをアップデートする、特別な情報をお届けいたします！\n\n○●-----------------------------------------------●○\n",
+    "footer": "━━━━━━━━━━━━━━━━━━━━━━━━━\n■配信停止をご希望の場合■\n--------------------------------------------------\n※「暮らしアップデート習慣」の配信の停止を希望の場合は\n下記ページより「配信停止ボタン」をクリックください。\nhttps://www.infotop.jp/mailmagazine/stop.html?m=188&c=u&i=<<:SETTINGITEM_識別子:>>\n\n※ご申請から配信停止の反映までに\n24時間程度かかることがございますのでご了承ください。\n\n--------------------------------------------------\n■商品について■\n--------------------------------------------------\nメール中に掲載されている商品について各リンク先の販売者の責任商品です。\nお問合せ等は各販売者へ直接ご連絡ください。\n\n【商品についてのお問合せ方法】\n各商品の販売ページに記載がございます、\n「特定商取引法に基づく表記」のお問合せ先に直接ご連絡ください。\nhttp://faq.infotop.jp/customer/393\n\n--------------------------------------------------\n■発行について■\n--------------------------------------------------\n・インフォトップにご登録頂きました会員様で\nＤＭの配信を受け取る設定となっているお客様にお届けしております。\n\n発行/インフォトップ< http://www.infotop.jp/ >\n運営会社/株式会社ファーストペンギン\nお問合せ/  https://www.infotop.jp/html/support/user/\n〒162-0846　東京都新宿区市谷左内町21番地 市谷左内坂ビル1階\n━━━━━━━━━━━━━━━━━━━━━━━━━\nCopyright (C)  infotop . All Rights Reserved."
+  },
+  {
+    "id": "06",
+    "sortOrder": 6,
+    "columnName": "infotopPlus",
+    "name": "infotop plus",
+    "deliveryTime": "10:00",
+    "header": "件名：\n\n【PR】インフォトップ：infotop plus　[2026.00.00]\n\nこのメールは、インフォトップにご登録のある方に配信しております。\n\n▼配信停止のご希望はこちら\n",
+    "footer": "（※このテンプレートはデータ破損により内容が不完全です。管理画面で修正してください）"
+  },
+  {
+    "id": "07",
+    "sortOrder": 7,
+    "columnName": "infotopSP",
+    "name": "infotop通信SP配信号",
+    "deliveryTime": "10:00",
+    "header": "件名：\n\n【PR】インフォトップ：infotop通信SP配信号　[2023.00.00]\n\nこのメールは、インフォトップにご登録のある方に配信しております。\n\n▼配信停止のご希望はこちら\n",
+    "footer": "（※このテンプレートはデータ破損により内容が不完全です。管理画面で修正してください）"
+  },
+  {
+    "id": "08",
+    "sortOrder": 8,
+    "columnName": "Affili",
+    "name": "アフィリ通信",
+    "deliveryTime": "10:00",
+    "header": "件名：\n\n【PR】インフォトップ：アフィリ通信　[2026.00.00]\n\nこのメールは、インフォトップにご登録のある方に配信しております。\n\n▼配信停止のご希望はこちら\nhttps://www.infotop.jp/mailmagazine/stop.html?m=15&c=a&i=<<:SETTINGITEM_識別子:>>\n",
+    "footer": "（※このテンプレートはデータ破損により内容が不完全です。管理画面で修正してください）"
+  },
+  {
+    "id": "09",
+    "sortOrder": 9,
+    "columnName": "InfotopGaigo",
+    "name": "インフォトップ通信号外",
+    "deliveryTime": "10:00",
+    "header": "件名：\n\n【PR】インフォトップ：インフォトップ通信号外　[2026.00.00]\n\nこのメールは、インフォトップにご登録のある方に配信しております。\n\n▼配信停止のご希望はこちら\nhttps://www.infotop.jp/mailmagazine/stop.html?m=40&c=all&i=<<:SETTINGITEM_識別子:>>\n",
+    "footer": "（※このテンプレートはデータ破損により内容が不完全です。管理画面で修正してください）"
+  },
+  {
+    "id": "10",
+    "sortOrder": 10,
+    "columnName": "ZeroYen",
+    "name": "インフォトップ通信号外【0円広場】",
+    "deliveryTime": "10:00",
+    "header": "件名：\n\n【PR】インフォトップ：0円広場　[2025.00.00]\n\nこのメールは、インフォトップにご登録のある方に配信しております。\n\n▼配信停止のご希望はこちら\nhttps://www.infotop.jp/mailmagazine/stop.html?m=40&c=all&i=<<:SETTINGITEM_識別子:>>\n",
+    "footer": "（※このテンプレートはデータ破損により内容が不完全です。管理画面で修正してください）"
+  },
+  {
+    "id": "11",
+    "sortOrder": 11,
+    "columnName": "TradeAce",
+    "name": "トレードエース通信号外広告",
+    "deliveryTime": "10:00",
+    "header": "件名：\n\n【PR】インフォトップ：トレードエース通信　[2026.00.00]\n\nこのメールは、インフォトップにご登録のある方に配信しております。\n\n▼配信停止のご希望はこちら\n",
+    "footer": "（※このテンプレートはデータ破損により内容が不完全です。管理画面で修正してください）"
+  },
+  {
+    "id": "12",
+    "sortOrder": 12,
+    "columnName": "UserTsushin",
+    "name": "ユーザー通信",
+    "deliveryTime": "10:00",
+    "header": "件名：\n\n【PR】インフォトップ：ユーザー通信　[2026.00.00]\n\nこのメールは、インフォトップにご登録のある方に配信しております。\n\n▼配信停止のご希望はこちら\n",
+    "footer": "（※このテンプレートはデータ破損により内容が不完全です。管理画面で修正してください）"
+  },
+  {
+    "id": "13",
+    "sortOrder": 13,
+    "columnName": "Ranking",
+    "name": "ランキング",
+    "deliveryTime": "10:00",
+    "header": "【ランキング】\n",
+    "footer": "（※このテンプレートはデータ破損により内容が不完全です。管理画面で修正してください）"
+  },
+  {
+    "id": "14",
+    "sortOrder": 14,
+    "columnName": "ToshiTraining",
+    "name": "投資トレーニング通信号外広告",
+    "deliveryTime": "10:00",
+    "header": "件名：\n\n【PR】インフォトップ：投資トレーニング通信【号外】　[2026.00.00]\n\nこのメールは、インフォトップにご登録のある方に配信しております。\n\n▼配信停止のご希望はこちら\n",
+    "footer": "（※このテンプレートはデータ破損により内容が不完全です。管理画面で修正してください）"
+  },
+  {
+    "id": "15",
+    "sortOrder": 15,
+    "columnName": "Hanbaisha",
+    "name": "販売者通信",
+    "deliveryTime": "10:00",
+    "header": "件名：\n\n【PR】インフォトップ：販売者通信　[2026.00.00]\n\nこのメールは、インフォトップにご登録のある方に配信しております。\n\n▼配信停止のご希望はこちら\n",
+    "footer": "（※このテンプレートはデータ破損により内容が不完全です。管理画面で修正してください）"
+  }
+]
+</script>
+
+<script>
+'use strict';
+
+// ========== Constants ==========
+const STORAGE_KEY = 'mailgen_media_v1';
+const PRESET_KEY = 'mailgen_presets_v1';
+const DATE_PATTERN = /\d{4}\.\d{2}\.(?:\d{2}|〇{1,2})/g;
+const DEPENDENT_CHARS = [
+  '①','②','③','④','⑤','⑥','⑦','⑧','⑨','⑩',
+  '⑪','⑫','⑬','⑭','⑮','⑯','⑰','⑱','⑲','⑳',
+  'Ⅰ','Ⅱ','Ⅲ','Ⅳ','Ⅴ','Ⅵ','Ⅶ','Ⅷ','Ⅸ','Ⅹ',
+  'ⅰ','ⅱ','ⅲ','ⅳ','ⅴ','ⅵ','ⅶ','ⅷ','ⅸ','ⅹ',
+  '㎡','㎢','㎥','㎤','㎎','㎏','㎜','㎝','㎞',
+  '㍉','㌔','㌢','㍍','㌘','㌧','㌃','㌶','㍑','㍗',
+  '㈱','㈲','㈹','℡','№','℃','℉',
+  '✓','✔','✕','✖',
+  '０','１','２','３','４','５','６','７','８','９'
+];
+
+// ========== State ==========
+let mediaList = [];
+let currentMedia = null;
+let originalBodyText = '';
+let firstInput = true;
+let openEditId = null;
+
+// ========== DOM refs ==========
+const $ = id => document.getElementById(id);
+const el = {
+  mainView: $('mainView'),
+  adminView: $('adminView'),
+  adminBtn: $('adminBtn'),
+  backToMainBtn: $('backToMainBtn'),
+  mediaSelect: $('mediaSelect'),
+  headerCard: $('headerCard'),
+  footerCard: $('footerCard'),
+  dateInput: $('dateInput'),
+  datePicker: $('datePicker'),
+  todayBtn: $('todayBtn'),
+  replaceDateBtn: $('replaceDateBtn'),
+  dateError: $('dateError'),
+  headerText: $('headerText'),
+  bodyText: $('bodyText'),
+  footerText: $('footerText'),
+  diffContainer: $('diffContainer'),
+  diffChangeCount: $('diffChangeCount'),
+  diffBeforeText: $('diffBeforeText'),
+  diffAfterText: $('diffAfterText'),
+  closeDiffBtn: $('closeDiffBtn'),
+  updateBeforeBtn: $('updateBeforeBtn'),
+  searchText: $('searchText'),
+  replaceTag: $('replaceTag'),
+  replaceAllBtn: $('replaceAllBtn'),
+  savePresetBtn: $('savePresetBtn'),
+  replaceResult: $('replaceResult'),
+  presetList: $('presetList'),
+  downloadTextBtn: $('downloadTextBtn'),
+  downloadHtmlBtn: $('downloadHtmlBtn'),
+  copyBtn: $('copyBtn'),
+  checkCharsBtn: $('checkCharsBtn'),
+  charCheckResult: $('charCheckResult'),
+  copySuccess: $('copySuccess'),
+  addMediaBtn: $('addMediaBtn'),
+  exportBtn: $('exportBtn'),
+  importBtn: $('importBtn'),
+  importFile: $('importFile'),
+  mediaListContainer: $('mediaListContainer'),
+};
+
+// ========== Data Management ==========
+function loadMedia() {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (raw) {
+    try { return JSON.parse(raw); } catch(e) {}
+  }
+  // First run: load defaults and save
+  const defaults = JSON.parse($('defaultTemplates').textContent);
+  saveMedia(defaults);
+  return defaults;
+}
+
+function saveMedia(list) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+  mediaList = list;
+}
+
+function getNextId(list) {
+  const maxId = list.reduce((m, item) => {
+    const n = parseInt(item.id, 10);
+    return isNaN(n) ? m : Math.max(m, n);
+  }, 0);
+  return String(maxId + 1).padStart(2, '0');
+}
+
+// ========== Preset Management ==========
+function loadPresets() {
+  try { return JSON.parse(localStorage.getItem(PRESET_KEY)) || []; } catch(e) { return []; }
+}
+function savePresets(list) { localStorage.setItem(PRESET_KEY, JSON.stringify(list)); }
+
+// ========== UI Utilities ==========
+function showView(name) {
+  el.mainView.classList.toggle('active', name === 'main');
+  el.adminView.classList.toggle('active', name === 'admin');
+}
+
+let toastTimer;
+function toast(msg, dur = 2500) {
+  const t = $('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), dur);
+}
+
+function escHtml(s) {
+  const d = document.createElement('div');
+  d.textContent = String(s ?? '');
+  return d.innerHTML.replace(/"/g, '&quot;');
+}
+
+function escRegExp(s) {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+// ========== Render Media Select ==========
+function renderSelect() {
+  const sorted = [...mediaList].sort((a, b) => (a.sortOrder || 99) - (b.sortOrder || 99));
+  el.mediaSelect.innerHTML = '<option value="">-- 媒体を選択してください --</option>';
+  sorted.forEach(m => {
+    const o = document.createElement('option');
+    o.value = m.id;
+    o.textContent = m.name;
+    el.mediaSelect.appendChild(o);
+  });
+  if (currentMedia) el.mediaSelect.value = currentMedia.id;
+}
+
+// ========== Media Select Handler ==========
+function handleMediaChange() {
+  const id = el.mediaSelect.value;
+  currentMedia = mediaList.find(m => m.id === id) || null;
+  if (!currentMedia) {
+    el.headerCard.style.display = 'none';
+    el.footerCard.style.display = 'none';
+    el.headerText.value = '';
+    el.footerText.value = '';
+    return;
+  }
+  el.headerText.value = currentMedia.header || '';
+  el.footerText.value = currentMedia.footer || '';
+  el.headerCard.style.display = 'block';
+  el.footerCard.style.display = 'block';
+}
+
+// ========== Date Functions ==========
+function formatDateString(s) {
+  // s = YYYYMMDD
+  return s.slice(0,4) + '.' + s.slice(4,6) + '.' + s.slice(6,8);
+}
+
+function setTodayDate() {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  el.dateInput.value = `${y}${m}${day}`;
+  el.datePicker.value = `${y}-${m}-${day}`;
+  el.dateError.textContent = '';
+}
+
+function syncPickerToInput() {
+  const v = el.datePicker.value; // YYYY-MM-DD
+  if (v) el.dateInput.value = v.replace(/-/g, '');
+}
+
+function syncInputToPicker() {
+  const v = el.dateInput.value.trim();
+  if (/^\d{8}$/.test(v)) {
+    el.datePicker.value = `${v.slice(0,4)}-${v.slice(4,6)}-${v.slice(6,8)}`;
+    el.dateError.textContent = '';
+  }
+}
+
+function replaceDate() {
+  const s = el.dateInput.value.trim();
+  if (!s) { el.dateError.textContent = '日付を入力してください'; return; }
+  if (!/^\d{8}$/.test(s)) { el.dateError.textContent = '8桁の数字で入力してください（例: 20260517）'; return; }
+  el.dateError.textContent = '';
+  const fmt = formatDateString(s);
+  el.headerText.value = el.headerText.value.replace(DATE_PATTERN, fmt);
+  toast(`日付を ${fmt} に置換しました`);
+}
+
+// ========== Download / Copy ==========
+function getFullText() {
+  return [el.headerText.value, el.bodyText.value, el.footerText.value]
+    .filter(t => t.trim()).join('\n\n');
+}
+
+function downloadFile(content, filename, type) {
+  const blob = new Blob([content], { type: `${type};charset=utf-8` });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function downloadText() {
+  const date = el.dateInput.value.trim() || 'nodate';
+  const mediaName = currentMedia ? currentMedia.name : 'mail';
+  const filename = `${date}_${mediaName}.txt`;
+  downloadFile(getFullText(), filename, 'text/plain');
+}
+
+function downloadHtml() {
+  const h = escHtml(el.headerText.value);
+  const b = escHtml(el.bodyText.value);
+  const f = escHtml(el.footerText.value);
+  const html = `<!DOCTYPE html>\n<html lang="ja">\n<head>\n<meta charset="UTF-8">\n<title>HTMLメール</title>\n</head>\n<body>\n<pre style="font-family:sans-serif;font-size:14px;line-height:1.8;white-space:pre-wrap">${[h,b,f].filter(x=>x.trim()).join('\n\n')}</pre>\n</body>\n</html>`;
+  downloadFile(html, 'mail.html', 'text/html');
+}
+
+async function copyToClipboard() {
+  try {
+    await navigator.clipboard.writeText(getFullText());
+    el.copySuccess.style.display = 'inline-block';
+    setTimeout(() => { el.copySuccess.style.display = 'none'; }, 2500);
+  } catch(e) {
+    toast('コピーに失敗しました（ブラウザの許可が必要な場合があります）');
+  }
+}
+
+// ========== Character Check ==========
+function checkDepChars() {
+  const allText = el.headerText.value + el.bodyText.value + el.footerText.value;
+  const found = DEPENDENT_CHARS.filter(c => allText.includes(c));
+  el.charCheckResult.style.display = 'block';
+  if (found.length > 0) {
+    el.charCheckResult.className = 'char-check-result error';
+    el.charCheckResult.textContent = '機種依存文字が見つかりました: ' + found.join(' ');
+  } else {
+    el.charCheckResult.className = 'char-check-result ok';
+    el.charCheckResult.textContent = 'OK — 機種依存文字は見つかりませんでした';
+  }
+}
+
+// ========== Diff ==========
+function updateDiff() {
+  if (!originalBodyText) return;
+  const curr = el.bodyText.value;
+  if (curr === originalBodyText) { el.diffContainer.classList.remove('show'); return; }
+
+  const before = originalBodyText;
+  const after = curr;
+  let changes = 0;
+
+  // Simple line-based diff
+  const beforeLines = before.split('\n');
+  const afterLines = after.split('\n');
+  const maxLen = Math.max(beforeLines.length, afterLines.length);
+  let bHTML = '', aHTML = '';
+
+  for (let i = 0; i < maxLen; i++) {
+    const bl = beforeLines[i] !== undefined ? beforeLines[i] : '';
+    const al = afterLines[i] !== undefined ? afterLines[i] : '';
+    if (bl === al) {
+      bHTML += escHtml(bl) + '\n';
+      aHTML += escHtml(al) + '\n';
+    } else {
+      changes++;
+      bHTML += `<span class="diff-deleted">${escHtml(bl)}</span>\n`;
+      aHTML += `<span class="diff-added">${escHtml(al)}</span>\n`;
+    }
+  }
+
+  el.diffChangeCount.textContent = changes;
+  el.diffBeforeText.innerHTML = bHTML;
+  el.diffAfterText.innerHTML = aHTML;
+  el.diffContainer.classList.add('show');
+}
+
+// ========== Nametag ==========
+function insertTagAtCursor(tag) {
+  const ta = el.bodyText;
+  const start = ta.selectionStart;
+  const end = ta.selectionEnd;
+  ta.value = ta.value.slice(0, start) + tag + ta.value.slice(end);
+  ta.selectionStart = ta.selectionEnd = start + tag.length;
+  ta.focus();
+}
+
+function replaceAll() {
+  const search = el.searchText.value;
+  const tag = el.replaceTag.value;
+  if (!search) { showReplaceResult('検索テキストを入力してください', false); return; }
+  if (!tag) { showReplaceResult('置換タグを選択してください', false); return; }
+
+  const curr = el.bodyText.value;
+  if (!originalBodyText) originalBodyText = curr;
+
+  const count = (curr.match(new RegExp(escRegExp(search), 'g')) || []).length;
+  if (count === 0) { showReplaceResult('一致する文字列が見つかりませんでした', false); return; }
+
+  el.bodyText.value = curr.split(search).join(tag);
+  updateDiff();
+  showReplaceResult(`${count} 箇所を置換しました`, true);
+}
+
+function showReplaceResult(msg, ok) {
+  el.replaceResult.textContent = msg;
+  el.replaceResult.style.color = ok ? '#16a34a' : '#dc2626';
+  el.replaceResult.style.display = 'block';
+  setTimeout(() => { el.replaceResult.style.display = 'none'; }, 3000);
+}
+
+// ========== Presets ==========
+function savePreset() {
+  const search = el.searchText.value;
+  const tag = el.replaceTag.value;
+  if (!search || !tag) { toast('検索テキストと置換タグの両方を入力してください'); return; }
+
+  const presets = loadPresets();
+  if (presets.some(p => p.search === search && p.replace === tag)) {
+    toast('このプリセットは既に登録されています'); return;
+  }
+  presets.push({ id: Date.now(), search, replace: tag });
+  savePresets(presets);
+  renderPresets();
+  toast('プリセットを保存しました');
+}
+
+function usePreset(id) {
+  const p = loadPresets().find(p => p.id === id);
+  if (!p) return;
+  el.searchText.value = p.search;
+  el.replaceTag.value = p.replace;
+  replaceAll();
+}
+
+function deletePreset(id) {
+  if (!confirm('このプリセットを削除しますか？')) return;
+  savePresets(loadPresets().filter(p => p.id !== id));
+  renderPresets();
+  toast('プリセットを削除しました');
+}
+
+function renderPresets() {
+  const presets = loadPresets();
+  el.presetList.style.display = presets.length ? 'block' : 'none';
+  if (!presets.length) { el.presetList.innerHTML = ''; return; }
+  el.presetList.innerHTML = `<div class="text-muted mb-2">保存済みプリセット</div>` +
+    presets.map(p => `
+      <div class="preset-item">
+        <div class="preset-item-text">"${escHtml(p.search)}" → ${escHtml(p.replace)}</div>
+        <div class="preset-item-actions">
+          <button class="btn-primary btn-sm" onclick="usePreset(${p.id})">使用</button>
+          <button class="btn-danger btn-sm" onclick="deletePreset(${p.id})">削除</button>
+        </div>
+      </div>`).join('');
+}
+
+// ========== Admin Panel ==========
+function renderAdminList() {
+  const sorted = [...mediaList].sort((a,b) => (a.sortOrder||99)-(b.sortOrder||99));
+  if (!sorted.length) {
+    el.mediaListContainer.innerHTML = '<div class="empty-state">媒体が登録されていません</div>';
+    return;
+  }
+  el.mediaListContainer.innerHTML = sorted.map(m => renderMediaItem(m)).join('');
+}
+
+function renderMediaItem(m) {
+  const isOpen = openEditId === m.id;
+  return `
+  <div class="media-item" id="media-item-${m.id}">
+    <div class="media-item-header" onclick="toggleEdit('${m.id}')">
+      <div>
+        <span class="media-item-id">${m.id}</span>
+        <span class="media-item-title">${escHtml(m.name)}</span>
+        <span class="badge badge-gray" style="margin-left:8px">${escHtml(m.columnName||'')}</span>
+        <span class="badge badge-primary" style="margin-left:4px">${m.deliveryTime||''}</span>
+      </div>
+      <div class="media-item-actions" onclick="event.stopPropagation()">
+        <button class="btn-danger btn-sm" onclick="deleteMediaItem('${m.id}')">削除</button>
+      </div>
+    </div>
+    <div class="media-edit-form ${isOpen ? 'open' : ''}" id="edit-form-${m.id}">
+      <div class="form-row">
+        <label>ID（自動採番・変更可）</label>
+        <input type="text" id="edit-id-${m.id}" value="${escHtml(m.id)}" style="max-width:100px">
+      </div>
+      <div class="form-row">
+        <label>表示順</label>
+        <input type="text" id="edit-sort-${m.id}" value="${m.sortOrder||''}" style="max-width:80px">
+      </div>
+      <div class="form-row">
+        <label>媒体名</label>
+        <input type="text" id="edit-name-${m.id}" value="${escHtml(m.name)}">
+      </div>
+      <div class="form-row">
+        <label>カラム名（ブックマークレット等で使用）</label>
+        <input type="text" id="edit-col-${m.id}" value="${escHtml(m.columnName||'')}">
+      </div>
+      <div class="form-row">
+        <label>配信時刻</label>
+        <div class="delivery-time-row">
+          <select id="edit-hour-${m.id}">${
+            Array.from({length:24},(_,i)=>i).map(h=>`<option value="${h}" ${(parseInt((m.deliveryTime||'10:00').split(':')[0])||0)===h?'selected':''}>${String(h).padStart(2,'0')}</option>`).join('')
+          }</select>
+          <span>:</span>
+          <select id="edit-min-${m.id}">
+            <option value="00" ${(m.deliveryTime||'').endsWith(':00')?'selected':''}>00</option>
+            <option value="30" ${(m.deliveryTime||'').endsWith(':30')?'selected':''}>30</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <label>ヘッダー</label>
+        <textarea id="edit-header-${m.id}" style="height:160px">${escHtml(m.header||'')}</textarea>
+      </div>
+      <div class="form-row">
+        <label>フッター</label>
+        <textarea id="edit-footer-${m.id}" style="height:160px">${escHtml(m.footer||'')}</textarea>
+      </div>
+      <div class="btn-row">
+        <button class="btn-primary" onclick="saveMediaItem('${m.id}')">保存</button>
+        <button class="btn-secondary" onclick="toggleEdit('${m.id}')">キャンセル</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function toggleEdit(id) {
+  openEditId = openEditId === id ? null : id;
+  renderAdminList();
+}
+
+function saveMediaItem(oldId) {
+  const newId = $(`edit-id-${oldId}`).value.trim();
+  const name = $(`edit-name-${oldId}`).value.trim();
+  const col = $(`edit-col-${oldId}`).value.trim();
+  const sort = parseInt($(`edit-sort-${oldId}`).value) || 0;
+  const hour = $(`edit-hour-${oldId}`).value;
+  const min = $(`edit-min-${oldId}`).value;
+  const header = $(`edit-header-${oldId}`).value;
+  const footer = $(`edit-footer-${oldId}`).value;
+
+  if (!newId) { toast('IDを入力してください'); return; }
+  if (!name) { toast('媒体名を入力してください'); return; }
+  if (newId !== oldId && mediaList.some(m => m.id === newId)) { toast('そのIDは既に使用されています'); return; }
+
+  const idx = mediaList.findIndex(m => m.id === oldId);
+  if (idx === -1) { toast('エラー: 媒体が見つかりません'); return; }
+
+  mediaList[idx] = { id: newId, sortOrder: sort, columnName: col, name, deliveryTime: `${hour}:${min}`, header, footer };
+  saveMedia(mediaList);
+  openEditId = newId !== oldId ? null : newId;
+  renderAdminList();
+  renderSelect();
+  toast('保存しました');
+}
+
+function deleteMediaItem(id) {
+  const m = mediaList.find(x => x.id === id);
+  if (!m) return;
+  if (!confirm(`「${m.name}」を削除しますか？`)) return;
+  saveMedia(mediaList.filter(x => x.id !== id));
+  if (currentMedia && currentMedia.id === id) {
+    currentMedia = null;
+    el.mediaSelect.value = '';
+    el.headerCard.style.display = 'none';
+    el.footerCard.style.display = 'none';
+  }
+  renderAdminList();
+  renderSelect();
+  toast('削除しました');
+}
+
+function addNewMedia() {
+  const id = getNextId(mediaList);
+  const newMedia = { id, sortOrder: mediaList.length + 1, columnName: '', name: '新規媒体', deliveryTime: '10:00', header: '', footer: '' };
+  mediaList.push(newMedia);
+  saveMedia(mediaList);
+  openEditId = id;
+  renderAdminList();
+  renderSelect();
+  // Scroll to new item
+  setTimeout(() => {
+    const el_ = document.getElementById(`media-item-${id}`);
+    if (el_) el_.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 100);
+}
+
+// ========== Import / Export ==========
+function exportData() {
+  const json = JSON.stringify(mediaList, null, 2);
+  downloadFile(json, `media_export_${new Date().toISOString().slice(0,10)}.json`, 'application/json');
+  toast('エクスポートしました');
+}
+
+function importData(file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!Array.isArray(data)) throw new Error('配列形式のJSONが必要です');
+      if (!confirm(`${data.length} 件のデータをインポートします。現在のデータは上書きされます。よろしいですか？`)) return;
+      saveMedia(data);
+      renderAdminList();
+      renderSelect();
+      toast(`${data.length} 件をインポートしました`);
+    } catch(err) {
+      toast('インポートエラー: ' + err.message);
+    }
+  };
+  reader.readAsText(file, 'utf-8');
+}
+
+// ========== Body text change ==========
+function handleBodyChange() {
+  const curr = el.bodyText.value;
+  if (firstInput && curr.length > 0) {
+    originalBodyText = curr;
+    firstInput = false;
+    return;
+  }
+  if (curr.length === 0) {
+    originalBodyText = '';
+    firstInput = true;
+    el.diffContainer.classList.remove('show');
+    return;
+  }
+  if (originalBodyText) updateDiff();
+}
+
+// ========== Init ==========
+function init() {
+  mediaList = loadMedia();
+  renderSelect();
+  renderPresets();
+
+  // View switching
+  el.adminBtn.addEventListener('click', () => {
+    showView('admin');
+    renderAdminList();
+  });
+  el.backToMainBtn.addEventListener('click', () => showView('main'));
+
+  // Media select
+  el.mediaSelect.addEventListener('change', handleMediaChange);
+
+  // Date
+  el.todayBtn.addEventListener('click', setTodayDate);
+  el.datePicker.addEventListener('change', syncPickerToInput);
+  el.dateInput.addEventListener('input', syncInputToPicker);
+  el.replaceDateBtn.addEventListener('click', replaceDate);
+
+  // Nametag insert buttons
+  document.querySelectorAll('.btn-tag').forEach(btn => {
+    btn.addEventListener('click', () => insertTagAtCursor(btn.dataset.tag));
+  });
+
+  // Body text diff tracking
+  el.bodyText.addEventListener('input', handleBodyChange);
+
+  // Diff controls
+  el.closeDiffBtn.addEventListener('click', () => el.diffContainer.classList.remove('show'));
+  el.updateBeforeBtn.addEventListener('click', () => {
+    originalBodyText = el.bodyText.value;
+    el.diffContainer.classList.remove('show');
+    toast('比較基準を更新しました');
+  });
+
+  // Replace
+  el.replaceAllBtn.addEventListener('click', replaceAll);
+  el.savePresetBtn.addEventListener('click', savePreset);
+
+  // Actions
+  el.downloadTextBtn.addEventListener('click', downloadText);
+  el.downloadHtmlBtn.addEventListener('click', downloadHtml);
+  el.copyBtn.addEventListener('click', copyToClipboard);
+  el.checkCharsBtn.addEventListener('click', checkDepChars);
+
+  // Admin
+  el.addMediaBtn.addEventListener('click', addNewMedia);
+  el.exportBtn.addEventListener('click', exportData);
+  el.importBtn.addEventListener('click', () => el.importFile.click());
+  el.importFile.addEventListener('change', e => { importData(e.target.files[0]); e.target.value = ''; });
+}
+
+// Expose globals for inline onclick handlers
+window.toggleEdit = toggleEdit;
+window.saveMediaItem = saveMediaItem;
+window.deleteMediaItem = deleteMediaItem;
+window.usePreset = usePreset;
+window.deletePreset = deletePreset;
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
