@@ -175,43 +175,6 @@ hr{border:none;border-top:1px solid #eee;margin:16px 0}
     </div>
   </div>
 
-  <!-- 本文 -->
-  <div class="card">
-    <div class="card-header">
-      <h2>本文</h2>
-      <div class="nametag-insert">
-        <span>挿入:</span>
-        <button class="btn-tag" data-tag="[[名前]]">[[名前]]</button>
-        <button class="btn-tag" data-tag="[[姓]]">[[姓]]</button>
-        <button class="btn-tag" data-tag="[[名]]">[[名]]</button>
-      </div>
-    </div>
-    <div class="card-body">
-      <textarea class="body-textarea" id="bodyText" placeholder="本文を入力してください"></textarea>
-    </div>
-  </div>
-
-  <!-- Diff表示 -->
-  <div class="diff-container" id="diffContainer">
-    <div class="diff-header">
-      <span>差分表示 — <strong id="diffChangeCount">0</strong> 箇所変更</span>
-      <div style="display:flex;gap:8px">
-        <button class="btn-outline btn-sm" id="updateBeforeBtn">現在を基準にする</button>
-        <button class="btn-secondary btn-sm" id="closeDiffBtn">閉じる</button>
-      </div>
-    </div>
-    <div class="diff-body">
-      <div class="diff-col">
-        <h3>変更前</h3>
-        <div class="diff-text" id="diffBeforeText"></div>
-      </div>
-      <div class="diff-col">
-        <h3>変更後</h3>
-        <div class="diff-text" id="diffAfterText"></div>
-      </div>
-    </div>
-  </div>
-
   <!-- ネームタグ置換 -->
   <div class="card">
     <div class="card-header"><h2>ネームタグ置換</h2></div>
@@ -225,9 +188,8 @@ hr{border:none;border-top:1px solid #eee;margin:16px 0}
           <label>置換タグ</label>
           <select id="replaceTag">
             <option value="">-- タグを選択 --</option>
-            <option value="[[名前]]">[[名前]]（フルネーム）</option>
-            <option value="[[姓]]">[[姓]]（姓のみ）</option>
-            <option value="[[名]]">[[名]]（名のみ）</option>
+            <option value="&lt;&lt;:氏名:&gt;&gt;">&#x3C;&#x3C;:氏名:&#x3E;&#x3E;（フルネーム）</option>
+            <option value="&lt;&lt;:SETTINGITEM_名字:&gt;&gt;">&#x3C;&#x3C;:SETTINGITEM_名字:&#x3E;&#x3E;（名字のみ）</option>
           </select>
         </div>
         <div style="display:flex;flex-direction:column;gap:6px;padding-bottom:1px">
@@ -243,11 +205,49 @@ hr{border:none;border-top:1px solid #eee;margin:16px 0}
     </div>
   </div>
 
+  <!-- 本文 -->
+  <div class="card">
+    <div class="card-header">
+      <h2>本文</h2>
+      <div class="nametag-insert">
+        <span>挿入:</span>
+        <button class="btn-tag" data-tag="<<:氏名:>>">氏名</button>
+        <button class="btn-tag" data-tag="<<:SETTINGITEM_名字:>>">名字</button>
+        <button class="btn-outline btn-sm" id="checkCharsBtn" style="margin-left:8px">機種依存文字チェック</button>
+      </div>
+    </div>
+    <div class="card-body">
+      <div id="charCheckResult" class="char-check-result" style="margin-bottom:10px"></div>
+      <textarea class="body-textarea" id="bodyText" placeholder="本文を入力してください"></textarea>
+    </div>
+  </div>
+
   <!-- フッター -->
   <div class="card" id="footerCard" style="display:none">
     <div class="card-header"><h2>フッター</h2></div>
     <div class="card-body">
       <textarea class="header-footer-textarea" id="footerText"></textarea>
+    </div>
+  </div>
+
+  <!-- 原稿比較 -->
+  <div class="diff-container" id="diffContainer">
+    <div class="diff-header">
+      <span>原稿比較 — <strong id="diffChangeCount">0</strong> 行変更</span>
+      <div style="display:flex;gap:8px">
+        <button class="btn-outline btn-sm" id="updateBeforeBtn">本文更新</button>
+        <button class="btn-secondary btn-sm" id="closeDiffBtn">閉じる</button>
+      </div>
+    </div>
+    <div class="diff-body">
+      <div class="diff-col">
+        <h3>変更前</h3>
+        <div class="diff-text" id="diffBeforeText"></div>
+      </div>
+      <div class="diff-col">
+        <h3>変更後</h3>
+        <div class="diff-text" id="diffAfterText"></div>
+      </div>
     </div>
   </div>
 
@@ -257,10 +257,8 @@ hr{border:none;border-top:1px solid #eee;margin:16px 0}
       <button class="btn-primary" id="downloadTextBtn">テキストDL</button>
       <button class="btn-primary" id="downloadHtmlBtn">HTML DL</button>
       <button class="btn-secondary" id="copyBtn">クリップボードにコピー</button>
-      <button class="btn-outline" id="checkCharsBtn">機種依存文字チェック</button>
       <div class="copy-success" id="copySuccess">コピーしました！</div>
     </div>
-    <div id="charCheckResult" class="char-check-result" style="margin:0 20px 16px"></div>
   </div>
 
 </main>
@@ -1005,7 +1003,7 @@ function init() {
   el.updateBeforeBtn.addEventListener('click', () => {
     originalBodyText = el.bodyText.value;
     el.diffContainer.classList.remove('show');
-    toast('比較基準を更新しました');
+    toast('比較基準を更新しました（本文更新）');
   });
 
   // Replace
