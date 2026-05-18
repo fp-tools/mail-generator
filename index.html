@@ -181,6 +181,10 @@ hr{border:none;border-top:1px solid #eee;margin:16px 0}
         <button class="btn-outline btn-sm" id="replaceDateBtn">日付置換</button>
       </div>
       <div id="dateError" style="color:#dc2626;font-size:12px;margin-bottom:6px"></div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <label for="subjectInput" style="white-space:nowrap;font-size:13px;min-width:2.5em">件名</label>
+        <input type="text" id="subjectInput" placeholder="配信メールの件名（MM本文登録ブックマークレットで自動入力されます）" style="flex:1">
+      </div>
       <textarea class="header-footer-textarea" id="headerText"></textarea>
     </div>
   </div>
@@ -502,6 +506,7 @@ const el = {
   todayBtn: $('todayBtn'),
   replaceDateBtn: $('replaceDateBtn'),
   dateError: $('dateError'),
+  subjectInput: $('subjectInput'),
   headerText: $('headerText'),
   bodyText: $('bodyText'),
   footerText: $('footerText'),
@@ -1033,6 +1038,8 @@ function updateMmSection() {
 }
 
 function extractSubject() {
+  const manual = el.subjectInput.value.trim();
+  if (manual) return manual;
   const hdr = el.headerText.value;
   const lines = hdr.split('\n');
   let found = false;
@@ -1166,6 +1173,9 @@ function init() {
   el.datePicker.addEventListener('change', syncPickerToInput);
   el.dateInput.addEventListener('input', syncInputToPicker);
   el.replaceDateBtn.addEventListener('click', replaceDate);
+
+  // Subject
+  el.subjectInput.addEventListener('input', updateBmLinks);
 
   // Nametag insert buttons
   document.querySelectorAll('.btn-tag').forEach(btn => {
