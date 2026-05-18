@@ -1184,23 +1184,28 @@ function generateBmHtml() {
 
 function generateBmReserve() {
   const t = getBmTitle();
-  const col = currentMedia ? (currentMedia.name || '') : '';
   const mName = currentMedia ? (currentMedia.name || '') : '';
   const d = el.dateInput.value.trim();
   const delivTime = currentMedia ? (currentMedia.deliveryTime || '10:00') : '10:00';
-  const rdt = d.length === 8 ? `${d.slice(0,4)}-${d.slice(4,6)}-${d.slice(6,8)} ${delivTime}` : '';
+  const [hourStr, minStr] = delivTime.split(':');
+  const hour = parseInt(hourStr, 10);
+  const min = parseInt(minStr, 10);
+  const dateStr = d.length === 8 ? `${d.slice(0,4)}/${d.slice(4,6)}/${d.slice(6,8)}` : '';
   const code = [
-    `var t=${JSON.stringify(t)},c=${JSON.stringify(col)},n=${JSON.stringify(mName)},dt=${JSON.stringify(rdt)};`,
+    `var t=${JSON.stringify(t)},n=${JSON.stringify(mName)},ds=${JSON.stringify(dateStr)},h=${hour},m=${min};`,
     `var q=function(sel){return document.querySelector(sel);};`,
-    `var tf=q('[name="title"]');if(tf)tf.value=t;`,
-    `var ls=q('select[name="list_id"]');`,
-    `if(ls)Array.from(ls.options).forEach(function(o){if(c&&o.text.indexOf(c)>-1){ls.value=o.value;ls.dispatchEvent(new Event('change'));}});`,
-    `var fn=q('[name="from_name"]');if(fn)fn.value=n;`,
-    `var mb=q('select[name="mail_body_id"]');`,
-    `if(mb)Array.from(mb.options).forEach(function(o){if(t&&o.text.indexOf(t)>-1){mb.value=o.value;}});`,
-    `var st=q('[name="status_2"]');if(st){st.checked=true;st.dispatchEvent(new Event('change'));}`,
-    `var rd=q('[name="reserve_datetime"]');if(rd)rd.value=dt;`,
-    `alert('配信予約フォームを入力しました。内容を確認して登録してください。');`
+    `var tf=q('[name="name"]');if(tf)tf.value=t;`,
+    `var seg=q('select[name="segmentid"]');`,
+    `if(seg&&n){Array.from(seg.options).forEach(function(o){if(o.text.indexOf(n)>-1){seg.value=o.value;}});}`,
+    `var tmpl=q('select[name="templateid"]');`,
+    `var tmplFound=false;`,
+    `if(tmpl&&t){Array.from(tmpl.options).forEach(function(o){if(!tmplFound&&o.text.indexOf(t)>-1){tmpl.value=o.value;tmplFound=true;}});}`,
+    `var rt=q('[name="mailtype"][value="1"]');if(rt)rt.click();`,
+    `var sd=q('[name="sendDateString"]');if(sd)sd.value=ds;`,
+    `var sh=q('select[name="sendHour"]');if(sh)sh.value=String(h);`,
+    `var sm=q('select[name="sendMinute"]');if(sm)sm.value=String(m);`,
+    `if(!tmplFound&&t){alert('メール本文「'+t+'」が見つかりません。先に本文を登録してください。');}`,
+    `else{alert('配信予約フォームを入力しました。内容を確認して登録してください。');}`
   ].join('');
   return `javascript:(function(){${code}})();`;
 }
