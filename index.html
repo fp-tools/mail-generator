@@ -141,9 +141,13 @@ hr{border:none;border-top:1px solid #eee;margin:16px 0}
 .media-item.dragging{opacity:0.4;border-style:dashed}
 .media-item.drag-over{outline:2px dashed #4949FF;outline-offset:-2px;background:#f5f5ff}
 
-/* ===== URL convert section ===== */
-.url-convert-hint{font-size:12px;color:#666;margin-bottom:8px}
-.url-convert-hint code{background:#f3f4f6;padding:1px 5px;border-radius:4px;font-family:monospace;font-size:11px}
+/* ===== URL convert panel ===== */
+.url-check-list{max-height:300px;overflow-y:auto;margin-bottom:12px;border:1.5px solid #e5e7eb;border-radius:8px}
+.url-check-label{display:flex;align-items:flex-start;gap:8px;padding:8px 12px;border-bottom:1px solid #f0f0f0;cursor:pointer;font-size:12px}
+.url-check-label:last-child{border-bottom:none}
+.url-check-label:hover{background:#f5f5ff}
+.url-check-label input[type=checkbox]{margin-top:2px;flex-shrink:0;cursor:pointer;accent-color:#4949FF}
+.url-check-label span{font-family:monospace;word-break:break-all;color:#333}
 
 /* ===== Compare view diff override ===== */
 #compareDiffContainer .diff-text{max-height:500px}
@@ -249,6 +253,8 @@ hr{border:none;border-top:1px solid #eee;margin:16px 0}
         <button class="btn-tag" data-tag="<<:氏名:>>">フルネーム</button>
         <button class="btn-tag" data-tag="<<:SETTINGITEM_名字:>>">名字のみ</button>
         <button class="btn-outline btn-sm" id="checkCharsBtn" style="margin-left:8px">機種依存文字チェック</button>
+        <button class="btn-outline btn-sm" id="urlBulkBtn" style="margin-left:8px">URL一括変換</button>
+        <button class="btn-outline btn-sm" id="urlSelectBtn">URL個別変換</button>
       </div>
     </div>
     <div class="card-body">
@@ -257,40 +263,19 @@ hr{border:none;border-top:1px solid #eee;margin:16px 0}
     </div>
   </div>
 
-  <!-- URL変換 -->
-  <div class="card">
-    <div class="card-header"><h2>URL変換</h2></div>
+  <!-- URL変換パネル -->
+  <div class="card" id="urlConvertPanel" style="display:none">
+    <div class="card-header">
+      <h2>変換するURLを選択</h2>
+      <button class="btn-secondary btn-sm" id="closeUrlPanelBtn">閉じる</button>
+    </div>
     <div class="card-body">
-      <div class="url-convert-hint">本文内のURLを配信機の計測形式 <code>$:URL_https://...:$</code> に変換します。</div>
-      <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px">
-        <button class="btn-primary btn-sm" id="convertAllUrlsBtn">一括変換</button>
-        <span class="text-muted">本文内のURLをすべて変換</span>
+      <div style="display:flex;gap:8px;margin-bottom:10px">
+        <button class="btn-outline btn-sm" id="urlSelectAllBtn">すべて選択</button>
+        <button class="btn-outline btn-sm" id="urlSelectNoneBtn">すべて解除</button>
       </div>
-      <div style="display:flex;gap:8px;align-items:center">
-        <input type="text" id="urlConvertInput" placeholder="個別変換するURLを入力" style="flex:1">
-        <button class="btn-outline btn-sm" id="convertSingleUrlBtn" style="white-space:nowrap">個別変換</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 原稿比較 -->
-  <div class="diff-container" id="diffContainer">
-    <div class="diff-header">
-      <span>原稿比較 — <strong id="diffChangeCount">0</strong> 行変更</span>
-      <div style="display:flex;gap:8px">
-        <button class="btn-outline btn-sm" id="updateBeforeBtn">本文更新</button>
-        <button class="btn-secondary btn-sm" id="closeDiffBtn">閉じる</button>
-      </div>
-    </div>
-    <div class="diff-body">
-      <div class="diff-col">
-        <h3>変更前</h3>
-        <div class="diff-text" id="diffBeforeText"></div>
-      </div>
-      <div class="diff-col">
-        <h3>変更後</h3>
-        <div class="diff-text" id="diffAfterText"></div>
-      </div>
+      <div class="url-check-list" id="urlCheckList"></div>
+      <button class="btn-primary" id="urlApplyBtn">変換する</button>
     </div>
   </div>
 
@@ -564,8 +549,6 @@ const DEPENDENT_CHARS = [
 // ========== State ==========
 let mediaList = [];
 let currentMedia = null;
-let originalBodyText = '';
-let firstInput = true;
 let openEditId = null;
 let dragId = null;
 
@@ -589,12 +572,6 @@ const el = {
   bodyText: $('bodyText'),
   footerText: $('footerText'),
   advertiserInput: $('advertiserInput'),
-  diffContainer: $('diffContainer'),
-  diffChangeCount: $('diffChangeCount'),
-  diffBeforeText: $('diffBeforeText'),
-  diffAfterText: $('diffAfterText'),
-  closeDiffBtn: $('closeDiffBtn'),
-  updateBeforeBtn: $('updateBeforeBtn'),
   searchText: $('searchText'),
   replaceTag: $('replaceTag'),
   replaceAllBtn: $('replaceAllBtn'),
@@ -622,9 +599,14 @@ const el = {
   compareDiffCount: $('compareDiffCount'),
   compareDiffBefore: $('compareDiffBefore'),
   compareDiffAfter: $('compareDiffAfter'),
-  convertAllUrlsBtn: $('convertAllUrlsBtn'),
-  urlConvertInput: $('urlConvertInput'),
-  convertSingleUrlBtn: $('convertSingleUrlBtn'),
+  urlBulkBtn: $('urlBulkBtn'),
+  urlSelectBtn: $('urlSelectBtn'),
+  urlConvertPanel: $('urlConvertPanel'),
+  urlCheckList: $('urlCheckList'),
+  urlSelectAllBtn: $('urlSelectAllBtn'),
+  urlSelectNoneBtn: $('urlSelectNoneBtn'),
+  urlApplyBtn: $('urlApplyBtn'),
+  closeUrlPanelBtn: $('closeUrlPanelBtn'),
 };
 
 // ========== Data Management ==========
@@ -838,18 +820,6 @@ function computeDiffHtml(before, after) {
   return { bHTML, aHTML, changes };
 }
 
-function updateDiff() {
-  if (!originalBodyText) return;
-  const curr = el.bodyText.value;
-  const isShown = el.diffContainer.classList.contains('show');
-  if (curr === originalBodyText && !isShown) return;
-  const { bHTML, aHTML, changes } = computeDiffHtml(originalBodyText, curr);
-  el.diffChangeCount.textContent = changes;
-  el.diffBeforeText.innerHTML = bHTML;
-  el.diffAfterText.innerHTML = aHTML;
-  el.diffContainer.classList.add('show');
-}
-
 // ========== URL変換 ==========
 function urlTwoPass(text, converter) {
   const placeholders = [];
@@ -862,37 +832,43 @@ function urlTwoPass(text, converter) {
   return converted.replace(/\x00PH(\d+)\x00/g, (_, i) => placeholders[+i]);
 }
 
-function convertAllUrls() {
-  let count = 0;
-  const result = urlTwoPass(el.bodyText.value, text =>
-    text.replace(/https?:\/\/\S+/g, url => {
-      url = url.replace(/[.,;:!?)>]+$/, '');
-      count++;
-      return `$:URL_${url}:$`;
-    })
-  );
-  if (count === 0) { toast('変換対象のURLが見つかりませんでした'); return; }
-  el.bodyText.value = result;
-  toast(`${count} 件のURLを変換しました`);
-  updateBmLinks();
-  if (originalBodyText) updateDiff();
+function scanBareUrls(text) {
+  const seen = new Set();
+  const urls = [];
+  const safe = text.replace(/\$:URL_https?:\/\/[^\s$]+:\$/g, '');
+  safe.replace(/https?:\/\/\S+/g, raw => {
+    const url = raw.replace(/[.,;:!?)>]+$/, '');
+    if (!seen.has(url)) { seen.add(url); urls.push(url); }
+  });
+  return urls;
 }
 
-function convertSingleUrl() {
-  const rawUrl = el.urlConvertInput.value.trim();
-  if (!rawUrl) { toast('URLを入力してください'); return; }
-  if (!/^https?:\/\//.test(rawUrl)) { toast('URLはhttp://またはhttps://で始まる必要があります'); return; }
-  const wrapped = `$:URL_${rawUrl}:$`;
-  const escaped = rawUrl.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+function openUrlConvertPanel(selectAll) {
+  const urls = scanBareUrls(el.bodyText.value);
+  if (urls.length === 0) { toast('変換対象のURLが見つかりませんでした'); return; }
+  el.urlCheckList.innerHTML = urls.map(url => `
+    <label class="url-check-label">
+      <input type="checkbox" class="url-check-item" value="${escHtml(url)}" ${selectAll ? 'checked' : ''}>
+      <span>${escHtml(url)}</span>
+    </label>`).join('');
+  el.urlConvertPanel.style.display = 'block';
+  el.urlConvertPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function applyUrlConvert() {
+  const checked = [...document.querySelectorAll('.url-check-item:checked')].map(cb => cb.value);
+  if (checked.length === 0) { toast('URLを選択してください'); return; }
+  let text = el.bodyText.value;
   let count = 0;
-  const result = urlTwoPass(el.bodyText.value, text =>
-    text.replace(new RegExp(escaped, 'g'), () => { count++; return wrapped; })
-  );
-  if (count === 0) { toast('本文にそのURLが見つかりませんでした（既に変換済みの可能性があります）'); return; }
-  el.bodyText.value = result;
+  for (const url of checked) {
+    const wrapped = `$:URL_${url}:$`;
+    const escaped = url.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    text = urlTwoPass(text, t => t.replace(new RegExp(escaped, 'g'), () => { count++; return wrapped; }));
+  }
+  el.bodyText.value = text;
+  el.urlConvertPanel.style.display = 'none';
   toast(`${count} 件のURLを変換しました`);
   updateBmLinks();
-  if (originalBodyText) updateDiff();
 }
 
 // ========== 原稿比較ビュー ==========
@@ -925,18 +901,13 @@ function replaceAll() {
   if (!tag) { showReplaceResult('置換タグを選択してください', false); return; }
 
   const curr = el.bodyText.value;
-  if (!originalBodyText) originalBodyText = curr;
-
   const re = new RegExp(escRegExp(search), 'g');
   const bodyCount = (curr.match(re) || []).length;
   const subjCount = (el.subjectInput.value.match(re) || []).length;
   const total = bodyCount + subjCount;
   if (total === 0) { showReplaceResult('一致する文字列が見つかりませんでした', false); return; }
 
-  if (bodyCount > 0) {
-    el.bodyText.value = curr.split(search).join(tag);
-    updateDiff();
-  }
+  if (bodyCount > 0) el.bodyText.value = curr.split(search).join(tag);
   if (subjCount > 0) {
     el.subjectInput.value = el.subjectInput.value.split(search).join(tag);
     updateBmLinks();
@@ -1233,19 +1204,6 @@ function importData(file) {
 
 // ========== Body text change ==========
 function handleBodyChange() {
-  const curr = el.bodyText.value;
-  if (firstInput && curr.length > 0) {
-    originalBodyText = curr;
-    firstInput = false;
-    return;
-  }
-  if (curr.length === 0) {
-    originalBodyText = '';
-    firstInput = true;
-    el.diffContainer.classList.remove('show');
-    return;
-  }
-  if (originalBodyText) updateDiff();
   updateBmLinks();
 }
 
@@ -1477,16 +1435,8 @@ function init() {
     });
   });
 
-  // Body text diff tracking
+  // Body text
   el.bodyText.addEventListener('input', handleBodyChange);
-
-  // Diff controls
-  el.closeDiffBtn.addEventListener('click', () => el.diffContainer.classList.remove('show'));
-  el.updateBeforeBtn.addEventListener('click', () => {
-    originalBodyText = el.bodyText.value;
-    updateDiff();
-    toast('比較基準を更新しました（本文更新）');
-  });
 
   // Replace
   el.replaceAllBtn.addEventListener('click', replaceAll);
@@ -1499,8 +1449,12 @@ function init() {
   el.checkCharsBtn.addEventListener('click', checkDepChars);
 
   // URL変換
-  el.convertAllUrlsBtn.addEventListener('click', convertAllUrls);
-  el.convertSingleUrlBtn.addEventListener('click', convertSingleUrl);
+  el.urlBulkBtn.addEventListener('click', () => openUrlConvertPanel(true));
+  el.urlSelectBtn.addEventListener('click', () => openUrlConvertPanel(false));
+  el.urlSelectAllBtn.addEventListener('click', () => document.querySelectorAll('.url-check-item').forEach(cb => { cb.checked = true; }));
+  el.urlSelectNoneBtn.addEventListener('click', () => document.querySelectorAll('.url-check-item').forEach(cb => { cb.checked = false; }));
+  el.urlApplyBtn.addEventListener('click', applyUrlConvert);
+  el.closeUrlPanelBtn.addEventListener('click', () => { el.urlConvertPanel.style.display = 'none'; });
 
   // Admin
   attachDragHandlers();
