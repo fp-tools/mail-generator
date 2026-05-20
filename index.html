@@ -325,9 +325,9 @@ hr{border:none;border-top:1px solid #eee;margin:16px 0}
     <div class="card-body">
       <div class="admin-toolbar">
         <button class="btn-primary" id="addMediaBtn">+ 媒体を追加</button>
-        <button class="btn-outline" id="exportBtn">JSONエクスポート</button>
-        <button class="btn-outline" id="importBtn">JSONインポート</button>
-        <input type="file" id="importFile" accept=".json" style="display:none">
+        <button class="btn-outline" id="exportBtn">CSVエクスポート</button>
+        <button class="btn-outline" id="importBtn">CSVインポート</button>
+        <input type="file" id="importFile" accept=".csv" style="display:none">
       </div>
       <div id="mediaListContainer"></div>
     </div>
@@ -658,8 +658,7 @@ function getFileBaseName() {
   const d = el.dateInput.value.trim();
   const mmdd = d.length === 8 ? d.slice(4) : (d || 'nodate');
   const mediaName = currentMedia ? currentMedia.name : 'mail';
-  const adv = el.advertiserInput.value.trim();
-  return adv ? `${mmdd}（${adv}）${mediaName}` : `${mmdd}_${mediaName}`;
+  return `${mmdd}${mediaName}　配信用`;
 }
 
 function downloadText() {
@@ -720,7 +719,7 @@ function computeDiffHtml(before, after) {
 // ========== URL変換 ==========
 function urlTwoPass(text, converter) {
   const placeholders = [];
-  const safe = text.replace(/\$:URL_https?:\/\/[^\s$]+:\$/g, m => {
+  const safe = text.replace(/\$\$:URL_https?:\/\/[^\s$]+:\$\$/g, m => {
     const idx = placeholders.length;
     placeholders.push(m);
     return `\x00PH${idx}\x00`;
@@ -732,7 +731,7 @@ function urlTwoPass(text, converter) {
 function scanBareUrls(text) {
   const seen = new Set();
   const urls = [];
-  const safe = text.replace(/\$:URL_https?:\/\/[^\s$]+:\$/g, '');
+  const safe = text.replace(/\$\$:URL_https?:\/\/[^\s$]+:\$\$/g, '');
   safe.replace(/https?:\/\/\S+/g, raw => {
     const url = raw.replace(/[.,;:!?)>]+$/, '');
     if (!seen.has(url)) { seen.add(url); urls.push(url); }
@@ -758,7 +757,7 @@ function applyUrlConvert() {
   let text = el.bodyText.value;
   let count = 0;
   for (const url of checked) {
-    const wrapped = `$:URL_${url}:$`;
+    const wrapped = `$$:URL_${url}:$$`;
     const escaped = url.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     text = urlTwoPass(text, t => t.replace(new RegExp(escaped, 'g'), () => { count++; return wrapped; }));
   }
@@ -1074,9 +1073,20 @@ function addNewMedia() {
 }
 
 // ========== Import / Export ==========
+function mediaToCSV(list) {
+  const cols = ['id','sortOrder','columnName','name','deliveryTime','deliverySystem','segmentId','fromName','header','footer'];
+  const rows = [cols.join(',')];
+  for (const m of list) {
+    const h = (m.header || '').replace(/\n/g, '\\n');
+    const f = (m.footer || '').replace(/\n/g, '\\n');
+    rows.push([m.id, m.sortOrder, m.columnName, m.name, m.deliveryTime||'10:00', m.deliverySystem||'MM', m.segmentId||'', m.fromName||'', h, f].join(','));
+  }
+  return rows.join('\n');
+}
+
 function exportData() {
-  const json = JSON.stringify(mediaList, null, 2);
-  downloadFile(json, `media_export_${new Date().toISOString().slice(0,10)}.json`, 'application/json');
+  const csv = mediaToCSV(mediaList);
+  downloadFile(csv, `media_export_${new Date().toISOString().slice(0,10)}.csv`, 'text/csv;charset=utf-8');
   toast('エクスポートしました');
 }
 
@@ -1085,8 +1095,8 @@ function importData(file) {
   const reader = new FileReader();
   reader.onload = e => {
     try {
-      const data = JSON.parse(e.target.result);
-      if (!Array.isArray(data)) throw new Error('配列形式のJSONが必要です');
+      const data = csvToMedia(e.target.result);
+      if (!data.length) throw new Error('データが見つかりません');
       if (!confirm(`${data.length} 件のデータをインポートします。現在のデータは上書きされます。よろしいですか？`)) return;
       saveMedia(data);
       renderAdminList();
