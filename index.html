@@ -482,27 +482,27 @@ const el = {
 
 // ========== Data Management ==========
 function csvToMedia(text) {
+  if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1); // strip BOM
   const lines = text.trim().split('\n').map(l => l.replace(/\r$/, '')).filter(l => l);
   if (lines.length < 2) return [];
-  const cols = lines[0].split(',').map(s => s.trim());
+  const NUM_COLS = 10; // positional: id,sortOrder,columnName,name,deliveryTime,deliverySystem,segmentId,fromName,header,footer
   return lines.slice(1).map(line => {
     const parts = line.split(',');
-    while (parts.length > cols.length) {
-      parts[cols.length - 1] += ',' + parts.splice(cols.length, 1)[0];
+    while (parts.length > NUM_COLS) {
+      parts[NUM_COLS - 1] += ',' + parts.splice(NUM_COLS, 1)[0];
     }
-    const o = {};
-    cols.forEach((c, i) => { o[c] = (parts[i] || '').replace(/\\n/g, '\n'); });
+    const v = i => (parts[i] || '').replace(/\\n/g, '\n');
     return {
-      id: o.id || '',
-      sortOrder: parseInt(o.sortOrder, 10) || 0,
-      columnName: o.columnName || '',
-      name: o.name || '',
-      deliveryTime: o.deliveryTime || '10:00',
-      deliverySystem: o.deliverySystem || 'MM',
-      segmentId: o.segmentId || '',
-      fromName: o.fromName || '',
-      header: o.header || '',
-      footer: o.footer || '',
+      id: v(0),
+      sortOrder: parseInt(v(1), 10) || 0,
+      columnName: v(2),
+      name: v(3),
+      deliveryTime: v(4) || '10:00',
+      deliverySystem: v(5) || 'MM',
+      segmentId: v(6),
+      fromName: v(7),
+      header: v(8),
+      footer: v(9),
     };
   });
 }
@@ -1074,7 +1074,7 @@ function addNewMedia() {
 
 // ========== Import / Export ==========
 function mediaToCSV(list) {
-  const cols = ['id','sortOrder','columnName','name','deliveryTime','deliverySystem','segmentId','fromName','header','footer'];
+  const cols = ['媒体ID','表示順','カラム名','媒体名','配信時刻','配信システム','セグメントID','差出人名','ヘッダー','フッター'];
   const rows = [cols.join(',')];
   for (const m of list) {
     const h = (m.header || '').replace(/\n/g, '\\n');
@@ -1085,7 +1085,7 @@ function mediaToCSV(list) {
 }
 
 function exportData() {
-  const csv = mediaToCSV(mediaList);
+  const csv = '﻿' + mediaToCSV(mediaList); // BOM for Excel UTF-8
   downloadFile(csv, `media_export_${new Date().toISOString().slice(0,10)}.csv`, 'text/csv;charset=utf-8');
   toast('エクスポートしました');
 }
