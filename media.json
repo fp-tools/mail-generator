@@ -1,5 +1,5 @@
 {
-  "_version": 1779776934900,
+  "_version": 1779776948789,
   "items": [
     {
       "id": "01",
@@ -195,7 +195,7 @@
     },
     {
       "id": "18",
-      "sortOrder": 18,
+      "sortOrder": 17,
       "name": "新規媒体（Aで作成）",
       "deliverySystem": "MM",
       "deliveryTime": "10:00",
@@ -205,19 +205,8 @@
       "fromName": ""
     },
     {
-      "id": "21",
-      "sortOrder": 21,
-      "name": "新規媒体（Aで編集してBで確認）",
-      "deliverySystem": "MM",
-      "deliveryTime": "10:00",
-      "header": "いぬ",
-      "footer": "いぬ",
-      "segmentId": "いぬ",
-      "fromName": "いぬ"
-    },
-    {
       "id": "22",
-      "sortOrder": 22,
+      "sortOrder": 18,
       "name": "新規媒体（Bで作成）",
       "deliverySystem": "MM",
       "deliveryTime": "10:00",
@@ -228,7 +217,7 @@
     },
     {
       "id": "23",
-      "sortOrder": 21,
+      "sortOrder": 19,
       "name": "新規媒体（Aで作成Aで編集）",
       "deliverySystem": "MM",
       "deliveryTime": "10:00",
@@ -236,6 +225,17 @@
       "footer": "",
       "segmentId": "",
       "fromName": ""
+    },
+    {
+      "id": "21",
+      "sortOrder": 20,
+      "name": "新規媒体（Aで編集してBで確認）",
+      "deliverySystem": "MM",
+      "deliveryTime": "10:00",
+      "header": "いぬ",
+      "footer": "いぬ",
+      "segmentId": "いぬ",
+      "fromName": "いぬ"
     }
   ]
 }
