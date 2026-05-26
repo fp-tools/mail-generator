@@ -978,6 +978,7 @@ function attachDragHandlers() {
     renderAdminList();
     renderSelect();
     toast('並び順を変更しました');
+    autoSync();
   });
 
   container.addEventListener('dragend', () => {
@@ -1084,6 +1085,7 @@ function saveMediaItem(oldId) {
   renderAdminList();
   renderSelect();
   toast('保存しました');
+  autoSync();
 }
 
 function deleteMediaItem(id) {
@@ -1100,6 +1102,7 @@ function deleteMediaItem(id) {
   renderAdminList();
   renderSelect();
   toast('削除しました');
+  autoSync();
 }
 
 function copyMediaItem(id) {
@@ -1113,6 +1116,7 @@ function copyMediaItem(id) {
   renderAdminList();
   renderSelect();
   toast('複製しました');
+  autoSync();
   setTimeout(() => {
     const el_ = document.getElementById(`media-item-${newId}`);
     if (el_) el_.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1173,14 +1177,17 @@ function clearGhToken() {
   ghStatus('トークンをクリアしました', 'ok');
 }
 
-async function syncToGitHub() {
+async function syncToGitHub(silent = false) {
   const pat = localStorage.getItem(GITHUB_PAT_KEY);
-  if (!pat) { ghStatus('先にGitHub Personal Access Tokenを保存してください', 'err'); return; }
+  if (!pat) {
+    if (!silent) ghStatus('先にGitHub Personal Access Tokenを保存してください', 'err');
+    return;
+  }
 
   const btn = $('ghSyncBtn');
   btn.disabled = true;
   btn.textContent = '同期中…';
-  ghStatus('', '');
+  if (!silent) ghStatus('', '');
 
   try {
     const version = Date.now();
@@ -1195,7 +1202,6 @@ async function syncToGitHub() {
       'Content-Type': 'application/json'
     };
 
-    // 現在のファイルのSHAを取得
     let sha;
     const getRes = await fetch(apiBase, { headers });
     if (getRes.ok) {
@@ -1205,7 +1211,6 @@ async function syncToGitHub() {
       throw new Error(`取得エラー: ${getRes.status}`);
     }
 
-    // ファイルを更新
     const body = { message: `媒体データを更新 (${new Date().toLocaleString('ja-JP')})`, content: encoded, branch: GITHUB_BRANCH };
     if (sha) body.sha = sha;
 
@@ -1216,7 +1221,7 @@ async function syncToGitHub() {
     }
 
     localStorage.setItem(MEDIA_VERSION_KEY, String(version));
-    ghStatus('同期しました。数分後に全ユーザーへ反映されます。', 'ok');
+    if (!silent) ghStatus('同期しました。数分後に全ユーザーへ反映されます。', 'ok');
     toast('GitHubに同期しました');
   } catch(e) {
     ghStatus('同期失敗: ' + e.message, 'err');
@@ -1224,6 +1229,11 @@ async function syncToGitHub() {
     btn.disabled = false;
     btn.textContent = 'GitHubに同期';
   }
+}
+
+async function autoSync() {
+  if (!localStorage.getItem(GITHUB_PAT_KEY)) return;
+  await syncToGitHub(true);
 }
 
 function exportJson() {
