@@ -1,5 +1,5 @@
 {
-  "_version": 1779778584784,
+  "_version": 1779783306304,
   "items": [
     {
       "id": "01",
@@ -258,6 +258,18 @@
       "footer": "りんご　ごりら",
       "segmentId": "りんご　ごりら",
       "fromName": "りんご　ごりら"
+    },
+    {
+      "id": "27",
+      "sortOrder": 23,
+      "columnName": "Hanbaisha",
+      "name": "販売者通信（コピー）",
+      "deliveryTime": "10:00",
+      "deliverySystem": "MM",
+      "segmentId": "",
+      "fromName": "",
+      "header": "件名：\n\n【PR】インフォトップ：販売者通信　[2026.00.00]\n\nこのメールは、インフォトップにご登録のある方に配信しております。\n\n▼配信停止のご希望はこちら\n",
+      "footer": "（※このテンプレートはデータ破損により内容が不完全です。管理画面で修正してください）"
     }
   ]
 }
