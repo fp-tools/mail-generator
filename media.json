@@ -1,5 +1,5 @@
 {
-  "_version": 1779783316181,
+  "_version": 1779783323211,
   "items": [
     {
       "id": "01",
@@ -249,19 +249,8 @@
       "fromName": "りんご　ごりら"
     },
     {
-      "id": "26",
-      "sortOrder": 22,
-      "name": "新規媒体（Bで作成してAで編集）",
-      "deliverySystem": "MM",
-      "deliveryTime": "10:00",
-      "header": "りんご　ごりら",
-      "footer": "りんご　ごりら",
-      "segmentId": "りんご　ごりら",
-      "fromName": "りんご　ごりら"
-    },
-    {
       "id": "27",
-      "sortOrder": 23,
+      "sortOrder": 22,
       "columnName": "Hanbaisha",
       "name": "販売者通信（コピー）",
       "deliveryTime": "10:00",
@@ -270,6 +259,17 @@
       "fromName": "",
       "header": "件名：\n\n【PR】インフォトップ：販売者通信　[2026.00.00]\n\nこのメールは、インフォトップにご登録のある方に配信しております。\n\n▼配信停止のご希望はこちら\n",
       "footer": "（※このテンプレートはデータ破損により内容が不完全です。管理画面で修正してください）"
+    },
+    {
+      "id": "26",
+      "sortOrder": 23,
+      "name": "新規媒体（Bで作成してAで編集）",
+      "deliverySystem": "MM",
+      "deliveryTime": "10:00",
+      "header": "りんご　ごりら",
+      "footer": "りんご　ごりら",
+      "segmentId": "りんご　ごりら",
+      "fromName": "りんご　ごりら"
     }
   ]
 }
