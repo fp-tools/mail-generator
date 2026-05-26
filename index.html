@@ -99,6 +99,9 @@ button:disabled{opacity:.5;cursor:not-allowed}
 .char-check-result{display:none;padding:10px 14px;border-radius:8px;font-size:13px;margin-top:8px}
 .char-check-result.ok{background:#dcfce7;color:#15803d;border:1px solid #86efac}
 .char-check-result.error{background:#fee2e2;color:#b91c1c;border:1px solid #fca5a5}
+.dep-char-preview{display:none;border:1.5px solid #fca5a5;border-radius:8px;padding:12px 16px;margin-bottom:10px;background:#fff;max-height:320px;overflow-y:auto;font-family:"MS Gothic","Courier New",monospace;font-size:13px;white-space:pre-wrap;word-break:break-all;line-height:1.8}
+.dep-char-preview.show{display:block}
+mark.dep-char{background:#fef08a;color:#b91c1c;font-weight:700;border-radius:2px;padding:0 1px}
 
 /* ===== Copy success ===== */
 .copy-success{display:none;padding:8px 14px;background:#dcfce7;color:#15803d;border-radius:8px;font-size:13px;border:1px solid #86efac}
@@ -282,6 +285,7 @@ hr{border:none;border-top:1px solid #eee;margin:16px 0}
         <button class="btn-primary btn-sm" id="urlApplyBtn">変換する</button>
       </div>
       <div id="charCheckResult" class="char-check-result" style="margin-bottom:10px"></div>
+      <div id="depCharPreview" class="dep-char-preview"></div>
       <textarea class="body-textarea" id="bodyText" placeholder="本文を入力してください"></textarea>
     </div>
   </div>
@@ -325,9 +329,11 @@ hr{border:none;border-top:1px solid #eee;margin:16px 0}
     <div class="card-body">
       <div class="admin-toolbar">
         <button class="btn-primary" id="addMediaBtn">+ 媒体を追加</button>
+        <button class="btn-success" id="exportJsonBtn">media.json書き出し</button>
         <button class="btn-outline" id="exportBtn">CSVエクスポート</button>
         <button class="btn-outline" id="importBtn">CSVインポート</button>
         <input type="file" id="importFile" accept=".csv" style="display:none">
+        <div style="width:100%;font-size:12px;color:#888;margin-top:4px">💡 <b>media.json書き出し</b> → GitHubリポジトリのルートにコミットすると全ユーザーに反映されます</div>
       </div>
       <div id="mediaListContainer"></div>
     </div>
@@ -507,11 +513,25 @@ function csvToMedia(text) {
   });
 }
 
-function loadMedia() {
+async function loadMedia() {
+  // Try fetching shared media.json from GitHub Pages (enables admin updates for all users)
+  try {
+    const res = await fetch('./media.json', { cache: 'no-cache' });
+    if (res.ok) {
+      const data = await res.json();
+      if (Array.isArray(data) && data.length) {
+        saveMedia(data);
+        return data;
+      }
+    }
+  } catch(e) {}
+
+  // Fall back to localStorage
   const raw = localStorage.getItem(STORAGE_KEY);
   if (raw) {
     try { return JSON.parse(raw); } catch(e) {}
   }
+
   // First run: load defaults and save
   const defaults = csvToMedia($('defaultTemplates').textContent);
   saveMedia(defaults);
@@ -683,15 +703,25 @@ async function copyToClipboard() {
 
 // ========== Character Check ==========
 function checkDepChars() {
-  const allText = el.headerText.value + el.bodyText.value + el.footerText.value;
+  const allText = [el.headerText.value, el.bodyText.value, el.footerText.value]
+    .filter(t => t.trim()).join('\n\n');
   const found = DEPENDENT_CHARS.filter(c => allText.includes(c));
+  const preview = $('depCharPreview');
   el.charCheckResult.style.display = 'block';
   if (found.length > 0) {
     el.charCheckResult.className = 'char-check-result error';
     el.charCheckResult.textContent = '機種依存文字が見つかりました: ' + found.join(' ');
+    let html = escHtml(allText);
+    found.forEach(c => {
+      html = html.split(c).join(`<mark class="dep-char">${c}</mark>`);
+    });
+    preview.innerHTML = html;
+    preview.classList.add('show');
   } else {
     el.charCheckResult.className = 'char-check-result ok';
     el.charCheckResult.textContent = 'OK — 機種依存文字は見つかりませんでした';
+    preview.classList.remove('show');
+    preview.innerHTML = '';
   }
 }
 
@@ -1090,6 +1120,11 @@ function exportData() {
   toast('エクスポートしました');
 }
 
+function exportJson() {
+  downloadFile(JSON.stringify(mediaList, null, 2), 'media.json', 'application/json');
+  toast('media.json を書き出しました。GitHubリポジトリのルートにコミットしてください。');
+}
+
 function importData(file) {
   if (!file) return;
   const reader = new FileReader();
@@ -1307,8 +1342,8 @@ function copyBmLinkHref(e, a) {
 }
 
 // ========== Init ==========
-function init() {
-  mediaList = loadMedia();
+async function init() {
+  mediaList = await loadMedia();
   renderSelect();
   renderPresets();
 
@@ -1366,6 +1401,7 @@ function init() {
   // Admin
   attachDragHandlers();
   el.addMediaBtn.addEventListener('click', addNewMedia);
+  $('exportJsonBtn').addEventListener('click', exportJson);
   el.exportBtn.addEventListener('click', exportData);
   el.importBtn.addEventListener('click', () => el.importFile.click());
   el.importFile.addEventListener('change', e => { importData(e.target.files[0]); e.target.value = ''; });
