@@ -1,5 +1,5 @@
 {
-  "_version": 1779777032511,
+  "_version": 1779777044538,
   "items": [
     {
       "id": "01",
@@ -210,10 +210,10 @@
       "name": "新規媒体（Aで作成Aで編集）",
       "deliverySystem": "MM",
       "deliveryTime": "10:00",
-      "header": "",
-      "footer": "",
-      "segmentId": "",
-      "fromName": ""
+      "header": "りんご",
+      "footer": "りんご",
+      "segmentId": "りんご",
+      "fromName": "りんご"
     },
     {
       "id": "21",
