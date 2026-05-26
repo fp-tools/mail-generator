@@ -145,6 +145,15 @@ mark.dep-char{background:#fef08a;color:#b91c1c;font-weight:700;border-radius:2px
 .badge-gray{background:#f3f4f6;color:#6b7280}
 hr{border:none;border-top:1px solid #eee;margin:16px 0}
 
+/* ===== GitHub Sync ===== */
+.gh-sync-panel{background:#f0f9ff;border:1.5px solid #bae6fd;border-radius:10px;padding:14px 16px;margin-bottom:16px}
+.gh-sync-panel h3{font-size:13px;font-weight:700;color:#0369a1;margin-bottom:10px}
+.gh-token-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.gh-token-row input{flex:1;min-width:200px;font-family:monospace;font-size:12px}
+.gh-status{font-size:12px;margin-top:8px;padding:6px 10px;border-radius:6px;display:none}
+.gh-status.ok{background:#dcfce7;color:#15803d;display:block}
+.gh-status.err{background:#fee2e2;color:#b91c1c;display:block}
+
 /* ===== Admin Drag Reorder ===== */
 .drag-handle{cursor:grab;color:#bbb;padding:0 8px 0 0;user-select:none;font-size:18px;line-height:1;vertical-align:middle}
 .drag-handle:hover{color:#888}
@@ -327,13 +336,22 @@ hr{border:none;border-top:1px solid #eee;margin:16px 0}
       <button class="btn-secondary btn-sm" id="backToMainBtn">← メインへ戻る</button>
     </div>
     <div class="card-body">
+      <div class="gh-sync-panel">
+        <h3>GitHub 同期設定</h3>
+        <div class="gh-token-row">
+          <input type="password" id="ghTokenInput" placeholder="GitHub Personal Access Token (repo権限)" autocomplete="off">
+          <button class="btn-primary btn-sm" id="ghSaveTokenBtn">保存</button>
+          <button class="btn-secondary btn-sm" id="ghClearTokenBtn">クリア</button>
+          <button class="btn-success" id="ghSyncBtn">GitHubに同期</button>
+        </div>
+        <div id="ghStatus" class="gh-status"></div>
+      </div>
       <div class="admin-toolbar">
         <button class="btn-primary" id="addMediaBtn">+ 媒体を追加</button>
-        <button class="btn-success" id="exportJsonBtn">media.json書き出し</button>
+        <button class="btn-outline" id="exportJsonBtn">media.json書き出し</button>
         <button class="btn-outline" id="exportBtn">CSVエクスポート</button>
         <button class="btn-outline" id="importBtn">CSVインポート</button>
         <input type="file" id="importFile" accept=".csv" style="display:none">
-        <div style="width:100%;font-size:12px;color:#888;margin-top:4px">💡 <b>media.json書き出し</b> → GitHubリポジトリのルートにコミットすると全ユーザーに反映されます</div>
       </div>
       <div id="mediaListContainer"></div>
     </div>
@@ -411,6 +429,11 @@ id,sortOrder,columnName,name,deliveryTime,deliverySystem,segmentId,fromName,head
 const STORAGE_KEY = 'mailgen_media_v1';
 const PRESET_KEY = 'mailgen_presets_v1';
 const MEDIA_VERSION_KEY = 'mailgen_media_version_v1';
+const GITHUB_PAT_KEY = 'mailgen_github_pat';
+const GITHUB_OWNER = 'fp-tools';
+const GITHUB_REPO = 'mail-generator';
+const GITHUB_FILE = 'media.json';
+const GITHUB_BRANCH = 'master';
 const DATE_PATTERN = /\d{2}[0-9x]{2}\.(?:\d{2}|xx)\.(?:\d{2}|xx|〇{1,2})/g;
 const DEPENDENT_CHARS = [
   '①','②','③','④','⑤','⑥','⑦','⑧','⑨','⑩',
@@ -1129,6 +1152,80 @@ function exportData() {
   toast('エクスポートしました');
 }
 
+// ========== GitHub Sync ==========
+function ghStatus(msg, type) {
+  const el = $('ghStatus');
+  el.textContent = msg;
+  el.className = 'gh-status ' + type;
+}
+
+function saveGhToken() {
+  const val = $('ghTokenInput').value.trim();
+  if (!val) { ghStatus('トークンを入力してください', 'err'); return; }
+  localStorage.setItem(GITHUB_PAT_KEY, val);
+  $('ghTokenInput').value = '';
+  ghStatus('トークンを保存しました', 'ok');
+}
+
+function clearGhToken() {
+  localStorage.removeItem(GITHUB_PAT_KEY);
+  $('ghTokenInput').value = '';
+  ghStatus('トークンをクリアしました', 'ok');
+}
+
+async function syncToGitHub() {
+  const pat = localStorage.getItem(GITHUB_PAT_KEY);
+  if (!pat) { ghStatus('先にGitHub Personal Access Tokenを保存してください', 'err'); return; }
+
+  const btn = $('ghSyncBtn');
+  btn.disabled = true;
+  btn.textContent = '同期中…';
+  ghStatus('', '');
+
+  try {
+    const version = Date.now();
+    const payload = { _version: version, items: mediaList };
+    const jsonStr = JSON.stringify(payload, null, 2);
+    const encoded = btoa(unescape(encodeURIComponent(jsonStr)));
+
+    const apiBase = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_FILE}`;
+    const headers = {
+      'Authorization': `token ${pat}`,
+      'Accept': 'application/vnd.github.v3+json',
+      'Content-Type': 'application/json'
+    };
+
+    // 現在のファイルのSHAを取得
+    let sha;
+    const getRes = await fetch(apiBase, { headers });
+    if (getRes.ok) {
+      const fileData = await getRes.json();
+      sha = fileData.sha;
+    } else if (getRes.status !== 404) {
+      throw new Error(`取得エラー: ${getRes.status}`);
+    }
+
+    // ファイルを更新
+    const body = { message: `媒体データを更新 (${new Date().toLocaleString('ja-JP')})`, content: encoded, branch: GITHUB_BRANCH };
+    if (sha) body.sha = sha;
+
+    const putRes = await fetch(apiBase, { method: 'PUT', headers, body: JSON.stringify(body) });
+    if (!putRes.ok) {
+      const err = await putRes.json();
+      throw new Error(err.message || `更新エラー: ${putRes.status}`);
+    }
+
+    localStorage.setItem(MEDIA_VERSION_KEY, String(version));
+    ghStatus('同期しました。数分後に全ユーザーへ反映されます。', 'ok');
+    toast('GitHubに同期しました');
+  } catch(e) {
+    ghStatus('同期失敗: ' + e.message, 'err');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'GitHubに同期';
+  }
+}
+
 function exportJson() {
   const version = Date.now();
   const payload = { _version: version, items: mediaList };
@@ -1413,7 +1510,14 @@ async function init() {
   // Admin
   attachDragHandlers();
   el.addMediaBtn.addEventListener('click', addNewMedia);
+  $('ghSaveTokenBtn').addEventListener('click', saveGhToken);
+  $('ghClearTokenBtn').addEventListener('click', clearGhToken);
+  $('ghSyncBtn').addEventListener('click', syncToGitHub);
   $('exportJsonBtn').addEventListener('click', exportJson);
+  // トークン設定済みなら入力欄にマスク表示
+  if (localStorage.getItem(GITHUB_PAT_KEY)) {
+    $('ghTokenInput').placeholder = 'トークン設定済み（変更する場合は入力して保存）';
+  }
   el.exportBtn.addEventListener('click', exportData);
   el.importBtn.addEventListener('click', () => el.importFile.click());
   el.importFile.addEventListener('change', e => { importData(e.target.files[0]); e.target.value = ''; });
