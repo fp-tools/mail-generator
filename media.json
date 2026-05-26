@@ -1,5 +1,5 @@
 {
-  "_version": 1779772722530,
+  "_version": 1779774907078,
   "items": [
     {
       "id": "01",
@@ -197,6 +197,17 @@
       "id": "17",
       "sortOrder": 17,
       "name": "登録テスト",
+      "deliverySystem": "MM",
+      "deliveryTime": "10:00",
+      "header": "",
+      "footer": "",
+      "segmentId": "",
+      "fromName": ""
+    },
+    {
+      "id": "18",
+      "sortOrder": 18,
+      "name": "新規媒体",
       "deliverySystem": "MM",
       "deliveryTime": "10:00",
       "header": "",
