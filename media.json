@@ -1,5 +1,5 @@
 {
-  "_version": 1779774912078,
+  "_version": 1779774921202,
   "items": [
     {
       "id": "01",
@@ -218,7 +218,7 @@
     {
       "id": "19",
       "sortOrder": 19,
-      "name": "新規媒体（コピー）",
+      "name": "新規媒体（PC　Bから登録）",
       "deliverySystem": "MM",
       "deliveryTime": "10:00",
       "header": "",
