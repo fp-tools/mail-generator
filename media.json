@@ -1,5 +1,5 @@
 {
-  "_version": 1779775792010,
+  "_version": 1779776345257,
   "items": [
     {
       "id": "01",
@@ -247,6 +247,17 @@
       "footer": "いぬ",
       "segmentId": "いぬ",
       "fromName": "いぬ"
+    },
+    {
+      "id": "22",
+      "sortOrder": 22,
+      "name": "新規媒体（Bで作成）",
+      "deliverySystem": "MM",
+      "deliveryTime": "10:00",
+      "header": "",
+      "footer": "",
+      "segmentId": "",
+      "fromName": ""
     }
   ]
 }
