@@ -534,21 +534,20 @@ function csvToMedia(text) {
 
 async function loadMedia() {
   try {
-    const res = await fetch('./media.json?t=' + Date.now(), { cache: 'no-store' });
+    const apiUrl = `${WORKER_URL}/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_FILE}`;
+    const res = await fetch(apiUrl, {
+      headers: { 'Accept': 'application/vnd.github.v3+json' },
+      cache: 'no-store'
+    });
     if (res.ok) {
-      const payload = await res.json();
-      const remoteVersion = payload._version || 0;
+      const fileData = await res.json();
+      const jsonStr = decodeURIComponent(escape(atob(fileData.content.replace(/\n/g, ''))));
+      const payload = JSON.parse(jsonStr);
       const remoteItems = Array.isArray(payload) ? payload : (payload.items || []);
       if (Array.isArray(remoteItems) && remoteItems.length) {
-        const storedVersion = parseInt(localStorage.getItem(MEDIA_VERSION_KEY) || '0', 10);
-        const hasLocal = !!localStorage.getItem(STORAGE_KEY);
-        if (remoteVersion > storedVersion || !hasLocal) {
-          // 新バージョンがデプロイされた or 初回 → リモートを使用
-          saveMedia(remoteItems);
-          localStorage.setItem(MEDIA_VERSION_KEY, String(remoteVersion));
-          return remoteItems;
-        }
-        // バージョン同一 → ローカル編集を保持
+        saveMedia(remoteItems);
+        localStorage.setItem(MEDIA_VERSION_KEY, String(payload._version || 0));
+        return remoteItems;
       }
     }
   } catch(e) {}
