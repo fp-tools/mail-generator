@@ -1,5 +1,5 @@
 {
-  "_version": 1779777071605,
+  "_version": 1779777104216,
   "items": [
     {
       "id": "01",
@@ -251,7 +251,7 @@
     {
       "id": "25",
       "sortOrder": 22,
-      "name": "新規媒体（Bで編集してBで編集）（コピー）",
+      "name": "新規媒体（Bで編集してAで編集）",
       "deliverySystem": "MM",
       "deliveryTime": "10:00",
       "header": "りんご",
