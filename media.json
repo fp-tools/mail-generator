@@ -1,5 +1,5 @@
 {
-  "_version": 1779776652328,
+  "_version": 1779776849849,
   "items": [
     {
       "id": "01",
@@ -225,17 +225,6 @@
       "footer": "",
       "segmentId": "",
       "fromName": ""
-    },
-    {
-      "id": "20",
-      "sortOrder": 20,
-      "name": "新規媒体：編集反映（Ａから）",
-      "deliverySystem": "MM",
-      "deliveryTime": "10:00",
-      "header": "りんご",
-      "footer": "りんご",
-      "segmentId": "りんご",
-      "fromName": "りんご"
     },
     {
       "id": "21",
