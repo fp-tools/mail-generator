@@ -1,5 +1,5 @@
 {
-  "_version": 1779776948789,
+  "_version": 1779776958311,
   "items": [
     {
       "id": "01",
@@ -230,6 +230,17 @@
       "id": "21",
       "sortOrder": 20,
       "name": "新規媒体（Aで編集してBで確認）",
+      "deliverySystem": "MM",
+      "deliveryTime": "10:00",
+      "header": "いぬ",
+      "footer": "いぬ",
+      "segmentId": "いぬ",
+      "fromName": "いぬ"
+    },
+    {
+      "id": "24",
+      "sortOrder": 21,
+      "name": "新規媒体（Aで編集してBで確認）（コピー）",
       "deliverySystem": "MM",
       "deliveryTime": "10:00",
       "header": "いぬ",
