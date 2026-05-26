@@ -410,6 +410,7 @@ id,sortOrder,columnName,name,deliveryTime,deliverySystem,segmentId,fromName,head
 // ========== Constants ==========
 const STORAGE_KEY = 'mailgen_media_v1';
 const PRESET_KEY = 'mailgen_presets_v1';
+const MEDIA_VERSION_KEY = 'mailgen_media_version_v1';
 const DATE_PATTERN = /\d{2}[0-9x]{2}\.(?:\d{2}|xx)\.(?:\d{2}|xx|〇{1,2})/g;
 const DEPENDENT_CHARS = [
   '①','②','③','④','⑤','⑥','⑦','⑧','⑨','⑩',
@@ -513,25 +514,31 @@ function csvToMedia(text) {
 }
 
 async function loadMedia() {
-  // Try fetching shared media.json from GitHub Pages (enables admin updates for all users)
   try {
     const res = await fetch('./media.json', { cache: 'no-cache' });
     if (res.ok) {
-      const data = await res.json();
-      if (Array.isArray(data) && data.length) {
-        saveMedia(data);
-        return data;
+      const payload = await res.json();
+      const remoteVersion = payload._version || 0;
+      const remoteItems = Array.isArray(payload) ? payload : (payload.items || []);
+      if (Array.isArray(remoteItems) && remoteItems.length) {
+        const storedVersion = parseInt(localStorage.getItem(MEDIA_VERSION_KEY) || '0', 10);
+        const hasLocal = !!localStorage.getItem(STORAGE_KEY);
+        if (remoteVersion > storedVersion || !hasLocal) {
+          // 新バージョンがデプロイされた or 初回 → リモートを使用
+          saveMedia(remoteItems);
+          localStorage.setItem(MEDIA_VERSION_KEY, String(remoteVersion));
+          return remoteItems;
+        }
+        // バージョン同一 → ローカル編集を保持
       }
     }
   } catch(e) {}
 
-  // Fall back to localStorage
   const raw = localStorage.getItem(STORAGE_KEY);
   if (raw) {
     try { return JSON.parse(raw); } catch(e) {}
   }
 
-  // First run: load defaults and save
   const defaults = csvToMedia($('defaultTemplates').textContent);
   saveMedia(defaults);
   return defaults;
@@ -1050,7 +1057,7 @@ function saveMediaItem(oldId) {
 
   mediaList[idx] = { id: newId, sortOrder: sort, name, deliverySystem: ds, deliveryTime: `${hour}:${min}`, header, footer, segmentId, fromName };
   saveMedia(mediaList);
-  openEditId = newId;
+  openEditId = null;
   renderAdminList();
   renderSelect();
   toast('保存しました');
@@ -1123,7 +1130,10 @@ function exportData() {
 }
 
 function exportJson() {
-  downloadFile(JSON.stringify(mediaList, null, 2), 'media.json', 'application/json');
+  const version = Date.now();
+  const payload = { _version: version, items: mediaList };
+  downloadFile(JSON.stringify(payload, null, 2), 'media.json', 'application/json');
+  localStorage.setItem(MEDIA_VERSION_KEY, String(version));
   toast('media.json を書き出しました。GitHubリポジトリのルートにコミットしてください。');
 }
 
