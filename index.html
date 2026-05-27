@@ -1248,21 +1248,29 @@ function exportJson() {
   toast('media.json を書き出しました。GitHubリポジトリのルートにコミットしてください。');
 }
 
+function applyImport(text) {
+  const data = csvToMedia(text);
+  if (!data.length) throw new Error('データが見つかりません');
+  if (!confirm(`${data.length} 件のデータをインポートします。現在のデータは上書きされます。よろしいですか？`)) return;
+  saveMedia(data);
+  renderAdminList();
+  renderSelect();
+  toast(`${data.length} 件をインポートしました`);
+  autoSync();
+}
+
 function importData(file) {
   if (!file) return;
   const reader = new FileReader();
   reader.onload = e => {
-    try {
-      const data = csvToMedia(e.target.result);
-      if (!data.length) throw new Error('データが見つかりません');
-      if (!confirm(`${data.length} 件のデータをインポートします。現在のデータは上書きされます。よろしいですか？`)) return;
-      saveMedia(data);
-      renderAdminList();
-      renderSelect();
-      toast(`${data.length} 件をインポートしました`);
-      autoSync();
-    } catch(err) {
-      toast('インポートエラー: ' + err.message);
+    const text = e.target.result;
+    if (text.includes('�')) {
+      // UTF-8 で文字化け → Shift-JIS で再読み込み
+      const r2 = new FileReader();
+      r2.onload = e2 => { try { applyImport(e2.target.result); } catch(err) { toast('インポートエラー: ' + err.message); } };
+      r2.readAsText(file, 'shift_jis');
+    } else {
+      try { applyImport(text); } catch(err) { toast('インポートエラー: ' + err.message); }
     }
   };
   reader.readAsText(file, 'utf-8');
