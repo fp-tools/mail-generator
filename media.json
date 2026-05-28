@@ -1,5 +1,5 @@
 {
-  "_version": 1779953733715,
+  "_version": 1779953820221,
   "items": [
     {
       "id": "1",
@@ -64,14 +64,13 @@
     {
       "id": "6",
       "sortOrder": 6,
-      "columnName": "",
       "name": "アフィリ通信",
-      "deliveryTime": "18:00",
       "deliverySystem": "MM",
-      "segmentId": "アフィリ通信",
-      "fromName": "アフィリ通信",
+      "deliveryTime": "18:00",
       "header": "【PR】インフォトップ：アフィリ通信　［202x.xx.xx］\n\nこのメールは、インフォトップにご登録のある方に配信しております。\n\n▼配信停止のご希望はこちら\nhttps://www.infotop.jp/mailmagazine/stop.html?m=15&c=a&i=<<:SETTINGITEM_識別子:>>\n\n━━━━━━━━━━━━━━━━━━━━━━━━\n",
-      "footer": "--------------------------------------------------\n■配信停止をご希望の場合■\n--------------------------------------------------\n※「アフィリ通信」の配信停止をご希望の場合は、\n下記ページより「配信停止ボタン」をクリックください。\nhttps://www.infotop.jp/mailmagazine/stop.html?m=15&c=a&i=<<:SETTINGITEM_識別子:>>\n\n※"
+      "footer": "--------------------------------------------------\n■配信停止をご希望の場合■\n--------------------------------------------------\n※「アフィリ通信」の配信停止をご希望の場合は、\n下記ページより「配信停止ボタン」をクリックください。\nhttps://www.infotop.jp/mailmagazine/stop.html?m=15&c=a&i=<<:SETTINGITEM_識別子:>>\n\n※",
+      "segmentId": "アフィリ通信",
+      "fromName": "【infotop】アフィリ通信"
     },
     {
       "id": "7",
