@@ -114,6 +114,10 @@ mark.dep-char{background:#fef08a;color:#b91c1c;font-weight:700;border-radius:2px
 
 /* ===== Admin ===== */
 .admin-toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.admin-tabs{display:flex;gap:4px;margin-bottom:16px;border-bottom:2px solid #eee}
+.admin-tab{background:none;border:none;border-bottom:3px solid transparent;padding:8px 18px;font-size:14px;font-weight:600;color:#888;cursor:pointer;font-family:inherit;margin-bottom:-2px}
+.admin-tab.active{color:#4949FF;border-bottom-color:#4949FF}
+.admin-tab:hover{color:#4949FF}
 .media-item{border:1.5px solid #e5e7eb;border-radius:10px;overflow:hidden;margin-bottom:12px}
 .media-item-header{padding:12px 16px;background:#f9fafb;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none}
 .media-item-header:hover{background:#f0f0ff}
@@ -181,6 +185,35 @@ hr{border:none;border-top:1px solid #eee;margin:16px 0}
 .btn-mm{background:#fff3e0;color:#e65100;border:1.5px solid #ffb74d;border-radius:8px;font-size:12px;font-weight:600;padding:7px 14px;cursor:grab;transition:all .15s;text-decoration:none;display:inline-block;font-family:inherit;user-select:none}
 .btn-mm:hover{background:#ffe0b2;text-decoration:none;color:#e65100}
 .btn-mm:active{cursor:grabbing}
+/* 配信機セレクター */
+.delivery-select{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.delivery-select .ds-label{font-size:13px;font-weight:700;color:#333}
+.delivery-radio{display:inline-flex;align-items:center;gap:6px;font-size:14px;cursor:pointer;padding:6px 12px;border:1.5px solid #ddd;border-radius:8px;transition:all .15s}
+.delivery-radio input{cursor:pointer}
+.delivery-radio.active{border-color:#4949FF;background:#f5f5ff;color:#4949FF;font-weight:600}
+/* 配配メール action section */
+.hm-section{display:none;align-items:flex-start;gap:8px;flex-wrap:wrap;width:100%;border-top:1px solid #eee;padding-top:10px;margin-top:6px}
+.hm-section.show{display:flex}
+.hm-label{font-size:12px;color:#888;font-weight:600;width:100%}
+.hm-drag-hint{font-size:11px;color:#1b5e20;width:100%;padding:6px 12px;background:#e8f5e9;border-radius:6px;border:1px solid #a5d6a7;line-height:1.7}
+.btn-hm{background:#e8f5e9;color:#1b5e20;border:1.5px solid #66bb6a;border-radius:8px;font-size:12px;font-weight:600;padding:7px 14px;cursor:grab;transition:all .15s;text-decoration:none;display:inline-block;font-family:inherit;user-select:none}
+.btn-hm:hover{background:#c8e6c9;text-decoration:none;color:#1b5e20}
+.btn-hm:active{cursor:grabbing}
+/* クリック計測ビュー */
+.measure-token-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
+.measure-token-status{font-size:13px;font-weight:600;padding:3px 10px;border-radius:6px;background:#fdecea;color:#c0392b}
+.measure-token-status.ok{background:#e8f5e9;color:#1b5e20}
+.measure-hint{font-size:12px;color:#666;background:#f5f5ff;border:1px solid #d0d0ff;border-radius:6px;padding:8px 12px;line-height:1.6}
+.measure-field{margin-bottom:12px}
+.measure-field>label{display:block;font-size:13px;font-weight:600;color:#444;margin-bottom:4px}
+.measure-field input,.measure-field select{width:100%;box-sizing:border-box}
+.measure-status{font-size:13px;margin-top:8px;min-height:1em}
+.measure-status.ok{color:#1b5e20}
+.measure-status.err{color:#c0392b}
+.measure-table-wrap{overflow-x:auto}
+.measure-table-wrap table{border-collapse:collapse;width:100%;font-size:12px}
+.measure-table-wrap th,.measure-table-wrap td{border:1px solid #e0e0e0;padding:6px 8px;text-align:left;white-space:nowrap}
+.measure-table-wrap th{background:#f5f5f7;font-weight:700}
 </style>
 </head>
 <body>
@@ -189,6 +222,7 @@ hr{border:none;border-top:1px solid #eee;margin:16px 0}
   <h1>Mail Generator</h1>
   <div class="header-actions">
     <button class="btn-nav" id="compareBtn">比較</button>
+    <button class="btn-nav" id="measureBtn">クリック計測</button>
     <button class="btn-nav" id="adminBtn">管理画面</button>
   </div>
 </header>
@@ -196,6 +230,21 @@ hr{border:none;border-top:1px solid #eee;margin:16px 0}
 <!-- ========== MAIN VIEW ========== -->
 <div id="mainView" class="view active">
 <main>
+
+  <!-- 配信機選択 -->
+  <div class="card">
+    <div class="card-body">
+      <div class="delivery-select">
+        <span class="ds-label">配信機</span>
+        <label class="delivery-radio" id="dsRadioHaihai">
+          <input type="radio" name="deliverySystem" value="haihai">配配メール
+        </label>
+        <label class="delivery-radio" id="dsRadioMM">
+          <input type="radio" name="deliverySystem" value="MM" checked>メールマーケティング（MM）
+        </label>
+      </div>
+    </div>
+  </div>
 
   <!-- 媒体選択 -->
   <div class="card">
@@ -295,6 +344,19 @@ hr{border:none;border-top:1px solid #eee;margin:16px 0}
       </div>
       <div id="charCheckResult" class="char-check-result" style="margin-bottom:10px"></div>
       <div id="depCharPreview" class="dep-char-preview"></div>
+      <div id="hmTrackPanel" style="display:none;background:#e8f5e9;border:1.5px solid #a5d6a7;border-radius:10px;padding:14px;margin-bottom:12px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+          <span style="font-size:13px;font-weight:700;color:#1b5e20">クリック計測URLに変換（click-isadmcp）</span>
+          <button class="btn-secondary btn-sm" id="hmTrackCloseBtn">閉じる</button>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px">
+          <label style="font-size:13px;white-space:nowrap">テンプレート</label>
+          <select id="hmTrackTemplate" style="flex:1"><option value="">-- 読み込み中… --</option></select>
+        </div>
+        <div style="font-size:12px;color:#1b5e20;margin-bottom:10px">本文中のURLを検出し、選択したテンプレートでトラッキングURLに一括変換します。</div>
+        <button class="btn-primary btn-sm" id="hmTrackApplyBtn">本文のURLを一括変換</button>
+        <div id="hmTrackStatus" class="measure-status"></div>
+      </div>
       <textarea class="body-textarea" id="bodyText" placeholder="本文を入力してください"></textarea>
     </div>
   </div>
@@ -321,6 +383,13 @@ hr{border:none;border-top:1px solid #eee;margin:16px 0}
         <a class="btn-mm" id="bmHtmlLink" href="javascript:void(0)" draggable="true" onclick="copyBmLinkHref(event,this)">🌐 MM本文登録（HTML）</a>
         <a class="btn-mm" id="bmReserveLink" href="javascript:void(0)" draggable="true" onclick="copyBmLinkHref(event,this)">📅 配信予約セット</a>
       </div>
+      <div class="hm-section" id="hmSection">
+        <span class="hm-label">配配メール（グループ配信）</span>
+        <div class="hm-drag-hint">📌 ブックマークバーへドラッグして登録 → 配配メールの該当画面で使用<br>「本文登録」は<b>本文作成</b>画面、「配信予約セット」は<b>配信日時設定</b>画面で実行してください</div>
+        <a class="btn-hm" id="hmBodyLink" href="javascript:void(0)" draggable="true" onclick="copyBmLinkHref(event,this)">📝 本文登録（件名＋本文）</a>
+        <a class="btn-hm" id="hmReserveLink" href="javascript:void(0)" draggable="true" onclick="copyBmLinkHref(event,this)">📅 配信予約セット</a>
+        <button class="btn-hm" id="hmTrackBtn" type="button" style="cursor:pointer">🔗 クリック計測URLに変換</button>
+      </div>
     </div>
   </div>
 
@@ -344,10 +413,15 @@ hr{border:none;border-top:1px solid #eee;margin:16px 0}
       </div>
       <div class="admin-toolbar">
         <button class="btn-primary" id="addMediaBtn">+ 媒体を追加</button>
+        <button class="btn-outline" id="addHaihaiSeedBtn">＋配配メール初期媒体を追加</button>
         <button class="btn-outline" id="exportJsonBtn">media.json書き出し</button>
         <button class="btn-outline" id="exportBtn">CSVエクスポート</button>
         <button class="btn-outline" id="importBtn">CSVインポート</button>
         <input type="file" id="importFile" accept=".csv" style="display:none">
+      </div>
+      <div class="admin-tabs">
+        <button class="admin-tab" data-tab="haihai">配配メール</button>
+        <button class="admin-tab" data-tab="MM">メールマーケティング（MM）</button>
       </div>
       <div id="mediaListContainer"></div>
     </div>
@@ -395,6 +469,73 @@ hr{border:none;border-top:1px solid #eee;margin:16px 0}
 </main>
 </div><!-- /compareView -->
 
+<!-- ========== クリック計測 VIEW ========== -->
+<div id="measureView" class="view">
+<main>
+  <div class="card">
+    <div class="card-header">
+      <h2>クリック計測（click-isadmcp 連携）</h2>
+      <button class="btn-secondary btn-sm" id="backFromMeasureBtn">← メインへ戻る</button>
+    </div>
+    <div class="card-body">
+      <div class="measure-token-row">
+        <span id="isadmcpTokenStatus" class="measure-token-status">トークン未設定</span>
+        <label style="display:inline-flex;align-items:center;gap:5px;font-size:13px;cursor:pointer"><input type="checkbox" id="isadmcpMockChk"> デモ用モックモード（仮データ）</label>
+        <button class="btn-outline btn-sm" id="isadmcpSetTokenBtn">APIトークンを設定/変更</button>
+        <button class="btn-outline btn-sm" id="isadmcpClearTokenBtn">トークン削除</button>
+      </div>
+      <div class="measure-hint">元URLを click-isadmcp のトラッキングURLに変換します。配信機を使わない広告のクリック計測にも使えます。</div>
+    </div>
+  </div>
+
+  <!-- 単体URL変換 -->
+  <div class="card">
+    <div class="card-header"><h2>URLを変換</h2></div>
+    <div class="card-body">
+      <div class="measure-field">
+        <label>テンプレート</label>
+        <div style="display:flex;gap:8px;align-items:center">
+          <select id="isadmcpTemplate" style="flex:1"><option value="">-- 読み込み中… --</option></select>
+          <button class="btn-outline btn-sm" id="isadmcpReloadTplBtn">再読込</button>
+        </div>
+      </div>
+      <div class="measure-field">
+        <label for="isadmcpUrl">元URL</label>
+        <input type="text" id="isadmcpUrl" placeholder="https://example.com/lp">
+      </div>
+      <div class="measure-field">
+        <label for="isadmcpLabel">ラベル（任意・計測データの識別名）</label>
+        <input type="text" id="isadmcpLabel" placeholder="例: 6月号_LP">
+      </div>
+      <button class="btn-primary" id="isadmcpConvertBtn">変換する</button>
+      <div class="measure-field" style="margin-top:12px">
+        <label for="isadmcpResult">トラッキングURL</label>
+        <div style="display:flex;gap:8px">
+          <input type="text" id="isadmcpResult" readonly placeholder="ここに変換結果が表示されます" style="flex:1">
+          <button class="btn-secondary btn-sm" id="isadmcpCopyBtn">コピー</button>
+        </div>
+      </div>
+      <div id="isadmcpConvertStatus" class="measure-status"></div>
+    </div>
+  </div>
+
+  <!-- 計測データ & スプレッドシート同期 -->
+  <div class="card">
+    <div class="card-header"><h2>計測データ</h2></div>
+    <div class="card-body">
+      <div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;margin-bottom:10px">
+        <div class="measure-field" style="margin:0"><label>From</label><input type="date" id="isadmcpFrom"></div>
+        <div class="measure-field" style="margin:0"><label>To</label><input type="date" id="isadmcpTo"></div>
+        <button class="btn-primary btn-sm" id="isadmcpStatsBtn">計測データ取得</button>
+        <button class="btn-success btn-sm" id="isadmcpSheetBtn">スプレッドシートへ同期</button>
+      </div>
+      <div id="isadmcpStatsStatus" class="measure-status"></div>
+      <div id="isadmcpStatsTable" class="measure-table-wrap"></div>
+    </div>
+  </div>
+</main>
+</div><!-- /measureView -->
+
 <!-- Toast -->
 <div id="toast"></div>
 
@@ -425,6 +566,7 @@ id,sortOrder,columnName,name,deliveryTime,deliverySystem,segmentId,fromName,head
 const STORAGE_KEY = 'mailgen_media_v1';
 const PRESET_KEY = 'mailgen_presets_v1';
 const MEDIA_VERSION_KEY = 'mailgen_media_version_v1';
+const DELIVERY_SYSTEM_KEY = 'mailgen_delivery_system_v1';
 const WORKER_URL = 'https://mail-generator-proxy.hot-japan1989.workers.dev/github-api';
 const GITHUB_OWNER = 'fp-tools';
 const GITHUB_REPO = 'mail-generator';
@@ -445,6 +587,8 @@ const DEPENDENT_CHARS = [
 // ========== State ==========
 let mediaList = [];
 let currentMedia = null;
+let currentDeliverySystem = 'MM';
+let currentAdminTab = 'MM';
 let openEditId = null;
 let dragId = null;
 
@@ -608,6 +752,8 @@ function showView(name) {
   el.mainView.classList.toggle('active', name === 'main');
   el.adminView.classList.toggle('active', name === 'admin');
   el.compareView.classList.toggle('active', name === 'compare');
+  const mv = $('measureView');
+  if (mv) mv.classList.toggle('active', name === 'measure');
 }
 
 let toastTimer;
@@ -631,7 +777,10 @@ function escRegExp(s) {
 
 // ========== Render Media Select ==========
 function renderSelect() {
-  const sorted = [...mediaList].sort((a, b) => (a.sortOrder || 99) - (b.sortOrder || 99));
+  // 配信機（currentDeliverySystem）に一致する媒体だけを表示
+  const sorted = [...mediaList]
+    .filter(m => (m.deliverySystem || 'MM') === currentDeliverySystem)
+    .sort((a, b) => (a.sortOrder || 99) - (b.sortOrder || 99));
   el.mediaSelect.innerHTML = '<option value="">-- 媒体を選択してください --</option>';
   sorted.forEach(m => {
     const o = document.createElement('option');
@@ -1006,9 +1155,13 @@ function attachDragHandlers() {
 
 // ========== Admin Panel ==========
 function renderAdminList() {
-  const sorted = [...mediaList].sort((a,b) => (a.sortOrder||99)-(b.sortOrder||99));
+  // タブ（配信機）でフィルタ
+  document.querySelectorAll('.admin-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === currentAdminTab));
+  const sorted = [...mediaList]
+    .filter(m => (m.deliverySystem || 'MM') === currentAdminTab)
+    .sort((a,b) => (a.sortOrder||99)-(b.sortOrder||99));
   if (!sorted.length) {
-    el.mediaListContainer.innerHTML = '<div class="empty-state">媒体が登録されていません</div>';
+    el.mediaListContainer.innerHTML = '<div class="empty-state">この配信機の媒体は登録されていません</div>';
     return;
   }
   el.mediaListContainer.innerHTML = sorted.map(m => renderMediaItem(m)).join('');
@@ -1142,7 +1295,7 @@ function copyMediaItem(id) {
 
 function addNewMedia() {
   const id = getNextId(mediaList);
-  const newMedia = { id, sortOrder: mediaList.length + 1, name: '新規媒体', deliverySystem: 'MM', deliveryTime: '10:00', header: '', footer: '', segmentId: '', fromName: '' };
+  const newMedia = { id, sortOrder: mediaList.length + 1, name: '新規媒体', deliverySystem: currentAdminTab, deliveryTime: '10:00', header: '', footer: '', segmentId: '', fromName: '' };
   mediaList.push(newMedia);
   saveMedia(mediaList);
   openEditId = id;
@@ -1153,6 +1306,143 @@ function addNewMedia() {
     const el_ = document.getElementById(`media-item-${id}`);
     if (el_) el_.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, 100);
+}
+
+// ========== 配配メール初期媒体（テンプレート） ==========
+const HAIHAI_SEED_MEDIA = [
+  {
+    name: 'BIGBrother通信　土曜日',
+    fromName: 'BIGBrother通信',
+    deliveryTime: '10:00',
+    header: `　【PR】BIG Brother通信                      　　　  2026.xx.xx
+
+　　　  ●●●●●件名●●●●●
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+本メールはインフォトップにご登録頂いているユーザー様にお送りしています。
+※配信停止をご希望の場合は、下記ページよりお願いいたします。
+https://www.infotop.jp/mailmagazine/stop.html?m=5&c=all&i=##__prop_9__##
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+    footer: `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+　BIG Brother通信
+━━━━━━━━━━━━━━━━━━
+■配信の停止ご希望の場合■
+━━━━━━━━━━━━━━━━━━
+※配信停止をご希望の場合は、下記ページよりお願いいたします。
+https://www.infotop.jp/mailmagazine/stop.html?m=5&c=all&i=##__prop_9__##
+※配信停止反映までに、最大1週間かかることがございますので、ご了承ください。
+━━━━━━━━━━━━━━━━━━
+■商品についてのお問合せ方法■
+━━━━━━━━━━━━━━━━━━
+このメールマガジンに記載されている内容は広告主の提供でお届けしています。
+  本稿の文責・配信内容につきましては、商品よびオファーページに記載のある
+「特定商法に基づく表示」のお問合せ先にございますので直接ご連絡ください。
+━━━━━━━━━━━━━━━━━━
+■発行について■
+━━━━━━━━━━━━━━━━━━
+発行/インフォトップ
+運営会社/株式会社ファーストペンギン
+お問合せ/ http://contact.infotop.jp/
+〒162-0846　　東京都新宿区市谷左内町21番地 市谷左内坂ビル1階
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ Copyright (C)  infotop . All Rights Reserved.`
+  },
+  {
+    name: 'BIGBrother通信号外　水曜日',
+    fromName: 'BIGBrother通信',
+    deliveryTime: '10:00',
+    header: `　【PR】 BIG Brother通信　－号外－　   　　　　　　 2026.xx.xx
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+本メールはインフォトップにご登録頂いているユーザー様にお送りしています。
+※配信停止をご希望の場合は、下記ページよりお願いいたします。
+https://www.infotop.jp/mailmagazine/stop.html?m=5&c=all&i=##__prop_9__##
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+    footer: `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+　BIG Brother通信　－号外－
+━━━━━━━━━━━━━━━━━━
+■配信の停止ご希望の場合■
+━━━━━━━━━━━━━━━━━━
+※配信停止をご希望の場合は、下記ページよりお願いいたします。
+https://www.infotop.jp/mailmagazine/stop.html?m=5&c=all&i=##__prop_9__##
+※配信停止反映までに、最大1週間かかることがございますので、ご了承ください。
+━━━━━━━━━━━━━━━━━━
+■商品についてのお問合せ方法■
+━━━━━━━━━━━━━━━━━━
+このメールマガジンに記載されている内容は広告主の提供でお届けしています。
+  本稿の文責・配信内容につきましては、商品よびオファーページに記載のある
+「特定商法に基づく表示」のお問合せ先にございますので直接ご連絡ください。
+━━━━━━━━━━━━━━━━━━
+■発行について■
+━━━━━━━━━━━━━━━━━━
+発行/インフォトップ
+運営会社/株式会社ファーストペンギン
+お問合せ/ http://contact.infotop.jp/
+〒162-0846　　東京都新宿区市谷左内町21番地 市谷左内坂ビル1階
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ Copyright (C)  infotop . All Rights Reserved.`
+  },
+  {
+    name: '【実録】ニュース・アイ',
+    fromName: '【実録】ニュース・アイ',
+    deliveryTime: '10:00',
+    header: `【PR】【実録】ニュース・アイ　　　　　　 2026.xx.xx
+　　　  ●●●●●件名●●●●●
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+本メールはインフォトップにご登録頂いているユーザー様にお送りしています。
+※配信停止をご希望の場合は、下記ページよりお願いいたします。
+https://www.infotop.jp/mailmagazine/stop.html?m=4&c=all&i=##__prop_9__##
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+    footer: `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+　【実録】ニュース・アイ
+━━━━━━━━━━━━━━━━━━
+■配信の停止ご希望の場合■
+━━━━━━━━━━━━━━━━━━
+※配信停止をご希望の場合は、下記ページよりお願いいたします。
+https://www.infotop.jp/mailmagazine/stop.html?m=4&c=all&i=##__prop_9__##
+※配信停止反映までに、最大1週間かかることがございますので、ご了承ください。
+━━━━━━━━━━━━━━━━━━
+■商品についてのお問合せ方法■
+━━━━━━━━━━━━━━━━━━
+このメールマガジンに記載されている内容は広告主の提供でお届けしています。
+  本稿の文責・配信内容につきましては、商品よびオファーページに記載のある
+「特定商法に基づく表示」のお問合せ先にございますので直接ご連絡ください。
+━━━━━━━━━━━━━━━━━━
+■発行について■
+━━━━━━━━━━━━━━━━━━
+発行/インフォトップ
+運営会社/株式会社ファーストペンギン
+お問合せ/ http://contact.infotop.jp/
+〒162-0846　　東京都新宿区市谷左内町21番地 市谷左内坂ビル1階
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ Copyright (C)  infotop . All Rights Reserved.`
+  }
+];
+
+// 配配メール初期媒体をmediaListにマージ（既存は名前一致でスキップ）。MMデータは保持。
+function addHaihaiSeedMedia() {
+  let added = 0, skipped = 0;
+  HAIHAI_SEED_MEDIA.forEach(seed => {
+    const exists = mediaList.some(m => (m.deliverySystem || 'MM') === 'haihai' && (m.name || '').trim() === seed.name.trim());
+    if (exists) { skipped++; return; }
+    const haihaiCount = mediaList.filter(m => (m.deliverySystem || 'MM') === 'haihai').length;
+    mediaList.push({
+      id: getNextId(mediaList),
+      sortOrder: 101 + haihaiCount,
+      columnName: '',
+      name: seed.name,
+      deliveryTime: seed.deliveryTime || '10:00',
+      deliverySystem: 'haihai',
+      segmentId: '',
+      fromName: seed.fromName || seed.name,
+      header: seed.header,
+      footer: seed.footer
+    });
+    added++;
+  });
+  saveMedia(mediaList);
+  currentAdminTab = 'haihai';
+  renderAdminList();
+  renderSelect();
+  toast(`配配メール媒体を ${added} 件追加${skipped ? `（${skipped}件は既存のためスキップ）` : ''}しました。確認後「GitHubに同期」で反映してください。`);
 }
 
 // ========== Import / Export ==========
@@ -1297,7 +1587,36 @@ function isMMMedia(m) {
 }
 
 function updateMmSection() {
-  $('mmSection').classList.toggle('show', isMMMedia(currentMedia));
+  const hasMedia = !!currentMedia;
+  $('mmSection').classList.toggle('show', currentDeliverySystem === 'MM' && hasMedia);
+  $('hmSection').classList.toggle('show', currentDeliverySystem === 'haihai' && hasMedia);
+}
+
+// 配信機ラジオの初期化・切替
+function setupDeliveryRadio() {
+  const radios = document.querySelectorAll('input[name="deliverySystem"]');
+  radios.forEach(r => {
+    r.checked = (r.value === currentDeliverySystem);
+    const wrap = r.closest('.delivery-radio');
+    if (wrap) wrap.classList.toggle('active', r.checked);
+    r.addEventListener('change', () => {
+      if (!r.checked) return;
+      currentDeliverySystem = r.value;
+      try { localStorage.setItem(DELIVERY_SYSTEM_KEY, currentDeliverySystem); } catch (e) {}
+      document.querySelectorAll('.delivery-radio').forEach(l => l.classList.remove('active'));
+      if (wrap) wrap.classList.add('active');
+      // 配信機を切り替えたら媒体選択をリセットし、対応する媒体だけ表示
+      currentMedia = null;
+      renderSelect();
+      el.mediaSelect.value = '';
+      el.headerCard.style.display = 'none';
+      el.footerCard.style.display = 'none';
+      el.headerText.value = '';
+      el.footerText.value = '';
+      updateMmSection();
+      updateBmLinks();
+    });
+  });
 }
 
 function extractSubject() {
@@ -1453,13 +1772,283 @@ function generateBmReserve() {
 }
 
 function updateBmLinks() {
-  if (!isMMMedia(currentMedia)) return;
-  const a1 = $('bmTextLink');
-  const a2 = $('bmHtmlLink');
-  const a3 = $('bmReserveLink');
-  if (a1) a1.href = generateBmText();
-  if (a2) a2.href = generateBmHtml();
-  if (a3) a3.href = generateBmReserve();
+  if (!currentMedia) return;
+  if (currentDeliverySystem === 'MM') {
+    const a1 = $('bmTextLink');
+    const a2 = $('bmHtmlLink');
+    const a3 = $('bmReserveLink');
+    if (a1) a1.href = generateBmText();
+    if (a2) a2.href = generateBmHtml();
+    if (a3) a3.href = generateBmReserve();
+  } else if (currentDeliverySystem === 'haihai') {
+    const h1 = $('hmBodyLink');
+    const h2 = $('hmReserveLink');
+    if (h1) h1.href = generateHmBody();
+    if (h2) h2.href = generateHmReserve();
+  }
+}
+
+// ========== 配配メール（HaiHai Mail）ブックマークレット ==========
+// 本文作成画面（StartEditGroupMail）: #subject / #body / #fromid に自動入力
+// ヘッダー/フッター（テンプレート）はジェネレーター側で配信機ごとに管理し、本文と連結して差し込む
+function generateHmBody() {
+  const s = extractSubject();
+  const b = getFullText();
+  const fromName = currentMedia ? (currentMedia.fromName || currentMedia.name || '') : '';
+  const code = [
+    `var s=${JSON.stringify(s)},b=${JSON.stringify(b)},fn=${JSON.stringify(fromName)};`,
+    `var subj=document.getElementById('subject');`,
+    `if(!subj){alert('配配メールの本文作成画面で実行してください。');return;}`,
+    `subj.value=s;`,
+    `var body=document.getElementById('body');if(body)body.value=b;`,
+    `var fid=document.getElementById('fromid');`,
+    `if(fid&&fn){Array.prototype.forEach.call(fid.options,function(o){if(o.text.trim()===fn.trim()||(fn&&o.text.indexOf(fn)>-1)){fid.value=o.value;}});}`,
+    `alert('件名・本文を入力しました。差出人と内容を確認して進めてください。');`
+  ].join('');
+  return `javascript:(function(){${code}})();`;
+}
+
+// 配信日時設定画面: 予約配信を選択し #bYear/#bMon/#bDay/#bHour/#bMin を設定（分は10分刻み）
+function generateHmReserve() {
+  const d = el.dateInput.value.trim();
+  const delivTime = currentMedia ? (currentMedia.deliveryTime || '10:00') : '10:00';
+  const [hourStr, minStr] = delivTime.split(':');
+  const hour = parseInt(hourStr, 10) || 0;
+  let min = parseInt(minStr, 10) || 0;
+  min = Math.round(min / 10) * 10;
+  if (min >= 60) min = 50;
+  const year = d.length === 8 ? d.slice(0, 4) : '';
+  const mon = d.length === 8 ? String(parseInt(d.slice(4, 6), 10)) : '';
+  const day = d.length === 8 ? String(parseInt(d.slice(6, 8), 10)) : '';
+  const code = [
+    `var y=${JSON.stringify(year)},mo=${JSON.stringify(mon)},da=${JSON.stringify(day)},h=${JSON.stringify(String(hour))},mi=${JSON.stringify(String(min))};`,
+    `var by=document.getElementById('bYear');`,
+    `if(!by){alert('配配メールの配信日時設定画面で実行してください。');return;}`,
+    `var sch=document.getElementById('btypeSchedule');if(sch)sch.click();`,
+    `var set=function(id,v){var e=document.getElementById(id);if(e&&v!==''){e.value=v;try{e.dispatchEvent(new Event('change'));}catch(ex){}}};`,
+    `set('bYear',y);set('bMon',mo);set('bDay',da);set('bHour',h);set('bMin',mi);`,
+    `alert('配信日時を設定しました（予約配信）。内容を確認してください。');`
+  ].join('');
+  return `javascript:(function(){${code}})();`;
+}
+
+// ========== click-isadmcp 連携（クリック計測） ==========
+// ベースURL・エンドポイントは引き継ぎ書§2の /api/v1 契約に準拠（変更時はここだけ直す）
+const ISADMCP_API_BASE = 'https://click-isadmcp.com/api/v1';
+const ISADMCP_TOKEN_KEY = 'isadmcp_token';
+const ISADMCP_MOCK_KEY = 'isadmcp_mock';
+
+// ===== モック（デモ）モード: A側API未稼働でもUI/UX検証できるよう仮データで動かす =====
+// 既定はON。チェックを外すと本番APIへ。
+function isadmcpMockEnabled() {
+  try { return (localStorage.getItem(ISADMCP_MOCK_KEY) || 'on') !== 'off'; } catch (e) { return true; }
+}
+function isadmcpMockLinks() {
+  try { return JSON.parse(localStorage.getItem('isadmcp_mock_links') || '[]'); } catch (e) { return []; }
+}
+function isadmcpSaveMockLinks(a) {
+  try { localStorage.setItem('isadmcp_mock_links', JSON.stringify(a)); } catch (e) {}
+}
+function isadmcpMockHash(s) { let h = 0; for (let i = 0; i < s.length; i++) { h = (h * 31 + s.charCodeAt(i)) >>> 0; } return h; }
+function isadmcpMockCode(s) { return ('00000000' + isadmcpMockHash(s).toString(36)).slice(-8); }
+
+async function isadmcpMockApi(path, options = {}) {
+  await new Promise(r => setTimeout(r, 300)); // 疑似ネットワーク遅延
+  const method = (options.method || 'GET').toUpperCase();
+  let body = {}; try { body = options.body ? JSON.parse(options.body) : {}; } catch (e) {}
+  if (path === '/templates') {
+    return { templates: [
+      { id: '1', name: '通常配信テンプレート', description: 'メルマガ標準', sendNumber: 1001 },
+      { id: '2', name: '号外テンプレート', description: '号外用', sendNumber: 1002 },
+      { id: '3', name: '広告A 計測用（非配信機）', description: '配信機を使わない広告', sendNumber: 2001 }
+    ] };
+  }
+  if (path === '/links' && method === 'POST') {
+    const url = body.originalUrl || '';
+    const tracking = 'https://trk-demo.example.jp/' + isadmcpMockCode(url);
+    const links = isadmcpMockLinks();
+    let rec = links.find(l => l.originalUrl === url);
+    if (!rec) {
+      rec = { id: String(links.length + 1), label: body.label || '', trackingUrl: tracking, originalUrl: url,
+        clicks: isadmcpMockHash(url) % 500, uniqueClicks: isadmcpMockHash(url) % 300,
+        lastClickedAt: '2026-06-15 ' + String(9 + isadmcpMockHash(url) % 9) + ':' + ('0' + (isadmcpMockHash(url) % 60)).slice(-2) };
+      links.push(rec); isadmcpSaveMockLinks(links);
+    } else if (body.label) { rec.label = body.label; isadmcpSaveMockLinks(links); }
+    return { id: rec.id, trackingUrl: rec.trackingUrl, originalUrl: url, templateId: body.templateId, label: rec.label };
+  }
+  if (path.indexOf('/stats') === 0) {
+    let items = isadmcpMockLinks();
+    if (!items.length) {
+      items = [
+        { id: '1', label: '6月号_LP', trackingUrl: 'https://trk-demo.example.jp/a1b2c3d4', originalUrl: 'https://example.com/lp', clicks: 312, uniqueClicks: 201, lastClickedAt: '2026-06-15 18:42' },
+        { id: '2', label: '広告A', trackingUrl: 'https://trk-demo.example.jp/9f8e7d6c', originalUrl: 'https://example.com/ad', clicks: 88, uniqueClicks: 65, lastClickedAt: '2026-06-15 12:10' }
+      ];
+    }
+    return { items };
+  }
+  if (path === '/sheets/sync' && method === 'POST') {
+    const n = isadmcpMockLinks().length || 2;
+    return { status: 'ok', updatedRows: n, spreadsheetUrl: 'https://docs.google.com/spreadsheets/d/DEMO_MOCK_SHEET/edit' };
+  }
+  return {};
+}
+
+function getIsadmcpToken(promptIfMissing) {
+  let t = '';
+  try { t = localStorage.getItem(ISADMCP_TOKEN_KEY) || ''; } catch (e) {}
+  if (!t && promptIfMissing) {
+    t = (window.prompt('click-isadmcp のAPIトークンを入力してください（初回のみ・この端末のlocalStorageに保存されます）') || '').trim();
+    if (t) { try { localStorage.setItem(ISADMCP_TOKEN_KEY, t); } catch (e) {} }
+  }
+  return t;
+}
+
+function setIsadmcpToken() {
+  let cur = ''; try { cur = localStorage.getItem(ISADMCP_TOKEN_KEY) || ''; } catch (e) {}
+  const t = (window.prompt('click-isadmcp のAPIトークンを入力してください', cur) || '').trim();
+  if (t) { try { localStorage.setItem(ISADMCP_TOKEN_KEY, t); } catch (e) {} toast('トークンを保存しました'); }
+  updateIsadmcpTokenStatus();
+}
+
+function clearIsadmcpToken() {
+  try { localStorage.removeItem(ISADMCP_TOKEN_KEY); } catch (e) {}
+  toast('トークンを削除しました');
+  updateIsadmcpTokenStatus();
+}
+
+function updateIsadmcpTokenStatus() {
+  const elx = $('isadmcpTokenStatus'); if (!elx) return;
+  const chk = $('isadmcpMockChk'); if (chk) chk.checked = isadmcpMockEnabled();
+  if (isadmcpMockEnabled()) { elx.textContent = 'モックモード（仮データで動作中）'; elx.classList.add('ok'); return; }
+  let t = ''; try { t = localStorage.getItem(ISADMCP_TOKEN_KEY) || ''; } catch (e) {}
+  if (t) { elx.textContent = 'トークン設定済み'; elx.classList.add('ok'); }
+  else { elx.textContent = 'トークン未設定'; elx.classList.remove('ok'); }
+}
+
+async function isadmcpApi(path, options = {}) {
+  if (isadmcpMockEnabled()) return isadmcpMockApi(path, options);
+  const token = getIsadmcpToken(true);
+  if (!token) throw new Error('APIトークンが未設定です');
+  const res = await fetch(ISADMCP_API_BASE + path, {
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + token,
+      ...(options.headers || {})
+    }
+  });
+  if (!res.ok) {
+    let msg = 'APIエラー ' + res.status;
+    try { const err = await res.json(); msg = (err && err.error && err.error.message) || err.message || msg; } catch (e) {}
+    if (res.status === 401) msg = '認証エラー（401）：トークンを確認してください';
+    throw new Error(msg);
+  }
+  return res.json();
+}
+
+async function loadIsadmcpTemplates(selectEl) {
+  if (!selectEl) return;
+  selectEl.innerHTML = '<option value="">-- 読み込み中… --</option>';
+  try {
+    const { templates } = await isadmcpApi('/templates');
+    if (!templates || !templates.length) { selectEl.innerHTML = '<option value="">（テンプレートなし）</option>'; return; }
+    selectEl.innerHTML = templates.map(t => `<option value="${escHtml(String(t.id))}">${escHtml(t.name || ('#' + t.id))}</option>`).join('');
+  } catch (e) {
+    selectEl.innerHTML = '<option value="">読み込み失敗</option>';
+    toast('テンプレ取得失敗: ' + e.message, 4000);
+  }
+}
+
+async function isadmcpConvertOne(originalUrl, templateId, label) {
+  const body = { originalUrl, templateId };
+  if (label) body.label = label;
+  const data = await isadmcpApi('/links', { method: 'POST', body: JSON.stringify(body) });
+  return data.trackingUrl || (data.link && data.link.trackingUrl) || '';
+}
+
+// 単体URL変換（クリック計測ビュー／配信機を使わない広告計測）
+async function isadmcpConvertSingle() {
+  const url = $('isadmcpUrl').value.trim();
+  const tpl = $('isadmcpTemplate').value;
+  const label = $('isadmcpLabel').value.trim();
+  const st = $('isadmcpConvertStatus');
+  st.className = 'measure-status'; st.textContent = '';
+  if (!url) { st.className = 'measure-status err'; st.textContent = '元URLを入力してください'; return; }
+  if (!tpl) { st.className = 'measure-status err'; st.textContent = 'テンプレートを選択してください'; return; }
+  st.textContent = '変換中…';
+  try {
+    const tracking = await isadmcpConvertOne(url, tpl, label);
+    $('isadmcpResult').value = tracking;
+    st.className = 'measure-status ok'; st.textContent = '変換しました';
+  } catch (e) {
+    st.className = 'measure-status err'; st.textContent = '変換失敗: ' + e.message;
+  }
+}
+
+async function isadmcpLoadStats() {
+  const st = $('isadmcpStatsStatus');
+  const wrap = $('isadmcpStatsTable');
+  st.className = 'measure-status'; st.textContent = '取得中…'; wrap.innerHTML = '';
+  const from = $('isadmcpFrom').value, to = $('isadmcpTo').value;
+  const qs = [];
+  if (from) qs.push('from=' + encodeURIComponent(from));
+  if (to) qs.push('to=' + encodeURIComponent(to));
+  try {
+    const data = await isadmcpApi('/stats' + (qs.length ? ('?' + qs.join('&')) : ''));
+    const items = data.items || [];
+    if (!items.length) { st.textContent = 'データがありません'; return; }
+    const rows = items.map(it => `<tr><td>${escHtml(String(it.id || ''))}</td><td>${escHtml(it.label || '')}</td><td>${escHtml(it.trackingUrl || '')}</td><td>${escHtml(String(it.clicks != null ? it.clicks : ''))}</td><td>${escHtml(String(it.uniqueClicks != null ? it.uniqueClicks : ''))}</td><td>${escHtml(it.lastClickedAt || it.lastClick || '')}</td></tr>`).join('');
+    wrap.innerHTML = `<table><thead><tr><th>ID</th><th>ラベル</th><th>トラッキングURL</th><th>クリック</th><th>ユニーク</th><th>最終クリック</th></tr></thead><tbody>${rows}</tbody></table>`;
+    st.className = 'measure-status ok'; st.textContent = items.length + ' 件';
+  } catch (e) {
+    st.className = 'measure-status err'; st.textContent = '取得失敗: ' + e.message;
+  }
+}
+
+async function isadmcpSyncSheet() {
+  const st = $('isadmcpStatsStatus');
+  st.className = 'measure-status'; st.textContent = '同期中…';
+  const from = $('isadmcpFrom').value, to = $('isadmcpTo').value;
+  const body = {};
+  if (from) body.from = from;
+  if (to) body.to = to;
+  try {
+    const r = await isadmcpApi('/sheets/sync', { method: 'POST', body: JSON.stringify(body) });
+    st.className = 'measure-status ok';
+    st.textContent = `同期完了: ${r.updatedRows != null ? r.updatedRows : '?'}件更新`;
+    if (r.spreadsheetUrl) st.innerHTML += ` <a href="${escHtml(r.spreadsheetUrl)}" target="_blank" rel="noopener">シートを開く</a>`;
+  } catch (e) {
+    st.className = 'measure-status err'; st.textContent = '同期失敗: ' + e.message;
+  }
+}
+
+// 配配メール本文のURLを一括でトラッキングURLに変換
+async function hmTrackApply() {
+  const tpl = $('hmTrackTemplate').value;
+  const st = $('hmTrackStatus');
+  st.className = 'measure-status'; st.textContent = '';
+  if (!tpl) { st.className = 'measure-status err'; st.textContent = 'テンプレートを選択してください'; return; }
+  // 長いURLから置換（短いURLが他URLの部分文字列になるケースを回避）
+  const urls = scanBareUrls(el.bodyText.value).sort((a, b) => b.length - a.length);
+  if (!urls.length) { st.className = 'measure-status err'; st.textContent = '本文に変換対象のURLが見つかりません'; return; }
+  let text = el.bodyText.value;
+  let done = 0, failed = 0;
+  st.textContent = `0/${urls.length} 変換中…`;
+  for (const url of urls) {
+    try {
+      const tracking = await isadmcpConvertOne(url, tpl);
+      if (tracking) {
+        const escaped = url.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        text = text.replace(new RegExp(escaped, 'g'), () => tracking);
+      } else { failed++; }
+    } catch (e) { failed++; }
+    done++;
+    st.textContent = `${done}/${urls.length} 変換中…`;
+  }
+  el.bodyText.value = text;
+  updateBmLinks();
+  st.className = failed ? 'measure-status err' : 'measure-status ok';
+  st.textContent = `完了: ${done - failed}/${urls.length} 件変換` + (failed ? `（${failed}件失敗）` : '');
 }
 
 function copyBmLinkHref(e, a) {
@@ -1476,18 +2065,66 @@ function copyBmLinkHref(e, a) {
 // ========== Init ==========
 async function init() {
   mediaList = await loadMedia();
+
+  // 配信機ラジオ（localStorageに最後の選択を保存）— renderSelectの前に確定させる
+  try { currentDeliverySystem = localStorage.getItem(DELIVERY_SYSTEM_KEY) || 'MM'; } catch (e) { currentDeliverySystem = 'MM'; }
+  setupDeliveryRadio();
+
   renderSelect();
   renderPresets();
 
   // View switching
   el.adminBtn.addEventListener('click', () => {
     showView('admin');
+    currentAdminTab = currentDeliverySystem;
     renderAdminList();
+  });
+
+  // 媒体管理タブ（配配メール / MM）
+  document.querySelectorAll('.admin-tab').forEach(t => {
+    t.addEventListener('click', () => {
+      currentAdminTab = t.dataset.tab;
+      renderAdminList();
+    });
   });
   el.backToMainBtn.addEventListener('click', () => showView('main'));
   el.compareBtn.addEventListener('click', () => showView('compare'));
   el.backFromCompareBtn.addEventListener('click', () => showView('main'));
   el.runCompareBtn.addEventListener('click', runCompare);
+
+  // クリック計測ビュー
+  $('measureBtn').addEventListener('click', () => {
+    showView('measure');
+    updateIsadmcpTokenStatus();
+    loadIsadmcpTemplates($('isadmcpTemplate'));
+  });
+  $('backFromMeasureBtn').addEventListener('click', () => showView('main'));
+  $('isadmcpMockChk').addEventListener('change', (e) => {
+    try { localStorage.setItem(ISADMCP_MOCK_KEY, e.target.checked ? 'on' : 'off'); } catch (_) {}
+    updateIsadmcpTokenStatus();
+    loadIsadmcpTemplates($('isadmcpTemplate'));
+  });
+  $('isadmcpSetTokenBtn').addEventListener('click', setIsadmcpToken);
+  $('isadmcpClearTokenBtn').addEventListener('click', clearIsadmcpToken);
+  $('isadmcpReloadTplBtn').addEventListener('click', () => loadIsadmcpTemplates($('isadmcpTemplate')));
+  $('isadmcpConvertBtn').addEventListener('click', isadmcpConvertSingle);
+  $('isadmcpCopyBtn').addEventListener('click', () => {
+    const v = $('isadmcpResult').value;
+    if (!v) { toast('変換結果がありません'); return; }
+    navigator.clipboard.writeText(v).then(() => toast('コピーしました')).catch(() => toast('コピーに失敗しました'));
+  });
+  $('isadmcpStatsBtn').addEventListener('click', isadmcpLoadStats);
+  $('isadmcpSheetBtn').addEventListener('click', isadmcpSyncSheet);
+
+  // 配配メール本文のクリック計測変換
+  $('hmTrackBtn').addEventListener('click', () => {
+    const panel = $('hmTrackPanel');
+    const show = panel.style.display === 'none' || !panel.style.display;
+    panel.style.display = show ? 'block' : 'none';
+    if (show) { loadIsadmcpTemplates($('hmTrackTemplate')); panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+  });
+  $('hmTrackCloseBtn').addEventListener('click', () => { $('hmTrackPanel').style.display = 'none'; });
+  $('hmTrackApplyBtn').addEventListener('click', hmTrackApply);
 
   // Media select
   el.mediaSelect.addEventListener('change', handleMediaChange);
@@ -1533,6 +2170,7 @@ async function init() {
   // Admin
   attachDragHandlers();
   el.addMediaBtn.addEventListener('click', addNewMedia);
+  $('addHaihaiSeedBtn').addEventListener('click', addHaihaiSeedMedia);
   $('ghSyncBtn').addEventListener('click', syncToGitHub);
   $('exportJsonBtn').addEventListener('click', exportJson);
   el.exportBtn.addEventListener('click', exportData);
