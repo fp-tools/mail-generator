@@ -1,5 +1,5 @@
 {
-  "_version": 1790847336836,
+  "_version": 1790847338665,
   "items": [
     {
       "id": "1",
@@ -164,7 +164,7 @@
     },
     {
       "id": "37",
-      "sortOrder": 16,
+      "sortOrder": 15,
       "name": "★ナレッジ出版JV★【特別提供】最速×着実ネット収入講座｜infotop",
       "deliverySystem": "MM",
       "deliveryTime": "17:00",
@@ -175,7 +175,7 @@
     },
     {
       "id": "23",
-      "sortOrder": 18,
+      "sortOrder": 16,
       "name": "マネー",
       "deliverySystem": "MM",
       "deliveryTime": "20:00",
@@ -186,7 +186,7 @@
     },
     {
       "id": "24",
-      "sortOrder": 19,
+      "sortOrder": 17,
       "name": "ビジネス",
       "deliverySystem": "MM",
       "deliveryTime": "20:00",
@@ -197,7 +197,7 @@
     },
     {
       "id": "25",
-      "sortOrder": 20,
+      "sortOrder": 18,
       "name": "infotopカテゴリ-A　マネー通信",
       "deliverySystem": "MM",
       "deliveryTime": "10:00",
@@ -208,7 +208,7 @@
     },
     {
       "id": "26",
-      "sortOrder": 21,
+      "sortOrder": 19,
       "name": "infotopカテゴリ-A　ビジネス通信",
       "deliverySystem": "MM",
       "deliveryTime": "10:00",
@@ -219,7 +219,7 @@
     },
     {
       "id": "16",
-      "sortOrder": 22,
+      "sortOrder": 20,
       "columnName": "",
       "name": "インフォトップ通信号外（hikidashi）",
       "deliveryTime": "12:00",
@@ -231,7 +231,7 @@
     },
     {
       "id": "15",
-      "sortOrder": 23,
+      "sortOrder": 21,
       "columnName": "",
       "name": "売れ筋商品ランキング",
       "deliveryTime": "19:00",
@@ -243,7 +243,7 @@
     },
     {
       "id": "17",
-      "sortOrder": 24,
+      "sortOrder": 22,
       "columnName": "",
       "name": "新規媒体（Aで作成）",
       "deliveryTime": "10:00",
@@ -255,7 +255,7 @@
     },
     {
       "id": "18",
-      "sortOrder": 25,
+      "sortOrder": 23,
       "columnName": "",
       "name": "新規媒体（Aで作成Aで編集）",
       "deliveryTime": "10:00",
@@ -267,7 +267,7 @@
     },
     {
       "id": "19",
-      "sortOrder": 26,
+      "sortOrder": 24,
       "columnName": "",
       "name": "新規媒体（Aで編集してBで確認）",
       "deliveryTime": "10:00",
@@ -279,7 +279,7 @@
     },
     {
       "id": "20",
-      "sortOrder": 27,
+      "sortOrder": 25,
       "columnName": "",
       "name": "新規媒体（Bで作成）",
       "deliveryTime": "10:00",
@@ -291,7 +291,7 @@
     },
     {
       "id": "21",
-      "sortOrder": 28,
+      "sortOrder": 26,
       "columnName": "",
       "name": "新規媒体（Bで作成してBで編集）",
       "deliveryTime": "10:00",
@@ -302,8 +302,19 @@
       "footer": "りんご　ごりら"
     },
     {
+      "id": "46",
+      "sortOrder": 27,
+      "name": "★スキルドJV★【本業しながらスマホ1台で】01ショート動画副業｜infotop",
+      "deliverySystem": "MM",
+      "deliveryTime": "20:00",
+      "header": "【PR】\n\n※本メールはインフォトップにご登録頂いているユーザーにお送りしています。\n\n▼配信停止のご希望はこちら\nhttps://www.infotop.jp/mailmagazine/stop.html?m=211&c=u&i=<<:SETTINGITEM_識別子:>>",
+      "footer": "※このメールマガジンに記載されている内容は広告主の提供でお届けしています。\n本稿の文責・配信内容につきましては、外部サイトに記載された\n「特定商取引法に基づく表示」の広告主に直接お問合せください。\n\n※今回の配信につきましては利益や効果を保証するものではございません。\n内容等をよくご理解した上でお申込みいただく必要がございます。\n予めご了承ください。\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━\n■配信停止をご希望の場合■\n----------------------------------------------------\n※インフォトップからのメールの配信停止をご希望の場合は、\n下記ページより「配信停止ボタン」をクリックください。\nhttps://www.infotop.jp/mailmagazine/stop.html?m=211&c=u&i=<<:SETTINGITEM_識別子:>>\n\n※ご申請から配信停止の反映までに24時間程お時間が掛かる場合が\nございますのでご了承ください。\n\n----------------------------------------------------\n■発行について■\n----------------------------------------------------\n・インフォトップにご登録頂きました会員様でＤＭの配信を受け取る設定と\nなっているお客様にお届けしております。\n\n発行/インフォトップ<http://www.infotop.jp/>\n運営会社/株式会社ファーストペンギン　　\nお問合せ/  https://www.infotop.jp/html/support/user/\n〒162-0846 東京都新宿区市谷左内町21番地 市谷左内坂ビル1階\n━━━━━━━━━━━━━━━━━━━━━━━━━━\nCopyright (C)  infotop . All Rights Reserved.",
+      "segmentId": "【本業しながらスマホ1台で】01ショート動画副業｜infotop",
+      "fromName": "【本業しながらスマホ1台で】01ショート動画副業｜infotop"
+    },
+    {
       "id": "22",
-      "sortOrder": 29,
+      "sortOrder": 28,
       "columnName": "",
       "name": "新規媒体（Bで作成してAで編集）",
       "deliveryTime": "10:00",
@@ -315,7 +326,7 @@
     },
     {
       "id": "29",
-      "sortOrder": 30,
+      "sortOrder": 29,
       "columnName": "",
       "name": "インフォトップ通信号外【0円広場】（コピー）",
       "deliveryTime": "8:00",
@@ -327,7 +338,7 @@
     },
     {
       "id": "33",
-      "sortOrder": 31,
+      "sortOrder": 30,
       "name": "BIGBrother通信",
       "deliverySystem": "haihai",
       "deliveryTime": "15:00",
@@ -338,7 +349,7 @@
     },
     {
       "id": "34",
-      "sortOrder": 32,
+      "sortOrder": 31,
       "name": "BIGBrother通信【号外】",
       "deliverySystem": "haihai",
       "deliveryTime": "9:00",
@@ -349,7 +360,7 @@
     },
     {
       "id": "35",
-      "sortOrder": 33,
+      "sortOrder": 32,
       "name": "ニュース・アイ",
       "deliverySystem": "haihai",
       "deliveryTime": "21:00",
@@ -360,7 +371,7 @@
     },
     {
       "id": "39",
-      "sortOrder": 34,
+      "sortOrder": 33,
       "name": "カスタムメール",
       "deliverySystem": "MM",
       "deliveryTime": "20:00",
@@ -371,7 +382,7 @@
     },
     {
       "id": "40",
-      "sortOrder": 35,
+      "sortOrder": 34,
       "name": "AM〈AIラク勝ちFX〉特別講座｜infotop",
       "deliverySystem": "MM",
       "deliveryTime": "8:00",
@@ -382,7 +393,7 @@
     },
     {
       "id": "41",
-      "sortOrder": 104,
+      "sortOrder": 35,
       "columnName": "",
       "name": "BIGBrother通信　土曜日",
       "deliveryTime": "10:00",
@@ -394,7 +405,7 @@
     },
     {
       "id": "42",
-      "sortOrder": 105,
+      "sortOrder": 36,
       "columnName": "",
       "name": "BIGBrother通信号外　水曜日",
       "deliveryTime": "10:00",
@@ -406,7 +417,7 @@
     },
     {
       "id": "43",
-      "sortOrder": 106,
+      "sortOrder": 37,
       "columnName": "",
       "name": "【実録】ニュース・アイ",
       "deliveryTime": "10:00",
@@ -418,7 +429,7 @@
     },
     {
       "id": "45",
-      "sortOrder": 40,
+      "sortOrder": 38,
       "name": "PM〈AIラク勝ちFX〉特別講座｜infotop",
       "deliverySystem": "MM",
       "deliveryTime": "19:00",
@@ -426,17 +437,6 @@
       "footer": "※このメールマガジンに記載されている内容は広告主の提供でお届けしています。\n本稿の文責・配信内容につきましては、外部サイトに記載された\n「特定商取引法に基づく表示」の広告主に直接お問合せください。\n\n※今回の配信につきましては利益や効果を保証するものではございません。\n内容等をよくご理解した上でお申込みいただく必要がございます。\n予めご了承ください。\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━\n■配信停止をご希望の場合■\n----------------------------------------------------\n※インフォトップからのメールの配信停止をご希望の場合は、\n下記ページより「配信停止ボタン」をクリックください。\nhttps://www.infotop.jp/mailmagazine/stop.html?m=210&c=u&i=<<:SETTINGITEM_識別子:>>\n\n※ご申請から配信停止の反映までに24時間程お時間が掛かる場合が\nございますのでご了承ください。\n\n----------------------------------------------------\n■発行について■\n----------------------------------------------------\n・インフォトップにご登録頂きました会員様でＤＭの配信を受け取る設定と\nなっているお客様にお届けしております。\n\n発行/インフォトップ<http://www.infotop.jp/>\n運営会社/株式会社ファーストペンギン　　\nお問合せ/  https://www.infotop.jp/html/support/user/\n〒162-0846 東京都新宿区市谷左内町21番地 市谷左内坂ビル1階\n━━━━━━━━━━━━━━━━━━━━━━━━━━\nCopyright (C)  infotop . All Rights Reserved.",
       "segmentId": "〈AIラク勝ちFX〉特別講座｜infotop",
       "fromName": "〈AIラク勝ちFX〉特別講座｜infotop"
-    },
-    {
-      "id": "46",
-      "sortOrder": 38,
-      "name": "★スキルドJV★【本業しながらスマホ1台で】01ショート動画副業｜infotop",
-      "deliverySystem": "MM",
-      "deliveryTime": "20:00",
-      "header": "【PR】\n\n※本メールはインフォトップにご登録頂いているユーザーにお送りしています。\n\n▼配信停止のご希望はこちら\nhttps://www.infotop.jp/mailmagazine/stop.html?m=211&c=u&i=<<:SETTINGITEM_識別子:>>",
-      "footer": "※このメールマガジンに記載されている内容は広告主の提供でお届けしています。\n本稿の文責・配信内容につきましては、外部サイトに記載された\n「特定商取引法に基づく表示」の広告主に直接お問合せください。\n\n※今回の配信につきましては利益や効果を保証するものではございません。\n内容等をよくご理解した上でお申込みいただく必要がございます。\n予めご了承ください。\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━\n■配信停止をご希望の場合■\n----------------------------------------------------\n※インフォトップからのメールの配信停止をご希望の場合は、\n下記ページより「配信停止ボタン」をクリックください。\nhttps://www.infotop.jp/mailmagazine/stop.html?m=211&c=u&i=<<:SETTINGITEM_識別子:>>\n\n※ご申請から配信停止の反映までに24時間程お時間が掛かる場合が\nございますのでご了承ください。\n\n----------------------------------------------------\n■発行について■\n----------------------------------------------------\n・インフォトップにご登録頂きました会員様でＤＭの配信を受け取る設定と\nなっているお客様にお届けしております。\n\n発行/インフォトップ<http://www.infotop.jp/>\n運営会社/株式会社ファーストペンギン　　\nお問合せ/  https://www.infotop.jp/html/support/user/\n〒162-0846 東京都新宿区市谷左内町21番地 市谷左内坂ビル1階\n━━━━━━━━━━━━━━━━━━━━━━━━━━\nCopyright (C)  infotop . All Rights Reserved.",
-      "segmentId": "【本業しながらスマホ1台で】01ショート動画副業｜infotop",
-      "fromName": "【本業しながらスマホ1台で】01ショート動画副業｜infotop"
     }
   ]
 }
