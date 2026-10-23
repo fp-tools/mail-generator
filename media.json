@@ -1,5 +1,5 @@
 {
-  "_version": 1792568459701,
+  "_version": 1792723093181,
   "items": [
     {
       "id": "1",
@@ -407,7 +407,7 @@
     {
       "id": "47",
       "sortOrder": 36,
-      "name": "infotop通信【特別号】",
+      "name": "CP特別号（案件名）",
       "deliverySystem": "MM",
       "deliveryTime": "14:00",
       "header": "【PR】インフォトップ：infotop通信 特別号　［202x.xx.xx］\n\n※本メールはインフォトップにご登録頂いている皆様にお送りしています。\n\n▼配信停止のご希望はこちら\nhttps://www.infotop.jp/mailmagazine/stop.html?m=24&c=u&i=<<:SETTINGITEM_識別子:>>\n\n━━━━━━━━━━━━━━━━━━━━━━━━\n",
