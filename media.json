@@ -1,5 +1,5 @@
 {
-  "_version": 1793616578739,
+  "_version": 1793616601156,
   "items": [
     {
       "id": "1",
@@ -617,14 +617,13 @@
     {
       "id": "66",
       "sortOrder": 214,
-      "columnName": "",
       "name": "infotop通信SP配信号",
-      "deliveryTime": "14:00",
       "deliverySystem": "clickmailer",
+      "deliveryTime": "14:00",
+      "header": "【PR】インフォトップ：infotop通信SP配信号　［202x.xx.xx］\n\nこのメールは、インフォトップにご登録のある方に配信しております。\n\n▼配信停止のご希望はこちら\nhttps://www.infotop.jp/mailmagazine/stop.html?m=43&c=u&i=[$c_IDENTIFIER$]\n\n━━━━━━━━━━━━━━━━━━━━━━━━\n",
+      "footer": "--------------------------------------------------\n■配信停止をご希望の場合■\n--------------------------------------------------\n※「infotop通信SP配信号」の配信停止をご希望の場合は、\n下記ページより「配信停止ボタン」をクリックください。\nhttps://www.infotop.jp/mailmagazine/stop.html?m=43&c=u&i=[$c_IDENTIFIER$]",
       "segmentId": "infotop通信SP配信号",
-      "fromName": "infotop通信SP配信号",
-      "header": "【PR】インフォトップ：infotop通信SP配信号　［202x.xx.xx］\n\nこのメールは、インフォトップにご登録のある方に配信しております。\n\n▼配信停止のご希望はこちら\nhttps://www.infotop.jp/mailmagazine/stop.html?m=43&c=u&i=<<:SETTINGITEM_識別子:>>\n\n━━━━━━━━━━━━━━━━━━━━━━━━\n",
-      "footer": "--------------------------------------------------\n■配信停止をご希望の場合■\n--------------------------------------------------\n※「infotop通信SP配信号」の配信停止をご希望の場合は、\n下記ページより「配信停止ボタン」をクリックください。\nhttps://www.infotop.jp/mailmagazine/stop.html?m=43&c=u&i=<<:SETTINGITEM_識別子"
+      "fromName": "infotop通信SP配信号"
     },
     {
       "id": "67",
