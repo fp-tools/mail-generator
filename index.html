@@ -242,6 +242,9 @@ hr{border:none;border-top:1px solid #eee;margin:16px 0}
         <label class="delivery-radio" id="dsRadioMM">
           <input type="radio" name="deliverySystem" value="MM" checked>メールマーケティング（MM）
         </label>
+        <label class="delivery-radio" id="dsRadioClickmailer">
+          <input type="radio" name="deliverySystem" value="clickmailer">クリックメーラー
+        </label>
       </div>
     </div>
   </div>
@@ -276,8 +279,8 @@ hr{border:none;border-top:1px solid #eee;margin:16px 0}
       <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px">
         <label for="subjectInput" style="white-space:nowrap;font-size:13px;min-width:3.5em">件名</label>
         <input type="text" id="subjectInput" placeholder="件名" style="flex:1;min-width:0">
-        <button class="btn-tag" data-tag="<<:氏名:>>" data-target="subjectInput">フルネーム</button>
-        <button class="btn-tag" data-tag="<<:SETTINGITEM_名字:>>" data-target="subjectInput">名字のみ</button>
+        <button class="btn-tag" data-kind="full" data-tag="<<:氏名:>>" data-target="subjectInput">フルネーム</button>
+        <button class="btn-tag" data-kind="last" data-tag="<<:SETTINGITEM_名字:>>" data-target="subjectInput">名字のみ</button>
       </div>
       <textarea class="header-footer-textarea" id="headerText"></textarea>
     </div>
@@ -296,8 +299,8 @@ hr{border:none;border-top:1px solid #eee;margin:16px 0}
           <label>置換タグ</label>
           <select id="replaceTag">
             <option value="">-- タグを選択 --</option>
-            <option value="&lt;&lt;:氏名:&gt;&gt;">フルネーム　&lt;&lt;:氏名:&gt;&gt;</option>
-            <option value="&lt;&lt;:SETTINGITEM_名字:&gt;&gt;">名字のみ　&lt;&lt;:SETTINGITEM_名字:&gt;&gt;</option>
+            <option data-kind="full" value="&lt;&lt;:氏名:&gt;&gt;">フルネーム　&lt;&lt;:氏名:&gt;&gt;</option>
+            <option data-kind="last" value="&lt;&lt;:SETTINGITEM_名字:&gt;&gt;">名字のみ　&lt;&lt;:SETTINGITEM_名字:&gt;&gt;</option>
           </select>
         </div>
         <div style="display:flex;flex-direction:column;gap:6px;padding-bottom:1px">
@@ -320,8 +323,8 @@ hr{border:none;border-top:1px solid #eee;margin:16px 0}
       <div class="body-toolbar">
         <div class="toolbar-group">
           <span class="toolbar-label">挿入</span>
-          <button class="btn-tag" data-tag="<<:氏名:>>">フルネーム</button>
-          <button class="btn-tag" data-tag="<<:SETTINGITEM_名字:>>">名字のみ</button>
+          <button class="btn-tag" data-kind="full" data-tag="<<:氏名:>>">フルネーム</button>
+          <button class="btn-tag" data-kind="last" data-tag="<<:SETTINGITEM_名字:>>">名字のみ</button>
         </div>
         <div class="toolbar-sep"></div>
         <div class="toolbar-group">
@@ -422,6 +425,7 @@ hr{border:none;border-top:1px solid #eee;margin:16px 0}
       <div class="admin-tabs">
         <button class="admin-tab" data-tab="haihai">配配メール</button>
         <button class="admin-tab" data-tab="MM">メールマーケティング（MM）</button>
+        <button class="admin-tab" data-tab="clickmailer">クリックメーラー</button>
       </div>
       <div id="mediaListContainer"></div>
     </div>
@@ -583,6 +587,20 @@ const DEPENDENT_CHARS = [
   '㈱','㈲','㈹','℡','№','℃','℉',
   '✓','✔','✕','✖'
 ];
+
+// 配信機ごとの表示名・ネームタグ（full=フルネーム / last=姓のみ）
+const DELIVERY_SYSTEMS = {
+  haihai:      { label: '配配メール' },
+  MM:          { label: 'メールマーケティング（MM）' },
+  clickmailer: { label: 'クリックメーラー' },
+};
+const MM_NAMETAGS = { full: '<<:氏名:>>', last: '<<:SETTINGITEM_名字:>>' };
+const NAMETAGS = {
+  MM: MM_NAMETAGS,
+  haihai: MM_NAMETAGS,
+  clickmailer: { full: '[$c_U_FULLNAME$]', last: '[$c_U_LASTNAME$]' },
+};
+function getNametags(ds) { return NAMETAGS[ds] || MM_NAMETAGS; }
 
 // ========== State ==========
 let mediaList = [];
@@ -1066,7 +1084,7 @@ function usePreset(id) {
   const p = loadPresets().find(p => p.id === id);
   if (!p) return;
   el.searchText.value = p.search;
-  el.replaceTag.value = p.replace;
+  el.replaceTag.value = convertNametags(p.replace, currentDeliverySystem);
   replaceAll();
 }
 
@@ -1188,8 +1206,15 @@ function renderMediaItem(m) {
         <input type="text" id="edit-name-${m.id}" value="${escHtml(m.name)}">
       </div>
       <div class="form-row">
-        <label>配信システム（MM=メールマーケティング、他システムは任意の識別子）</label>
-        <input type="text" id="edit-ds-${m.id}" value="${escHtml(m.deliverySystem||'MM')}" style="max-width:140px">
+        <label>配信機</label>
+        <select id="edit-ds-${m.id}" style="max-width:260px">${
+          (() => {
+            const cur = m.deliverySystem || 'MM';
+            const keys = Object.keys(DELIVERY_SYSTEMS);
+            if (!keys.includes(cur)) keys.push(cur);
+            return keys.map(k => `<option value="${escHtml(k)}" ${k === cur ? 'selected' : ''}>${escHtml(DELIVERY_SYSTEMS[k] ? DELIVERY_SYSTEMS[k].label : k)}</option>`).join('');
+          })()
+        }</select>
       </div>
       <div class="form-row">
         <label>配信時刻</label>
@@ -1592,6 +1617,52 @@ function updateMmSection() {
   $('hmSection').classList.toggle('show', currentDeliverySystem === 'haihai' && hasMedia);
 }
 
+// ========== 配信機ごとのネームタグ ==========
+// どの配信機のネームタグも、指定した配信機のネームタグに変換する
+function convertNametags(text, toDs) {
+  if (!text) return text;
+  const to = getNametags(toDs);
+  let out = text;
+  Object.values(NAMETAGS).forEach(from => {
+    ['full', 'last'].forEach(kind => {
+      if (from[kind] !== to[kind]) out = out.split(from[kind]).join(to[kind]);
+    });
+  });
+  return out;
+}
+
+// 挿入ボタン・置換タグの選択肢を、現在の配信機のタグに切り替える
+function applyNametagUI() {
+  const tags = getNametags(currentDeliverySystem);
+  const labels = { full: 'フルネーム', last: currentDeliverySystem === 'clickmailer' ? '姓のみ' : '名字のみ' };
+  document.querySelectorAll('.btn-tag[data-kind]').forEach(btn => {
+    const kind = btn.dataset.kind;
+    if (!tags[kind]) return;
+    btn.dataset.tag = tags[kind];
+    btn.title = tags[kind];
+    btn.textContent = labels[kind];
+  });
+  el.replaceTag.querySelectorAll('option[data-kind]').forEach(o => {
+    const kind = o.dataset.kind;
+    if (!tags[kind]) return;
+    o.value = tags[kind];
+    o.textContent = `${labels[kind]}　${tags[kind]}`;
+  });
+}
+
+// 件名・本文に入っている既存のネームタグを、現在の配信機のタグに置き換える
+function convertExistingNametags() {
+  let changed = false;
+  [el.subjectInput, el.bodyText].forEach(f => {
+    const v = convertNametags(f.value, currentDeliverySystem);
+    if (v !== f.value) { f.value = v; changed = true; }
+  });
+  if (changed) {
+    const label = DELIVERY_SYSTEMS[currentDeliverySystem] ? DELIVERY_SYSTEMS[currentDeliverySystem].label : currentDeliverySystem;
+    toast(`件名・本文のネームタグを${label}用に変換しました`, 3500);
+  }
+}
+
 // 配信機ラジオの初期化・切替
 function setupDeliveryRadio() {
   const radios = document.querySelectorAll('input[name="deliverySystem"]');
@@ -1607,6 +1678,8 @@ function setupDeliveryRadio() {
       if (wrap) wrap.classList.add('active');
       // 配信機を切り替えたら媒体選択をリセットし、対応する媒体だけ表示
       currentMedia = null;
+      applyNametagUI();
+      convertExistingNametags();
       renderSelect();
       el.mediaSelect.value = '';
       el.headerCard.style.display = 'none';
@@ -2068,7 +2141,9 @@ async function init() {
 
   // 配信機ラジオ（localStorageに最後の選択を保存）— renderSelectの前に確定させる
   try { currentDeliverySystem = localStorage.getItem(DELIVERY_SYSTEM_KEY) || 'MM'; } catch (e) { currentDeliverySystem = 'MM'; }
+  if (!DELIVERY_SYSTEMS[currentDeliverySystem]) currentDeliverySystem = 'MM';
   setupDeliveryRadio();
+  applyNametagUI();
 
   renderSelect();
   renderPresets();
@@ -2080,7 +2155,7 @@ async function init() {
     renderAdminList();
   });
 
-  // 媒体管理タブ（配配メール / MM）
+  // 媒体管理タブ（配配メール / MM / クリックメーラー）
   document.querySelectorAll('.admin-tab').forEach(t => {
     t.addEventListener('click', () => {
       currentAdminTab = t.dataset.tab;
