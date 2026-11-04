@@ -408,16 +408,11 @@ hr{border:none;border-top:1px solid #eee;margin:16px 0}
       <button class="btn-secondary btn-sm" id="backToMainBtn">← メインへ戻る</button>
     </div>
     <div class="card-body">
-      <div class="gh-sync-panel">
-        <div class="gh-token-row">
-          <button class="btn-success" id="ghSyncBtn">GitHubに同期</button>
-        </div>
-        <div id="ghStatus" class="gh-status"></div>
-      </div>
+      <div class="measure-hint" style="margin-bottom:12px">ここで保存・削除・複製・並び替えをすると、自動で全員に反映されます（他の人は画面を再読み込みすると最新になります）。</div>
+      <div id="ghStatus" class="gh-status"></div>
       <div class="admin-toolbar">
         <button class="btn-primary" id="addMediaBtn">+ 媒体を追加</button>
         <button class="btn-outline" id="addHaihaiSeedBtn">＋配配メール初期媒体を追加</button>
-        <button class="btn-outline" id="exportJsonBtn">media.json書き出し</button>
         <button class="btn-outline" id="exportBtn">CSVエクスポート</button>
         <button class="btn-outline" id="importBtn">CSVインポート</button>
         <input type="file" id="importFile" accept=".csv" style="display:none">
@@ -1162,7 +1157,13 @@ function attachDragHandlers() {
     renderAdminList();
     renderSelect();
     toast('並び順を変更しました');
-    autoSync();
+    const order = mediaList.map(m => m.id);
+    autoSync(list => {
+      const pos = id => { const i = order.indexOf(id); return i === -1 ? order.length : i; };
+      list.sort((a, b) => pos(a.id) - pos(b.id));
+      list.forEach((m, i) => { m.sortOrder = i + 1; });
+      return list;
+    });
   });
 
   container.addEventListener('dragend', () => {
@@ -1274,13 +1275,18 @@ function saveMediaItem(oldId) {
   if (!name) { toast('媒体名を入力してください'); return; }
   if (idx === -1) { toast('エラー: 媒体が見つかりません'); return; }
 
-  mediaList[idx] = { id: newId, sortOrder: sort, name, deliverySystem: ds, deliveryTime: `${hour}:${min}`, header, footer, segmentId, fromName };
+  const updated = { ...mediaList[idx], id: newId, sortOrder: sort, name, deliverySystem: ds, deliveryTime: `${hour}:${min}`, header, footer, segmentId, fromName };
+  mediaList[idx] = updated;
   saveMedia(mediaList);
   openEditId = null;
   renderAdminList();
   renderSelect();
   toast('保存しました');
-  autoSync();
+  autoSync(list => {
+    const i = list.findIndex(m => m.id === newId);
+    if (i === -1) list.push(updated); else list[i] = updated;
+    return list;
+  });
 }
 
 function deleteMediaItem(id) {
@@ -1297,7 +1303,7 @@ function deleteMediaItem(id) {
   renderAdminList();
   renderSelect();
   toast('削除しました');
-  autoSync();
+  autoSync(list => list.filter(x => x.id !== id));
 }
 
 function copyMediaItem(id) {
@@ -1311,7 +1317,7 @@ function copyMediaItem(id) {
   renderAdminList();
   renderSelect();
   toast('複製しました');
-  autoSync();
+  autoSync(list => { if (!list.some(m => m.id === newId)) list.push(copy); return list; });
   setTimeout(() => {
     const el_ = document.getElementById(`media-item-${newId}`);
     if (el_) el_.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1443,14 +1449,14 @@ https://www.infotop.jp/mailmagazine/stop.html?m=4&c=all&i=##__prop_9__##
 ];
 
 // 配配メール初期媒体をmediaListにマージ（既存は名前一致でスキップ）。MMデータは保持。
-function addHaihaiSeedMedia() {
+function mergeHaihaiSeeds(list) {
   let added = 0, skipped = 0;
   HAIHAI_SEED_MEDIA.forEach(seed => {
-    const exists = mediaList.some(m => (m.deliverySystem || 'MM') === 'haihai' && (m.name || '').trim() === seed.name.trim());
+    const exists = list.some(m => (m.deliverySystem || 'MM') === 'haihai' && (m.name || '').trim() === seed.name.trim());
     if (exists) { skipped++; return; }
-    const haihaiCount = mediaList.filter(m => (m.deliverySystem || 'MM') === 'haihai').length;
-    mediaList.push({
-      id: getNextId(mediaList),
+    const haihaiCount = list.filter(m => (m.deliverySystem || 'MM') === 'haihai').length;
+    list.push({
+      id: getNextId(list),
       sortOrder: 101 + haihaiCount,
       columnName: '',
       name: seed.name,
@@ -1463,11 +1469,17 @@ function addHaihaiSeedMedia() {
     });
     added++;
   });
+  return { added, skipped };
+}
+
+function addHaihaiSeedMedia() {
+  const { added, skipped } = mergeHaihaiSeeds(mediaList);
   saveMedia(mediaList);
   currentAdminTab = 'haihai';
   renderAdminList();
   renderSelect();
-  toast(`配配メール媒体を ${added} 件追加${skipped ? `（${skipped}件は既存のためスキップ）` : ''}しました。確認後「GitHubに同期」で反映してください。`);
+  toast(`配配メール媒体を ${added} 件追加${skipped ? `（${skipped}件は既存のためスキップ）` : ''}しました。`);
+  if (added) autoSync(list => { mergeHaihaiSeeds(list); return list; });
 }
 
 // ========== Import / Export ==========
@@ -1497,70 +1509,74 @@ function exportData() {
   toast('エクスポートしました');
 }
 
-// ========== GitHub Sync ==========
+// ========== 共有データへの自動保存 ==========
+// 媒体データは全員共通（リポジトリの media.json）。管理画面での操作ごとに自動保存する。
+// 他の人が先に更新していた場合でも上書きで消さないよう、保存直前に最新データを取得し、
+// その上に「今回の操作（mutator）」だけを適用してから保存する。
 function ghStatus(msg, type) {
-  const el = $('ghStatus');
-  el.textContent = msg;
-  el.className = 'gh-status ' + type;
+  const s = $('ghStatus');
+  if (!s) return;
+  s.textContent = msg;
+  s.className = 'gh-status ' + (type || '');
 }
 
-async function syncToGitHub(silent = false) {
-  const btn = $('ghSyncBtn');
-  btn.disabled = true;
-  btn.textContent = '同期中…';
-  if (!silent) ghStatus('', '');
+const SHARED_API = `${WORKER_URL}/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_FILE}`;
+const SHARED_HEADERS = { 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' };
 
-  try {
-    const version = Date.now();
-    const payload = { _version: version, items: mediaList };
-    const jsonStr = JSON.stringify(payload, null, 2);
-    const encoded = btoa(unescape(encodeURIComponent(jsonStr)));
+async function pushSharedChange(mutator) {
+  let lastErr;
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      // 1) 最新の共有データを取得
+      let sha, list = null;
+      const getRes = await fetch(SHARED_API, { headers: SHARED_HEADERS, cache: 'no-store' });
+      if (getRes.ok) {
+        const fileData = await getRes.json();
+        sha = fileData.sha;
+        const payload = JSON.parse(decodeURIComponent(escape(atob(fileData.content.replace(/\n/g, '')))));
+        list = Array.isArray(payload) ? payload : (payload.items || []);
+      } else if (getRes.status !== 404) {
+        throw new Error(`取得エラー: ${getRes.status}`);
+      }
+      // 2) 最新データに今回の操作だけを適用（mutatorなし＝インポート等の全置換）
+      const next = (list && mutator) ? mutator(JSON.parse(JSON.stringify(list))) : JSON.parse(JSON.stringify(mediaList));
 
-    const apiBase = `${WORKER_URL}/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_FILE}`;
-    const headers = {
-      'Accept': 'application/vnd.github.v3+json',
-      'Content-Type': 'application/json'
-    };
+      // 3) 保存（sha不一致＝同時更新なら最初からやり直す）
+      const version = Date.now();
+      const encoded = btoa(unescape(encodeURIComponent(JSON.stringify({ _version: version, items: next }, null, 2))));
+      const body = { message: `媒体データを更新 (${new Date().toLocaleString('ja-JP')})`, content: encoded, branch: GITHUB_BRANCH };
+      if (sha) body.sha = sha;
+      const putRes = await fetch(SHARED_API, { method: 'PUT', headers: SHARED_HEADERS, body: JSON.stringify(body) });
+      if (putRes.status === 409 || putRes.status === 422) { lastErr = new Error('同時更新のため再試行'); continue; }
+      if (!putRes.ok) {
+        let msg = `更新エラー: ${putRes.status}`;
+        try { const err = await putRes.json(); msg = err.message || msg; } catch (e) {}
+        throw new Error(msg);
+      }
 
-    let sha;
-    const getRes = await fetch(apiBase, { headers });
-    if (getRes.ok) {
-      const fileData = await getRes.json();
-      sha = fileData.sha;
-    } else if (getRes.status !== 404) {
-      throw new Error(`取得エラー: ${getRes.status}`);
+      // 4) 他の人の変更を取り込んだ結果を画面にも反映
+      localStorage.setItem(MEDIA_VERSION_KEY, String(version));
+      const changed = JSON.stringify(next) !== JSON.stringify(mediaList);
+      saveMedia(next);
+      if (currentMedia) currentMedia = mediaList.find(m => m.id === currentMedia.id) || currentMedia;
+      if (changed) { renderAdminList(); renderSelect(); }
+      ghStatus('', '');
+      return;
+    } catch (e) {
+      lastErr = e;
+      break;
     }
-
-    const body = { message: `媒体データを更新 (${new Date().toLocaleString('ja-JP')})`, content: encoded, branch: GITHUB_BRANCH };
-    if (sha) body.sha = sha;
-
-    const putRes = await fetch(apiBase, { method: 'PUT', headers, body: JSON.stringify(body) });
-    if (!putRes.ok) {
-      const err = await putRes.json();
-      throw new Error(err.message || `更新エラー: ${putRes.status}`);
-    }
-
-    localStorage.setItem(MEDIA_VERSION_KEY, String(version));
-    if (!silent) ghStatus('同期しました。数分後に全ユーザーへ反映されます。', 'ok');
-    toast('GitHubに同期しました');
-  } catch(e) {
-    ghStatus('同期失敗: ' + e.message, 'err');
-  } finally {
-    btn.disabled = false;
-    btn.textContent = 'GitHubに同期';
   }
+  const msg = '⚠️ 保存に失敗しました（他の人には反映されていません）: ' + (lastErr ? lastErr.message : '');
+  ghStatus(msg, 'err');
+  toast(msg, 6000);
 }
 
-async function autoSync() {
-  await syncToGitHub(true);
-}
-
-function exportJson() {
-  const version = Date.now();
-  const payload = { _version: version, items: mediaList };
-  downloadFile(JSON.stringify(payload, null, 2), 'media.json', 'application/json');
-  localStorage.setItem(MEDIA_VERSION_KEY, String(version));
-  toast('media.json を書き出しました。GitHubリポジトリのルートにコミットしてください。');
+// 保存は順番に実行（連続操作でも取りこぼさない）
+let sharedSaveChain = Promise.resolve();
+function autoSync(mutator) {
+  sharedSaveChain = sharedSaveChain.then(() => pushSharedChange(mutator)).catch(() => {});
+  return sharedSaveChain;
 }
 
 function applyImport(text) {
@@ -2149,10 +2165,14 @@ async function init() {
   renderPresets();
 
   // View switching
-  el.adminBtn.addEventListener('click', () => {
+  el.adminBtn.addEventListener('click', async () => {
     showView('admin');
     currentAdminTab = currentDeliverySystem;
     renderAdminList();
+    // 他の人が編集した最新の媒体データを取り込んでから表示し直す
+    const before = JSON.stringify(mediaList);
+    mediaList = await loadMedia();
+    if (JSON.stringify(mediaList) !== before && openEditId === null) { renderAdminList(); renderSelect(); }
   });
 
   // 媒体管理タブ（配配メール / MM / クリックメーラー）
@@ -2246,8 +2266,6 @@ async function init() {
   attachDragHandlers();
   el.addMediaBtn.addEventListener('click', addNewMedia);
   $('addHaihaiSeedBtn').addEventListener('click', addHaihaiSeedMedia);
-  $('ghSyncBtn').addEventListener('click', syncToGitHub);
-  $('exportJsonBtn').addEventListener('click', exportJson);
   el.exportBtn.addEventListener('click', exportData);
   el.importBtn.addEventListener('click', () => el.importFile.click());
   el.importFile.addEventListener('change', e => { importData(e.target.files[0]); e.target.value = ''; });
