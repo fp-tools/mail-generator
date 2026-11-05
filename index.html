@@ -246,13 +246,14 @@ a.btn-nav{text-decoration:none;display:inline-block;border-radius:7px}
 .gb-agency-bar{background:#fafafe;border:1px solid #e5e7f5;border-radius:8px;padding:10px 12px;margin-bottom:12px}
 .gb-agency-bar .inline-group input[type=text]{max-width:320px}
 .gb-copy-hint{margin-top:8px}
+.gb-kind-h{font-size:13px;font-weight:700;color:#3535cc;background:#f5f5ff;border-left:4px solid #4949FF;padding:6px 10px;margin:12px 0 6px;border-radius:4px}
 .badge-company{background:#f3f4f6;color:#444;margin-left:6px}
 .badge-warn{background:#fef3c7;color:#92400e}
 .badge-ok{background:#dcfce7;color:#166534}
 .badge-err{background:#fee2e2;color:#b91c1c}
 .badge-info{background:#e0e7ff;color:#3535cc}
 
-/* ===== 代理店入稿（GA） ===== */
+/* ===== 他媒体入稿（GA） ===== */
 .ga-main{padding-bottom:110px}
 .ga-demo-banner{background:#b91c1c;color:#fff;font-weight:700;text-align:center;padding:8px;border-radius:8px;margin-bottom:12px}
 .ga-conn-row{display:flex;align-items:center;gap:8px;justify-content:flex-end;margin-bottom:8px;flex-wrap:wrap}
@@ -289,6 +290,7 @@ a.btn-nav{text-decoration:none;display:inline-block;border-radius:7px}
 .ga-mlist{max-height:320px;overflow-y:auto;border:1.5px solid #e5e7eb;border-radius:8px}
 .ga-mgroup-h{display:block;width:100%;text-align:left;background:#f5f5f7;color:#333;border-radius:0;padding:6px 10px;font-size:12px;border-bottom:1px solid #eee}
 .ga-mgroup-h:hover{background:#eaeaff}
+.ga-mkind-h{background:#e0e0ff;color:#3535cc;font-weight:700;font-size:13px;border-left:4px solid #4949FF}
 .ga-mitem{display:flex !important;align-items:center;gap:8px;padding:6px 12px;border-bottom:1px solid #f3f3f3;font-weight:400 !important;color:#222 !important;margin:0 !important;font-size:14px !important;cursor:pointer}
 .ga-mitem:hover{background:#f5f5ff}
 .ga-chips{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:8px 0}
@@ -314,6 +316,31 @@ a.btn-nav{text-decoration:none;display:inline-block;border-radius:7px}
 .ga-lp-card{border:1.5px solid #e5e7eb;border-radius:10px;padding:10px 12px;margin-bottom:8px;font-size:13px;line-height:1.7}
 .ga-lp-url{font-family:monospace;font-size:12px;word-break:break-all}
 .ga-lp-mis{margin:4px 0 0 0;padding-left:18px}
+/* 複数原稿（gm-） */
+.gm-row-warn td{background:#fffbeb}
+.gm-row-warn td:first-child{box-shadow:inset 4px 0 0 #d97706}
+.gm-table .gm-name{min-width:150px}
+.gm-table .gm-adv{min-width:110px}
+.gm-fname{overflow-wrap:anywhere;max-width:260px}
+.gm-detail > td{background:#fafafe !important;padding:10px 12px 14px 28px}
+.gm-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px}
+.gm-tools input[type=text]{width:auto;min-width:200px;flex:0 1 260px}
+.gm-filter.on{background:#4949FF;color:#fff;border-color:#4949FF}
+.gm-bulk{background:#f5f5ff;border:1px solid #d0d0ff;border-radius:8px;padding:6px 10px;margin-bottom:8px;display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:13px}
+.gm-undo{background:#333;color:#fff;border-radius:8px;padding:6px 10px;margin-bottom:8px;font-size:13px}
+.gm-undo .btn-outline{background:#fff}
+.gm-linkbtn{background:none;border:none;color:#3535cc;text-decoration:underline;cursor:pointer;padding:0 2px;font-size:inherit}
+.gm-ov{margin-top:10px;font-size:13px}
+.gm-ov-box{border:1px solid #e5e7f5;border-radius:8px;padding:8px 10px;margin-top:6px;background:#fff}
+.gm-matrix td,.gm-matrix th{white-space:nowrap}
+.gm-cell-sel{outline:2px solid #4949FF;outline-offset:-2px}
+.gm-prog{display:flex;align-items:center;gap:8px;min-width:200px;flex:1}
+.gm-prog-bar{flex:1;height:10px;background:#e5e7eb;border-radius:6px;overflow:hidden}
+.gm-prog-fill{height:100%;background:#4949FF;width:0;transition:width .3s}
+@media (prefers-reduced-motion:reduce){.gm-prog-fill{transition:none}}
+.gm-bar-extra{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+#measureView.gm-dragging .ga-main{outline:3px dashed #4949FF;outline-offset:-6px;background:#f8f8ff}
+#measureView.gm-on [data-preview]{display:none}
 @media (max-width:640px){
   .app-header{padding:10px 12px}
   .ga-bar-in{flex-direction:column;align-items:stretch}
@@ -327,7 +354,7 @@ a.btn-nav{text-decoration:none;display:inline-block;border-radius:7px}
   <h1>Mail Generator</h1>
   <div class="header-actions">
     <button class="btn-nav" id="compareBtn">比較</button>
-    <button class="btn-nav" id="measureBtn">代理店入稿</button>
+    <button class="btn-nav" id="measureBtn">他媒体入稿</button>
     <a class="btn-nav" id="ccResultsLink" href="#" target="_blank" rel="noopener">結果を見る ↗</a>
     <button class="btn-nav" id="adminBtn">管理画面</button>
   </div>
@@ -458,10 +485,10 @@ a.btn-nav{text-decoration:none;display:inline-block;border-radius:7px}
           <span style="font-size:13px;font-weight:700;color:#1b5e20">クリック計測URLに変換</span>
           <button class="btn-secondary btn-sm" id="hmTrackCloseBtn">閉じる</button>
         </div>
-        <div style="font-size:12px;color:#1b5e20;margin-bottom:10px;line-height:1.7">計測URLの発行は「代理店入稿」画面で行います。原稿のURLを検出し、媒体ごとに計測URLを発行して変換後の原稿を作ります（LPの取得状況も確認できます）。</div>
+        <div style="font-size:12px;color:#1b5e20;margin-bottom:10px;line-height:1.7">計測URLの発行は「他媒体入稿」画面で行います。原稿のURLを検出し、媒体ごとに計測URLを発行して変換後の原稿を作ります（LPの取得状況も確認できます）。</div>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <button class="btn-primary btn-sm" id="hmTrackApplyBtn">この本文を代理店入稿に送る</button>
-          <button class="btn-outline btn-sm" id="hmTrackOpenBtn">代理店入稿を開く</button>
+          <button class="btn-primary btn-sm" id="hmTrackApplyBtn">この本文を他媒体入稿に送る</button>
+          <button class="btn-outline btn-sm" id="hmTrackOpenBtn">他媒体入稿を開く</button>
         </div>
       </div>
       <textarea class="body-textarea" id="bodyText" placeholder="本文を入力してください"></textarea>
@@ -528,11 +555,12 @@ a.btn-nav{text-decoration:none;display:inline-block;border-radius:7px}
         <button class="admin-tab" data-tab="agency" title="外部広告の媒体（代理店の計測の出稿先）">代理店<span class="gb-count" data-count="agency"></span></button>
       </div>
       <div id="gbAgencyBar" class="gb-agency-bar" style="display:none">
-        <div class="text-muted" style="margin-bottom:6px">外部広告の媒体（代理店の計測の出稿先）です。「代理店入稿」画面の媒体選択に表示されます。</div>
+        <div class="text-muted" style="margin-bottom:6px">外部広告の媒体（代理店の計測の出稿先）です。「他媒体入稿」画面の媒体選択に表示されます。</div>
         <div class="inline-group">
           <input type="text" id="gbSearch" placeholder="検索: 媒体名・媒体社名" aria-label="代理店の媒体を検索">
           <label class="ga-inline-chk"><input type="checkbox" id="gbOnlyNoCompany"> 媒体社名が未入力のものだけ表示<span id="gbNoCompanyCount"></span></label>
         </div>
+        <div id="gbKindTabs" class="ga-rtabs mt-2" role="tablist" aria-label="代理店の区分" style="margin-bottom:0"></div>
         <div id="gbCopyArea" class="gb-copy-hint"></div>
       </div>
       <div id="mediaListContainer"></div>
@@ -581,12 +609,12 @@ a.btn-nav{text-decoration:none;display:inline-block;border-radius:7px}
 </main>
 </div><!-- /compareView -->
 
-<!-- ========== 代理店入稿 VIEW（GA-1） ========== -->
+<!-- ========== 他媒体入稿 VIEW（GA-1） ========== -->
 <div id="measureView" class="view">
 <main class="ga-main">
   <div class="card">
     <div class="card-header">
-      <h2>代理店入稿</h2>
+      <h2>他媒体入稿</h2>
       <button class="btn-secondary btn-sm" id="backFromMeasureBtn">← メインへ戻る</button>
     </div>
     <div class="card-body">
@@ -594,7 +622,7 @@ a.btn-nav{text-decoration:none;display:inline-block;border-radius:7px}
         <span id="gaConnStatus" class="ga-conn" role="status"></span>
         <button class="btn-outline btn-sm" id="gaConnBtn" type="button" style="display:none">入力する</button>
       </div>
-      <div class="measure-hint">広告主から受け取った原稿のURLを計測URLに変換し、媒体ごとの原稿を作ります。上から順に ①原稿 → ②URL → ③出稿先 を入れて、画面下の「一括発行」を押してください。</div>
+      <div class="measure-hint">受け取った原稿のURLを計測URLに変換し、媒体ごとの原稿を作ります。ファイルは最大30件まで、まとめて取り込めます。上から順に ①原稿 → ②URL → ③出稿先 を入れて、画面下の発行ボタンを押してください。</div>
     </div>
   </div>
 
@@ -615,21 +643,21 @@ a.btn-nav{text-decoration:none;display:inline-block;border-radius:7px}
           <select id="gaEncSel"><option value="utf-8">UTF-8</option><option value="shift_jis">Shift_JIS</option><option value="euc-jp">EUC-JP</option></select>
           <span id="gaEncNote" class="text-muted"></span>
         </div>
+        <div class="ga-actions"><button class="btn-outline btn-sm" type="button" id="gmPasteAddBtn">＋この原稿をリストに追加して、続けてもう1件貼り付ける</button></div>
       </div>
       <div id="gaPaneFile" role="tabpanel" style="display:none">
         <div id="gaDrop" class="ga-drop">
-          ファイルをここにドロップ<br>
+          ここにファイルをドロップ（複数OK・最大30件）<br>
           または <button class="btn-outline btn-sm" type="button" id="gaFileBtn">ファイルを選ぶ</button>
-          <input type="file" id="gaFileInput" accept=".txt,.docx" style="display:none">
+          <input type="file" id="gaFileInput" accept=".txt,.docx" multiple style="display:none">
+          <div class="text-muted">複数のファイルを同時に選べます（最大30件。2件以上で「原稿リスト」になり、まとめて発行できます）。</div>
           <div class="text-muted">対応: .txt（UTF-8 / Shift_JIS / EUC-JP）、.docx（Word）。Wordのハイパーリンク（表示文字と別のURL）も検出します。<br>変換後の原稿はテキストで出力します（Wordの書式は引き継がれません）。ヘッダー・フッター・脚注・テキストボックスは読み込みません。</div>
         </div>
       </div>
       <div id="gaPaneGdoc" role="tabpanel" style="display:none">
-        <label for="gaGdocUrl">GoogleドキュメントのURL</label>
-        <div class="inline-group">
-          <input type="text" id="gaGdocUrl" placeholder="https://docs.google.com/document/d/…">
-          <button class="btn-primary btn-sm" type="button" id="gaGdocBtn">取り込む</button>
-        </div>
+        <label for="gaGdocUrl">GoogleドキュメントのURL（1行に1つ）</label>
+        <textarea id="gaGdocUrl" rows="4" style="min-height:0;height:auto" placeholder="https://docs.google.com/document/d/… を1行ずつ貼り付け"></textarea>
+        <div class="ga-actions"><button class="btn-primary btn-sm" type="button" id="gaGdocBtn" disabled>取り込む（0件）</button><span id="gmGdocNote" class="ga-warn-sm" aria-live="polite"></span></div>
         <div class="text-muted mt-2">共有設定を一時的に変えた場合は、取り込み後に元へ戻してください。</div>
       </div>
       <div id="gaImportMsg" class="ga-msg" role="status" aria-live="polite"></div>
@@ -639,6 +667,32 @@ a.btn-nav{text-decoration:none;display:inline-block;border-radius:7px}
           <input type="text" id="gaName" maxlength="60" placeholder="自動（ファイル名・タイトル・先頭行）">
         </div>
       </div>
+    </div>
+  </div>
+
+  <div id="gmUndo" class="gm-undo" role="status" style="display:none;margin:0 0 12px"></div>
+  <!-- ② 原稿リスト（複数原稿） -->
+  <div class="card" id="gmCard" style="display:none">
+    <div class="card-header"><h2 id="gmCardTitle">② 原稿リスト</h2>
+      <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap"><span id="gmSummary" class="text-muted" aria-live="polite"></span><button class="btn-outline btn-sm" type="button" id="gmNextWarn">次の要確認へ ↓</button><button class="btn-outline btn-sm" type="button" id="gmDelAll">すべて削除</button></div>
+    </div>
+    <div class="card-body">
+      <div id="gmLockNote" class="ga-banner info" style="display:none">🔒 発行中は編集できません</div>
+      <div id="gmTools">
+        <div class="gm-tools">
+          <label for="gmAdvAll" style="margin:0;font-size:13px">広告主を一括入力</label>
+          <input type="text" id="gmAdvAll" maxlength="100" list="gaAdvList" autocomplete="off" placeholder="広告主名">
+          <span id="gmAdvScopeBox"><label class="ga-inline-chk" style="margin-left:0 !important"><input type="radio" name="gmAdvScope" value="empty" checked> 未入力の原稿だけ</label><label class="ga-inline-chk"><input type="radio" name="gmAdvScope" value="all"> すべての原稿</label></span>
+          <button class="btn-outline btn-sm" type="button" id="gmAdvApply">適用</button>
+        </div>
+        <div class="gm-tools"><span style="font-size:13px">絞り込み:</span><span id="gmFilters" style="display:flex;gap:4px;flex-wrap:wrap"></span></div>
+        <div id="gmBulkBar" class="gm-bulk" style="display:none"><span id="gmBulkCount"></span>
+          <button class="btn-outline btn-sm" type="button" id="gmBulkCommon">出稿先を共通に戻す</button>
+          <button class="btn-outline btn-sm" type="button" id="gmBulkDel">削除</button>
+          <button class="btn-outline btn-sm" type="button" id="gmBulkClear">選択を解除</button></div>
+      </div>
+      <div id="gmList"></div>
+      <span id="gmLive" style="position:absolute;left:-9999px" aria-live="polite"></span>
     </div>
   </div>
 
@@ -658,10 +712,10 @@ a.btn-nav{text-decoration:none;display:inline-block;border-radius:7px}
 
   <!-- ③ 出稿先 -->
   <div class="card" id="gaCard3">
-    <div class="card-header"><h2>③ 出稿先</h2></div>
+    <div class="card-header"><h2 id="gaCard3Title">③ 出稿先</h2></div>
     <div class="card-body">
       <div class="ga-row" style="margin-top:0">
-        <div>
+        <div id="gaAdvBox">
           <label for="gaAdv">広告主</label>
           <input type="text" id="gaAdv" maxlength="100" list="gaAdvList" autocomplete="off">
           <datalist id="gaAdvList"></datalist>
@@ -672,7 +726,7 @@ a.btn-nav{text-decoration:none;display:inline-block;border-radius:7px}
           <input type="date" id="gaDate">
         </div>
       </div>
-      <div class="ga-row">
+      <div class="ga-row" id="gaCampRow">
         <div>
           <label for="gaCampName">出稿名（共通部分）</label>
           <input type="text" id="gaCampName" maxlength="100">
@@ -698,6 +752,7 @@ a.btn-nav{text-decoration:none;display:inline-block;border-radius:7px}
         <div class="ga-table-wrap mt-2"><div id="gaMediaTable"></div></div>
         <div class="ga-sub">配信数: 媒体から報告された配信数（あとから入力できます。0は未入力と同じ扱い）。出稿費: CPC（クリック単価）の算出に使います。</div>
       </details>
+      <div id="gmCommonNote" class="mt-2"></div>
     </div>
   </div>
 
@@ -716,6 +771,12 @@ a.btn-nav{text-decoration:none;display:inline-block;border-radius:7px}
     </div>
   </div>
 
+  <!-- ④ 発行と結果（複数原稿） -->
+  <div class="card" id="gmResultCard" style="display:none">
+    <div class="card-header"><h2 id="gmResultTitle" tabindex="-1">④ 発行と結果 <span id="gmResultSummary" class="text-muted" aria-live="polite"></span></h2></div>
+    <div class="card-body" id="gmResultBody"></div>
+  </div>
+
   <!-- LP取得状況（GA-2） -->
   <div class="card" id="gaLpCard" style="display:none">
     <div class="card-header">
@@ -731,6 +792,12 @@ a.btn-nav{text-decoration:none;display:inline-block;border-radius:7px}
 <div class="ga-bar" id="gaBar">
   <div class="ga-bar-in">
     <div class="ga-bar-text"><span id="gaBarText"></span><span class="ga-bar-reason" id="gaBarReason"></span></div>
+    <div class="gm-bar-extra" id="gmBarExtra" style="display:none">
+      <div class="gm-prog" id="gmProg" role="progressbar" aria-label="発行の進捗" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="display:none"><div class="gm-prog-bar"><div class="gm-prog-fill" id="gmProgFill"></div></div><span id="gmProgPct">0%</span></div>
+      <button class="btn-outline" type="button" id="gmStopBtn" style="display:none">中断</button>
+      <button class="btn-outline" type="button" id="gmFailBtn" style="display:none">失敗分のみ再試行</button>
+      <button class="btn-outline" type="button" id="gmRestBtn" style="display:none">残りを発行</button>
+    </div>
     <button class="btn-primary" type="button" id="gaIssueBtn" aria-describedby="gaBarReason">一括発行して原稿を変換</button>
     <div class="ga-bar-err" id="gaBarErr" role="alert"></div>
   </div>
@@ -807,6 +874,11 @@ const MEDIA_CATEGORIES = {
   clickmailer: { label: 'クリックメーラー' },
   agency:      { label: '代理店（外部広告）' },
 };
+// 代理店区分の下位区分（agencyKind）: own=自社広告（自社で配信。クリックメーラー等からのコピー）/ external=他媒体（他社が運営）
+const AGENCY_KINDS = { own: '自社広告', external: '他媒体' };
+// 未設定の既存データは sourceId の有無で判定（表示のみ。次の保存で書き込む）
+function gbAgencyKind(m) { return m && AGENCY_KINDS[m.agencyKind] ? m.agencyKind : (m && m.sourceId ? 'own' : 'external'); }
+let gbAgencyKindTab = 'all';
 let editPwMem = ''; // 「記憶しない」を選んだ編集パスワード（このページを開いている間だけ保持）
 let gbSearchText = '';
 let gbOnlyNoCompany = false;
@@ -926,6 +998,7 @@ function csvToMedia(text) {
     if (item.deliverySystem === 'agency' || v(10)) item.mediaCompany = v(10);
     if (v(11)) item.sourceId = v(11);
     if (item.deliverySystem === 'agency' || v(12)) item.memo = v(12);
+    if (AGENCY_KINDS[v(13)]) item.agencyKind = v(13);
     return item;
   });
 }
@@ -1201,9 +1274,15 @@ function scanBareUrls(text) {
   return urls;
 }
 
+function ccIsTrackingUrl(u) {
+  try { return CC_TRACKING_HOSTS.includes(new URL(u).hostname.toLowerCase()); } catch (e) { return false; }
+}
 function openUrlConvertPanel(selectAll) {
-  const urls = scanBareUrls(el.bodyText.value);
-  if (urls.length === 0) { toast('変換対象のURLが見つかりませんでした'); return; }
+  const found = scanBareUrls(el.bodyText.value);
+  const urls = found.filter(u => !ccIsTrackingUrl(u));
+  const skipped = found.length - urls.length;
+  if (urls.length === 0) { toast(skipped ? `計測URL（${skipped}件）は他媒体入稿で変換済みのため対象外です` : '変換対象のURLが見つかりませんでした', skipped ? 4000 : 2500); return; }
+  if (skipped) toast(`計測URL（${skipped}件）は他媒体入稿で変換済みのため、一覧から外しました`, 4000);
   el.urlCheckList.innerHTML = urls.map(url => `
     <label class="url-check-label">
       <input type="checkbox" class="url-check-item" value="${escHtml(url)}" ${selectAll ? 'checked' : ''}>
@@ -1396,10 +1475,17 @@ function attachDragHandlers() {
 // ========== Admin Panel ==========
 function gbCount(cat) { return mediaList.filter(m => (m.deliverySystem || 'MM') === cat).length; }
 // クリックメーラーの媒体のうち、まだ代理店区分にコピーしていないもの（sourceId で判定。何度押しても重複しない）
-function gbPendingCopies(list) {
-  return list.filter(m => m.deliverySystem === 'clickmailer' &&
+function gbPendingCopies(list, ds = 'clickmailer') {
+  return list.filter(m => (m.deliverySystem || 'MM') === ds &&
     !list.some(x => x.deliverySystem === 'agency' && String(x.sourceId || '') === String(m.id)));
 }
+// 自社広告の媒体が「配信に使う配信機の媒体」（sourceId の紐付け先。代理店以外）
+function gbSourceMedia(m) {
+  if (!m || m.sourceId == null || m.sourceId === '') return null;
+  const s = mediaList.find(x => String(x.id) === String(m.sourceId));
+  return s && (s.deliverySystem || 'MM') !== 'agency' && DELIVERY_SYSTEMS[s.deliverySystem || 'MM'] ? s : null;
+}
+const GB_COPY_SOURCES = ['clickmailer', 'haihai', 'MM'];
 function renderAdminList() {
   gbRenderCompanyList();
   // タブ（配信機・区分）でフィルタ
@@ -1418,13 +1504,17 @@ function renderAdminList() {
   if (isAgency) {
     const noCo = sorted.filter(m => !(m.mediaCompany || '').trim());
     $('gbNoCompanyCount').textContent = `（${noCo.length}）`;
-    const pending = gbPendingCopies(mediaList).length;
+    const copyBtns = GB_COPY_SOURCES.map(ds => [ds, gbPendingCopies(mediaList, ds).length]).filter(([, n]) => n)
+      .map(([ds, n]) => `<button type="button" class="btn-outline btn-sm" data-copyds="${ds}" ${ds === 'clickmailer' ? 'id="gbCopyCmBtn"' : ''}>${escHtml(MEDIA_CATEGORIES[ds].label)}の媒体 ${n}件を代理店（自社広告）にコピー</button>`);
     $('gbCopyArea').innerHTML =
-      (pending ? `<button type="button" class="btn-outline btn-sm" id="gbCopyCmBtn">クリックメーラーの媒体 ${pending}件を代理店にコピー</button> <span class="text-muted">コピー済みの媒体は重複しません</span>` : '') +
+      (copyBtns.length ? copyBtns.join(' ') + ' <span class="text-muted">コピー済みの媒体は重複しません。コピーした媒体は他媒体入稿の結果から元の配信機で原稿作成できます</span>' : '') +
       (noCo.length ? `<div class="measure-hint mt-2">ⓘ 媒体社名が未入力の代理店媒体が ${noCo.length}件あります。媒体社名を入力してください。</div>` : '');
+    const kc = k => sorted.filter(m => gbAgencyKind(m) === k).length;
+    $('gbKindTabs').innerHTML = [['all', 'すべて', sorted.length], ['own', '自社広告', kc('own')], ['external', '他媒体', kc('external')]]
+      .map(([k, l, n]) => `<button type="button" class="admin-tab ${gbAgencyKindTab === k ? 'active' : ''}" role="tab" aria-selected="${gbAgencyKindTab === k}" data-kindtab="${k}">${l}<span class="gb-count">${n}</span></button>`).join('');
     const q = gbSearchText.trim().toLowerCase();
     const total = sorted.length;
-    sorted = sorted.filter(m => (!q || (m.name || '').toLowerCase().includes(q) || (m.mediaCompany || '').toLowerCase().includes(q)) &&
+    sorted = sorted.filter(m => (gbAgencyKindTab === 'all' || gbAgencyKind(m) === gbAgencyKindTab) && (!q || (m.name || '').toLowerCase().includes(q) || (m.mediaCompany || '').toLowerCase().includes(q)) &&
                                 (!gbOnlyNoCompany || !(m.mediaCompany || '').trim()));
     if (!sorted.length) {
       el.mediaListContainer.innerHTML = total
@@ -1437,6 +1527,14 @@ function renderAdminList() {
     el.mediaListContainer.innerHTML = '<div class="empty-state">この配信機の媒体は登録されていません</div>';
     return;
   }
+  if (isAgency && gbAgencyKindTab === 'all') {
+    // 「すべて」は 自社広告 → 他媒体 の見出しで区切る
+    el.mediaListContainer.innerHTML = Object.keys(AGENCY_KINDS).map(k => {
+      const ms = sorted.filter(m => gbAgencyKind(m) === k);
+      return ms.length ? `<div class="gb-kind-h">${escHtml(AGENCY_KINDS[k])} <span class="gb-count">${ms.length}件</span></div>` + ms.map(m => renderMediaItem(m)).join('') : '';
+    }).join('');
+    return;
+  }
   el.mediaListContainer.innerHTML = sorted.map(m => renderMediaItem(m)).join('');
 }
 
@@ -1446,7 +1544,7 @@ function renderMediaItem(m) {
   const isAgency = cur === 'agency';
   const id = escHtml(m.id);
   const badge = isAgency
-    ? ((m.mediaCompany || '').trim() ? `<span class="badge badge-company">${escHtml(m.mediaCompany)}</span>` : '<span class="badge badge-gray" style="margin-left:6px">媒体社未設定</span>')
+    ? `<span class="badge ${gbAgencyKind(m) === 'own' ? 'badge-info' : 'badge-warn'}" style="margin-left:6px">${escHtml(AGENCY_KINDS[gbAgencyKind(m)])}</span>` + ((m.mediaCompany || '').trim() ? `<span class="badge badge-company">${escHtml(m.mediaCompany)}</span>` : '<span class="badge badge-gray" style="margin-left:6px">媒体社未設定</span>')
     : `<span class="badge badge-primary" style="margin-left:4px">${escHtml(m.deliveryTime||'')}</span>`;
   return `
   <div class="media-item" id="media-item-${id}" data-id="${id}">
@@ -1480,7 +1578,19 @@ function renderMediaItem(m) {
       </div>
       <div class="gb-ag-fields" style="${isAgency ? '' : 'display:none'}">
         <div class="form-row">
-          <label for="edit-company-${id}">媒体社名 <span style="color:#b91c1c">*</span>（媒体を運営する会社）</label>
+          <label for="edit-kind-${id}">代理店の区分</label>
+          <select id="edit-kind-${id}" style="max-width:260px">${Object.keys(AGENCY_KINDS).map(k => `<option value="${k}" ${gbAgencyKind(m) === k ? 'selected' : ''}>${escHtml(AGENCY_KINDS[k])}${k === 'own' ? '（自社で配信する媒体）' : '（他社が運営する媒体）'}</option>`).join('')}</select>
+        </div>
+        <div class="form-row">
+          <label for="edit-src-${id}">配信に使う配信機の媒体（自社広告のみ・任意）</label>
+          <select id="edit-src-${id}" style="max-width:360px"><option value="">（なし）</option>${m.sourceId != null && m.sourceId !== '' && !mediaList.some(x => String(x.id) === String(m.sourceId) && (x.deliverySystem || 'MM') !== 'agency') ? `<option value="${escHtml(m.sourceId)}" selected>（紐付け先の媒体は削除済み・ID ${escHtml(m.sourceId)}）</option>` : ''}${Object.keys(DELIVERY_SYSTEMS).map(ds => {
+            const ms = mediaList.filter(x => (x.deliverySystem || 'MM') === ds).sort((a, b) => (a.sortOrder || 99) - (b.sortOrder || 99));
+            return ms.length ? `<optgroup label="${escHtml(DELIVERY_SYSTEMS[ds].label)}">${ms.map(x => `<option value="${escHtml(x.id)}" ${String(m.sourceId || '') === String(x.id) ? 'selected' : ''}>${escHtml(x.name)}</option>`).join('')}</optgroup>` : '';
+          }).join('')}</select>
+          <div class="text-muted" style="color:#666">他媒体入稿の結果から「○○で原稿作成」を押すと、この媒体を選んだ状態でメイン画面を開きます（ヘッダー・フッターはこの媒体のもの）。</div>
+        </div>
+        <div class="form-row">
+          <label for="edit-company-${id}">媒体社名（媒体を運営する会社。他媒体は入力してください／自社広告は「自社」でも可）</label>
           <input type="text" id="edit-company-${id}" maxlength="60" value="${escHtml(m.mediaCompany||'')}" list="gbCompanyList">
           <div class="gb-field-err" id="edit-company-err-${id}" role="alert"></div>
         </div>
@@ -1575,26 +1685,40 @@ function saveMediaItem(oldId) {
     $(`edit-name-${oldId}`).focus();
     return;
   }
-  if (ds === 'agency' && !mediaCompany) {
-    if (coErr) coErr.textContent = '媒体社名を入力してください';
-    toast('媒体社名を入力してください');
-    $(`edit-company-${oldId}`).focus();
-    return;
-  }
+  const agencyKind = ($(`edit-kind-${oldId}`) ? $(`edit-kind-${oldId}`).value : '') || gbAgencyKind(mediaList[idx] || {});
+  // 他媒体は媒体社名の未入力を警告する（保存はできる）
+  const coWarn = ds === 'agency' && agencyKind === 'external' && !mediaCompany;
   if (idx === -1) { toast('エラー: 媒体が見つかりません'); return; }
 
   const updated = { ...mediaList[idx], id: newId, sortOrder: sort, name, deliverySystem: ds, deliveryTime: `${hour}:${min}`, header, footer, segmentId, fromName };
   if (ds === 'agency' || mediaList[idx].mediaCompany !== undefined || mediaCompany) updated.mediaCompany = mediaCompany;
   if (ds === 'agency' || mediaList[idx].memo !== undefined || memo) updated.memo = memo;
+  if (ds === 'agency') updated.agencyKind = AGENCY_KINDS[agencyKind] ? agencyKind : 'external';
+  if (ds === 'agency' && $(`edit-src-${oldId}`)) {
+    const src = $(`edit-src-${oldId}`).value;
+    if (src) { updated.sourceId = src; const sm = mediaList.find(x => String(x.id) === String(src)); if (sm) updated.sourceDs = sm.deliverySystem || 'MM'; }
+    else if (mediaList[idx].sourceId != null) { delete updated.sourceId; delete updated.sourceDs; }
+  }
+  // クリックメーラー媒体の名前を変えたら、sourceId で紐付いた代理店区分の媒体名も同じ保存で更新する（媒体社名・メモ等は変えない）
+  const syncAgencyName = ds !== 'agency' && DELIVERY_SYSTEMS[ds] && (mediaList[idx].name || '') !== name;
+  const applyLinked = list => {
+    let n = 0;
+    if (syncAgencyName) list.forEach(x => {
+      if (x.deliverySystem === 'agency' && x.sourceId != null && String(x.sourceId) === String(newId) && x.name !== name) { x.name = name; n++; }
+    });
+    return n;
+  };
   mediaList[idx] = updated;
+  const linked = applyLinked(mediaList);
   saveMedia(mediaList);
   openEditId = null;
   renderAdminList();
   renderSelect();
-  toast('保存しました');
+  toast((linked ? `保存しました。代理店区分の媒体名も更新しました（${linked}件）` : '保存しました') + (coWarn ? '（媒体社名が未入力です。他媒体は媒体社名を入れてください）' : ''), linked || coWarn ? 4500 : 2500);
   autoSync(list => {
     const i = list.findIndex(m => m.id === newId);
     if (i === -1) list.push(updated); else list[i] = updated;
+    applyLinked(list);
     return list;
   });
 }
@@ -1644,7 +1768,8 @@ function addNewMedia() {
     <div class="d1-head"><h3 id="gbAddTitle">媒体を追加</h3><button type="button" class="d1-x" aria-label="閉じる">×</button></div>
     <div class="d1-body">
       <fieldset class="gb-fieldset"><legend>登録先（複数選べます）</legend>
-        ${Object.keys(MEDIA_CATEGORIES).map(k => `<label><input type="checkbox" class="gb-cat" value="${escHtml(k)}" ${k === initCat ? 'checked' : ''}> ${escHtml(MEDIA_CATEGORIES[k].label)}</label>`).join('')}
+        ${Object.keys(MEDIA_CATEGORIES).map(k => `<label><input type="checkbox" class="gb-cat" value="${escHtml(k)}" ${k === initCat || (initCat === 'clickmailer' && k === 'agency') ? 'checked' : ''}> ${escHtml(MEDIA_CATEGORIES[k].label)}</label>`).join('')}
+        ${initCat === 'clickmailer' ? '<div class="text-muted" style="color:#666">ⓘ クリックメーラーの媒体は、他媒体入稿でも使えるよう「代理店（自社広告）」にも作成します（不要なら外してください）。</div>' : ''}
         <div style="margin-top:6px"><button type="button" class="btn-outline btn-sm gb-both">クリックメーラーと代理店の両方</button></div>
         <div class="text-muted mt-2" style="color:#666">ⓘ 複数を選ぶと、それぞれに1件ずつ作成されます。作成後は、それぞれ別々に編集します。</div>
         <div class="gb-field-err gb-cat-err" role="alert"></div>
@@ -1655,8 +1780,13 @@ function addNewMedia() {
         <div class="gb-field-err gb-name-err" role="alert"></div>
         <div class="gb-dup"></div>
       </div>
+      <div class="form-row gb-add-kind" style="display:none">
+        <label>代理店の区分</label>
+        <label class="ga-inline-chk" style="margin-left:0 !important"><input type="radio" name="gbAddKind" value="own"> 自社広告（自社で配信する媒体）</label>
+        <label class="ga-inline-chk"><input type="radio" name="gbAddKind" value="external"> 他媒体（他社が運営する媒体）</label>
+      </div>
       <div class="form-row gb-add-co" style="display:none">
-        <label for="gbAddCompany">媒体社名 <span style="color:#b91c1c">*</span></label>
+        <label for="gbAddCompany">媒体社名 <span class="gb-co-req" style="color:#b91c1c">*</span></label>
         <input type="text" id="gbAddCompany" maxlength="60" list="gbCompanyList">
         <div class="gb-field-err gb-co-err" role="alert"></div>
         <div class="text-muted" style="color:#666">（媒体名＝配信の名称、媒体社名＝媒体を運営する会社）</div>
@@ -1669,9 +1799,16 @@ function addNewMedia() {
   gbRenderCompanyList();
   const q = s => wrap.querySelector(s);
   const cats = () => [...wrap.querySelectorAll('.gb-cat:checked')].map(c => c.value);
+  let kindTouched = false;
+  const kind = () => (wrap.querySelector('input[name="gbAddKind"]:checked') || {}).value || 'external';
   const update = () => {
     const cs = cats();
+    // 区分の初期値: クリックメーラー等と同時に作る＝自社広告、代理店だけ＝他媒体
+    if (!kindTouched) { const k = cs.some(c => c !== 'agency') ? 'own' : 'external'; wrap.querySelectorAll('input[name="gbAddKind"]').forEach(r => { r.checked = r.value === k; }); }
+    q('.gb-add-kind').style.display = cs.includes('agency') ? '' : 'none';
     q('.gb-add-co').style.display = cs.includes('agency') ? '' : 'none';
+    q('.gb-co-req').style.display = kind() === 'external' ? '' : 'none';
+    q('#gbAddCompany').placeholder = kind() === 'own' ? '空欄なら「自社」' : '';
     q('.gb-summary').textContent = cs.length ? '作成されるもの: ' + cs.map(c => `${MEDIA_CATEGORIES[c].label}に1件`).join('・') : '登録先を選んでください';
     const name = q('#gbAddName').value.trim();
     const dups = cs.filter(c => name && mediaList.some(m => (m.deliverySystem || 'MM') === c && (m.name || '').trim() === name));
@@ -1688,7 +1825,15 @@ function addNewMedia() {
     }
   };
   document.addEventListener('keydown', onKey, true);
-  wrap.addEventListener('change', update);
+  wrap.addEventListener('change', e => {
+    if (e.target.name === 'gbAddKind') kindTouched = true;
+    // クリックメーラーを選んだら代理店（自社広告）も初期チェック（外すこともできる）
+    if (e.target.classList && e.target.classList.contains('gb-cat') && e.target.value === 'clickmailer' && e.target.checked) {
+      const ag = wrap.querySelector('.gb-cat[value="agency"]');
+      if (ag) ag.checked = true;
+    }
+    update();
+  });
   q('#gbAddName').addEventListener('input', update);
   q('.gb-both').addEventListener('click', () => {
     wrap.querySelectorAll('.gb-cat').forEach(c => { if (c.value === 'clickmailer' || c.value === 'agency') c.checked = true; });
@@ -1702,18 +1847,20 @@ function addNewMedia() {
     const company = q('#gbAddCompany').value.trim();
     q('.gb-cat-err').textContent = cs.length ? '' : '登録先を1つ以上選んでください';
     q('.gb-name-err').textContent = name ? '' : '媒体名を入力してください';
-    q('.gb-co-err').textContent = (cs.includes('agency') && !company) ? '媒体社名を入力してください' : '';
+    const ak = kind();
+    const needCo = cs.includes('agency') && ak === 'external' && !company;
+    q('.gb-co-err').textContent = needCo ? '媒体社名を入力してください' : '';
     if (!cs.length) return;
     if (!name) { q('#gbAddName').focus(); return; }
-    if (cs.includes('agency') && !company) { q('#gbAddCompany').focus(); return; }
+    if (needCo) { q('#gbAddCompany').focus(); return; }
     close();
-    gbCreateMedia(cs, name, company);
+    gbCreateMedia(cs, name, company || (ak === 'own' ? '自社' : ''), ak);
   });
   update();
   setTimeout(() => q('#gbAddName').focus(), 0);
 }
 
-function gbCreateMedia(cats, name, company) {
+function gbCreateMedia(cats, name, company, agencyKind) {
   // 採番は mutator の中で（最新の一覧に対して）行う。同時に他の人が追加しても上書きしない（設計書 6.2）
   let created = [];
   const mutator = list => {
@@ -1723,7 +1870,7 @@ function gbCreateMedia(cats, name, company) {
       const id = getNextId(list);
       const maxSort = list.reduce((mx, m) => Math.max(mx, m.sortOrder || 0), 0);
       const item = { id, sortOrder: maxSort + 1, columnName: '', name, deliveryTime: '10:00', deliverySystem: cat, segmentId: '', fromName: '', header: '', footer: '' };
-      if (cat === 'agency') { item.mediaCompany = company; item.memo = ''; }
+      if (cat === 'agency') { item.mediaCompany = company; item.memo = ''; item.agencyKind = AGENCY_KINDS[agencyKind] ? agencyKind : 'external'; }
       if (firstId) item.sourceId = firstId;
       list.push(item);
       created.push({ id, cat });
@@ -1747,17 +1894,17 @@ function gbCreateMedia(cats, name, company) {
 }
 
 // クリックメーラーの媒体を代理店区分へコピー（設計書 6.3。sourceId で重複を防ぐので2回押しても増えない）
-function gbCopyClickmailerToAgency() {
+function gbCopyClickmailerToAgency(ds = 'clickmailer') {
   const mutator = list => {
-    gbPendingCopies(list).forEach(m => {
+    gbPendingCopies(list, ds).forEach(m => {
       const maxAg = list.filter(x => x.deliverySystem === 'agency').reduce((mx, x) => Math.max(mx, x.sortOrder || 0), 0);
       const maxAll = list.reduce((mx, x) => Math.max(mx, x.sortOrder || 0), 0);
-      list.push({ ...m, id: getNextId(list), deliverySystem: 'agency', mediaCompany: '', memo: '', sourceId: m.id, sortOrder: Math.max(maxAg, maxAll) + 1 });
+      list.push({ ...m, id: getNextId(list), deliverySystem: 'agency', agencyKind: 'own', mediaCompany: '', memo: '', sourceId: m.id, sourceDs: ds, sortOrder: Math.max(maxAg, maxAll) + 1 });
     });
     return list;
   };
-  const n = gbPendingCopies(mediaList).length;
-  if (!n) { toast('コピーするクリックメーラーの媒体はありません（コピー済み）'); return; }
+  const n = gbPendingCopies(mediaList, ds).length;
+  if (!n) { toast(`コピーする${MEDIA_CATEGORIES[ds].label}の媒体はありません（コピー済み）`); return; }
   saveMedia(mutator(JSON.parse(JSON.stringify(mediaList))));
   currentAdminTab = 'agency';
   renderAdminList();
@@ -1911,7 +2058,7 @@ function addHaihaiSeedMedia() {
 
 // ========== Import / Export ==========
 function mediaToCSV(list) {
-  const cols = ['媒体ID','表示順','カラム名','媒体名','配信時刻','配信システム','セグメントID','差出人名','ヘッダー','フッター','媒体社名','コピー元ID','メモ'];
+  const cols = ['媒体ID','表示順','カラム名','媒体名','配信時刻','配信システム','セグメントID','差出人名','ヘッダー','フッター','媒体社名','コピー元ID','メモ','代理店の区分'];
   const q = v => {
     const s = String(v == null ? '' : v);
     return (s.includes(',') || s.includes('\n') || s.includes('"'))
@@ -1925,7 +2072,7 @@ function mediaToCSV(list) {
       m.deliveryTime || '10:00', m.deliverySystem || 'MM',
       m.segmentId || '', m.fromName || '',
       m.header || '', m.footer || '',
-      m.mediaCompany || '', m.sourceId || '', m.memo || ''
+      m.mediaCompany || '', m.sourceId || '', m.memo || '', m.agencyKind || ''
     ].map(q).join(','));
   }
   return rows.join('\r\n');
@@ -2375,7 +2522,7 @@ function generateHmReserve() {
   return `javascript:(function(){${code}})();`;
 }
 
-// ========== 代理店入稿（クリック計測 click-counter 連携） ==========
+// ========== 他媒体入稿（クリック計測 click-counter 連携） ==========
 // API仕様: click-counter/API.md。APIのベースURLは次の1行だけを変更する（本番: https://cc.click-isadmcp.com/v1）
 const CC_API_BASE = 'https://cc-app.soga-naoya.workers.dev/v1';
 const CC_ORIGIN = CC_API_BASE.replace(/\/v1\/?$/, '');
@@ -2811,6 +2958,18 @@ function ccSetManuscript(text, o) {
   ccDetect();
   return true;
 }
+function ccFileExt(name) { return ((String(name).match(/\.([^.]+)$/) || [])[1] || '').toLowerCase(); }
+// .txt / .docx を読み、ccSetManuscript に渡せる形で返す（拡張子・サイズの検査は呼び出し側）
+async function ccReadManuscriptFile(file) {
+  const buf = await file.arrayBuffer();
+  const base = file.name.replace(/\.[^.]+$/, '');
+  if (ccFileExt(file.name) === 'docx') {
+    const r = await ccDocxToText(buf);
+    return { text: r.text, sourceType: 'docx', sourceFilename: file.name, name: base, docxLinks: r.links };
+  }
+  const r = ccDecodeText(buf);
+  return { text: r.text, sourceType: 'txt', sourceFilename: file.name, name: base, enc: r.enc, fileBuf: buf };
+}
 async function ccImportFile(file) {
   if (!file) return;
   const ext = ((file.name.match(/\.([^.]+)$/) || [])[1] || '').toLowerCase();
@@ -2821,16 +2980,8 @@ async function ccImportFile(file) {
   if (file.size > CC_LIMITS.fileBytes) { ccMsg('長すぎるため取り込めません（上限 5MB）', 'err'); return; }
   ccMsg(`読み込み中…（${file.name}）`);
   try {
-    const buf = await file.arrayBuffer();
-    const base = file.name.replace(/\.[^.]+$/, '');
-    let ok;
-    if (ext === 'docx') {
-      const r = await ccDocxToText(buf);
-      ok = ccSetManuscript(r.text, { sourceType: 'docx', sourceFilename: file.name, name: base, docxLinks: r.links });
-    } else {
-      const r = ccDecodeText(buf);
-      ok = ccSetManuscript(r.text, { sourceType: 'txt', sourceFilename: file.name, name: base, enc: r.enc, fileBuf: buf });
-    }
+    const r = await ccReadManuscriptFile(file);
+    const ok = ccSetManuscript(r.text, r);
     if (ok) ccMsg(`「${file.name}」を取り込みました。`, 'ok');
   } catch (e) {
     ccMsg('ファイルを読み込めませんでした。別のファイルでお試しください。（' + (e && e.message ? e.message : e) + '）', 'err');
@@ -2838,8 +2989,38 @@ async function ccImportFile(file) {
 }
 function ccHandleDropFiles(files) {
   if (!files || !files.length) return;
-  if (files.length > 1) toast('1つずつ取り込んでください。最初の1件を取り込みました');
-  ccImportFile(files[0]).then(() => { if (files.length > 1) { const m = $('gaImportMsg'); m.textContent += '（複数のファイルが選ばれたため、最初の1件だけ取り込みました）'; } });
+  // 2件以上、または原稿リスト表示中 → 原稿リストに追加（複数原稿）。1件だけなら従来どおり
+  if (files.length > 1 || gm.active) { gmAddFiles(files); return; }
+  ccImportFile(files[0]);
+}
+async function ccFetchGdoc(url) {
+  const res = await ccApi('/import/gdoc', { method: 'POST', body: JSON.stringify({ url, format: 'docx' }), timeout: 20000 });
+  const ct = res.headers.get('Content-Type') || '';
+  let text, title = null, links = [];
+  if (ct.includes('json')) {
+    const d = await res.json();
+    text = d.text || ''; title = d.title || null;
+  } else {
+    const buf = await res.arrayBuffer();
+    title = res.headers.get('X-CC-Doc-Title');
+    if (title) { try { title = decodeURIComponent(title); } catch (e) {} }
+    try {
+      const r = await ccDocxToText(buf);
+      text = r.text; links = r.links;
+    } catch (e) {
+      const r2 = await ccApi('/import/gdoc', { method: 'POST', body: JSON.stringify({ url, format: 'txt' }), timeout: 20000 });
+      const d = await r2.json();
+      text = d.text || ''; title = title || d.title || null;
+    }
+  }
+  return { text, title, links };
+}
+// Googleドキュメント取り込みのエラーを日本語の1文にする（複数URL用）
+function ccGdocErrText(e) {
+  if (e.code === 'GDOC_NOT_PUBLIC') return '共有設定が『リンクを知っている全員が閲覧可』になっていない可能性があります';
+  if (e.code === 'GDOC_NOT_FOUND' || e.code === 'INVALID_URL') return 'ドキュメントが見つかりませんでした。URLを確認してください';
+  if (e.network || (e.status && e.status >= 500)) return '取得サービスに接続できませんでした';
+  return e.message || '取り込めませんでした';
 }
 async function ccImportGdoc() {
   const url = $('gaGdocUrl').value.trim();
@@ -2848,25 +3029,7 @@ async function ccImportGdoc() {
   btn.disabled = true; btn.textContent = '取得中…';
   ccMsg('Googleドキュメントを取得しています…');
   try {
-    const res = await ccApi('/import/gdoc', { method: 'POST', body: JSON.stringify({ url, format: 'docx' }), timeout: 20000 });
-    const ct = res.headers.get('Content-Type') || '';
-    let text, title = null, links = [];
-    if (ct.includes('json')) {
-      const d = await res.json();
-      text = d.text || ''; title = d.title || null;
-    } else {
-      const buf = await res.arrayBuffer();
-      title = res.headers.get('X-CC-Doc-Title');
-      if (title) { try { title = decodeURIComponent(title); } catch (e) {} }
-      try {
-        const r = await ccDocxToText(buf);
-        text = r.text; links = r.links;
-      } catch (e) {
-        const r2 = await ccApi('/import/gdoc', { method: 'POST', body: JSON.stringify({ url, format: 'txt' }), timeout: 20000 });
-        const d = await r2.json();
-        text = d.text || ''; title = title || d.title || null;
-      }
-    }
+    const { text, title, links } = await ccFetchGdoc(url);
     if (ccSetManuscript(text, { sourceType: 'gdoc', sourceRef: url, name: title || '', docxLinks: links })) {
       ccMsg(`Googleドキュメント${title ? '「' + title + '」' : ''}を取り込みました。`, 'ok');
     }
@@ -2986,12 +3149,12 @@ function ccManuscriptName() {
 function ccDefaultLabel(pos) { return `${ccManuscriptName()}_${pos}`; }
 function ccLabelOf(l) { return (l.label || '').trim() || ccDefaultLabel(l.pos); }
 
-function ccDetect() {
-  const text = $('gaText').value;
+// 原稿テキストから URL 一覧を作る（単一原稿・複数原稿で共通。edits はURLごとの手動変更）
+function ccBuildLinks(text, docxLinks, edits) {
   const found = ccDetectUrls(text);
-  ga.truncated = Math.max(0, found.length - CC_LIMITS.urls);
+  const truncated = Math.max(0, found.length - CC_LIMITS.urls);
   const nth = new Map(), firstPos = new Map();
-  ga.links = found.slice(0, CC_LIMITS.urls).map((f, i) => {
+  const links = found.slice(0, CC_LIMITS.urls).map((f, i) => {
     const pos = i + 1;
     const k = nth.get(f.url) || 0;
     nth.set(f.url, k + 1);
@@ -2999,8 +3162,8 @@ function ccDetect() {
     const cls = ccClassify(f.url, f.wrapped);
     const dupOf = firstPos.has(f.url) ? firstPos.get(f.url) : null;
     if (dupOf == null) firstPos.set(f.url, pos);
-    const word = ga.docxLinks.find(d => d.url === f.url && d.display && d.display !== f.url);
-    const e = ga.edits.get(key) || {};
+    const word = (docxLinks || []).find(d => d.url === f.url && d.display && d.display !== f.url);
+    const e = edits.get(key) || {};
     const locked = cls.kind === 'invalid' || cls.kind === 'merge' || cls.kind === 'self';
     const track = locked ? false : (e.track != null ? e.track : cls.kind === 'ok');
     return {
@@ -3011,6 +3174,12 @@ function ccDetect() {
       lpUrl: e.lpUrl || '', label: e.label || '', err: false,
     };
   });
+  return { links, truncated };
+}
+function ccDetect() {
+  const r = ccBuildLinks($('gaText').value, ga.docxLinks, ga.edits);
+  ga.truncated = r.truncated;
+  ga.links = r.links;
   if (!ga.issuing && $('gaBarErr')) $('gaBarErr').textContent = '';
   ccRenderUrls();
   ccUpdateBar();
@@ -3109,6 +3278,7 @@ function ccSetSelected(ids) {
   const all = ccAgencyMedia();
   ga.selected = all.filter(m => ids.includes(m.id)).map(m => m.id);
   ccRenderMedia(); ccRenderMediaTable(); ccUpdateBar(); ccMarkStale();
+  if (gm.active) gmScheduleRender();
 }
 function ccRenderMedia() {
   const all = ccAgencyMedia();
@@ -3119,15 +3289,21 @@ function ccRenderMedia() {
   } else {
     const q = ($('gaMediaSearch').value || '').trim().toLowerCase();
     const shown = all.filter(m => !q || (m.name || '').toLowerCase().includes(q) || (m.mediaCompany || '').toLowerCase().includes(q));
-    const groups = new Map();
-    shown.forEach(m => { const c = (m.mediaCompany || '').trim(); if (!groups.has(c)) groups.set(c, []); groups.get(c).push(m); });
-    const keys = [...groups.keys()].sort((a, b) => (a === '') - (b === ''));
-    box.innerHTML = shown.length ? keys.map(c => {
-      const ms = groups.get(c);
-      const head = c ? `<button type="button" class="ga-mgroup-h" data-company="${escHtml(c)}">${escHtml(c)} <span class="text-muted">（${ms.length}件・クリックでまとめて選択／解除）</span></button>`
-                     : `<div class="ga-mgroup-h" style="cursor:default">媒体社未設定 <span class="text-muted">（${ms.length}件）</span></div>`;
-      return head + ms.map(m => `<label class="ga-mitem"><input type="checkbox" class="ga-mchk" value="${escHtml(m.id)}" ${ga.selected.includes(m.id) ? 'checked' : ''}>
-        <span>${escHtml(m.name)}${m.mediaCompany ? ` <span class="text-muted">（${escHtml(m.mediaCompany)}）</span>` : ' <span class="badge badge-gray">媒体社未設定</span>'}</span></label>`).join('');
+    // 自社広告 / 他媒体 のグループ → その中を媒体社ごとにまとめる
+    box.innerHTML = shown.length ? Object.keys(AGENCY_KINDS).map(kind => {
+      const inKind = shown.filter(m => gbAgencyKind(m) === kind);
+      if (!inKind.length) return '';
+      const groups = new Map();
+      inKind.forEach(m => { const c = (m.mediaCompany || '').trim(); if (!groups.has(c)) groups.set(c, []); groups.get(c).push(m); });
+      const keys = [...groups.keys()].sort((a, b) => (a === '') - (b === ''));
+      const kindOn = inKind.every(m => ga.selected.includes(m.id));
+      return `<button type="button" class="ga-mgroup-h ga-mkind-h" data-kind="${escHtml(kind)}">${escHtml(AGENCY_KINDS[kind])} <span class="text-muted">（${inKind.length}件・クリックで${kindOn ? 'まとめて解除' : 'すべて選択'}）</span></button>` + keys.map(c => {
+        const ms = groups.get(c);
+        const head = c ? `<button type="button" class="ga-mgroup-h" data-company="${escHtml(c)}" data-ckind="${escHtml(kind)}">${escHtml(c)} <span class="text-muted">（${ms.length}件・クリックでまとめて選択／解除）</span></button>`
+                       : `<div class="ga-mgroup-h" style="cursor:default">媒体社未設定 <span class="text-muted">（${ms.length}件）</span></div>`;
+        return head + ms.map(m => `<label class="ga-mitem"><input type="checkbox" class="ga-mchk" value="${escHtml(m.id)}" ${ga.selected.includes(m.id) ? 'checked' : ''}>
+          <span>${escHtml(m.name)}${m.mediaCompany ? ` <span class="text-muted">（${escHtml(m.mediaCompany)}）</span>` : ' <span class="badge badge-gray">媒体社未設定</span>'}</span></label>`).join('');
+      }).join('');
     }).join('') : '<div class="empty-state" style="color:#666">条件に合う媒体がありません。</div>';
   }
   const chips = $('gaChips');
@@ -3207,6 +3383,8 @@ function ccBlockReason() {
 function ccUpdateBar() {
   const btn = $('gaIssueBtn');
   if (!btn) return;
+  if (gm.active) { gmUpdateBar(); return; }
+  btn.style.display = '';
   const M = ga.selected.length, T = ccTrackedCount();
   $('gaBarText').textContent = `${M}媒体 × ${T}リンク = ${(M * T).toLocaleString()}本の計測URLを発行します`;
   const reason = ga.issuing ? '' : ccBlockReason();
@@ -3239,7 +3417,7 @@ function ccBuildRequest() {
     const startAt = (d || v.time) ? `${d || date}T${v.time || '00:00'}:00+09:00` : null;
     const pc = prevCamp(m.id);
     return {
-      mediaId: m.id, mediaName: m.name, mediaCompany: m.mediaCompany || null, mediaCategory: 'agency',
+      mediaId: m.id, mediaName: m.name, mediaCompany: m.mediaCompany || null, mediaCategory: 'agency', mediaKind: gbAgencyKind(m),
       deliveryCount: Number.isNaN(count) ? null : count, costYen: Number.isNaN(cost) ? null : cost, costTax: v.tax === 'incl' ? 'incl' : 'excl',
       startAt, campaignName: (ccCampCommon() + '_' + m.name).slice(0, 200), campaignId: pc ? pc.campaignId : null,
     };
@@ -3387,6 +3565,7 @@ function ccRenderResult() {
     <div class="ga-actions">
       <button type="button" class="btn-primary btn-sm" data-ga="copy-one">コピー</button>
       <button type="button" class="btn-outline btn-sm" data-ga="dl-one">.txtダウンロード</button>
+      ${ccToMainBtnHtml(cur.campaign.mediaId, 'data-ga="to-main"')}
       <select id="gaDlEnc" aria-label="ダウンロードの文字コード"><option value="utf-8">UTF-8</option><option value="shift_jis">Shift_JIS</option></select>
       <span class="text-muted" style="color:#444">置換 ${cur.replaced}本 / 未置換 ${cur.notReplaced}本（計測しない・除外）</span>
       <span class="text-muted" style="color:#444"><mark style="background:#e0e7ff;text-decoration:underline">■</mark> 置換済み</span>
@@ -3476,6 +3655,7 @@ function ccOnResultClick(e) {
     case 'dl-one': ccDownload(cur.plain, ccSanitizeFilename(cur.name) + '.txt', enc); break;
     case 'dl-all': ccDownload(ccAllText(), ccSanitizeFilename(ccCampCommon() + '_全媒体') + '.txt', enc); break;
     case 'copy-all': ccCopyText(ccAllText(), b); break;
+    case 'to-main': ccOpenInDelivery(cur.campaign.mediaId, cur.plain, ccReqDate(ga.resultReq, cur.campaign.mediaId), ga.resultReq.manuscript.name); break;
     case 'new': ccResetAll(); break;
   }
 }
@@ -3604,6 +3784,1049 @@ function ccRenderLp() {
   const rb = $('gaLpRetry'); if (rb) rb.addEventListener('click', () => { ccStopLpPoll(); ccPollLp(); });
 }
 
+// ---------- 複数原稿（一括入稿。設計: click-counter/docs/cc-ui-multi.md） ----------
+// 原稿が2件以上になると「原稿リスト」モード（gm.active）。1件のときは従来の単一原稿の画面をそのまま使う。
+// 発行は原稿ごとに POST /v1/issue を1回（requestId は原稿ごとに固定＝再送しても二重発行しない）。
+const CC_MULTI_MAX = 30;          // 一度に扱える原稿数（リスト総数）
+const CC_MULTI_CONCURRENCY = 2;   // 一括発行の同時実行数（無料プラン: D1 50クエリ/呼び出し・CPU 上限のため 1〜2）
+const CC_GDOC_CONCURRENCY = 2;    // Googleドキュメントの同時取得数
+const CC_KV_DAILY_WARN = 900;     // 無料プランの KV 書込 1,000回/日 に近い発行本数の目安
+const gm = {
+  active: false, items: [], seq: 0, filter: 'all', sel: new Set(), open: new Set(),
+  running: false, stopReq: false, stopKind: '', banner: '', kvWarn: false, prog: null,
+  preview: null, undo: null, undoTimer: null, warnCursor: -1, renderTimer: null,
+};
+
+function gmNewItem(o) {
+  return {
+    id: 'm' + (++gm.seq), fileName: o.fileName || '', sourceType: o.sourceType || 'paste', sourceFilename: o.sourceFilename || null, sourceRef: o.sourceRef || null,
+    text: o.text || '', enc: o.enc || null, fileBuf: o.fileBuf || null, docxLinks: o.docxLinks || [],
+    name: o.nameEdited || '', nameAuto: String(o.name || '').slice(0, 60), adv: o.adv || '', edits: o.edits || new Map(),
+    links: [], truncated: 0, override: null,
+    load: o.load || 'ok', loadErr: o.loadErr || '', gdocNotPublic: false,
+    status: 'idle', note: '', error: '',
+    requestId: null, requestSig: '', result: null, req: null, snapLinks: null, resultTexts: [],
+  };
+}
+function gmFind(id) { return gm.items.find(x => x.id === id); }
+function gmName(it) {
+  const v = (it.name || '').trim();
+  if (v) return v;
+  if (it.nameAuto) return it.nameAuto;
+  const first = it.text.split('\n').map(l => l.replace(/https?:\/\/\S+/g, '').trim()).find(Boolean) || '';
+  return first.slice(0, 20) || '原稿';
+}
+function gmDetect(it) {
+  if (it.load !== 'ok') { it.links = []; it.truncated = 0; return; }
+  const r = ccBuildLinks(it.text, it.docxLinks, it.edits);
+  it.links = r.links; it.truncated = r.truncated;
+}
+function gmLabelOf(it, l) { return (l.label || '').trim() || `${gmName(it)}_${l.pos}`; }
+function gmMediaIds(it) {
+  const all = ccAgencyMedia();
+  const ids = it.override ? it.override.selected : ga.selected;
+  return ids.filter(id => all.some(m => m.id === id));
+}
+function gmTracked(it) { return it.links.filter(l => l.track).length; }
+function gmUniqueName(base) {
+  const names = new Set(gm.items.map(x => x.nameAuto));
+  if (!names.has(base)) return base;
+  for (let k = 2; ; k++) { const n = `${base}(${k})`.slice(0, 60); if (!names.has(n)) return n; }
+}
+
+// ---------- 確認（発行前チェック。画面側で毎回算出） ----------
+function gmChecks(it) {
+  const block = [], warn = [];
+  if (it.load === 'loading') return { block, warn, loading: true };
+  if (it.load === 'error') { block.push('取り込めませんでした: ' + it.loadErr); return { block, warn }; }
+  if (!gmTracked(it)) block.push(it.links.length ? '計測するURLがありません' : 'URLがありません');
+  const bad = it.links.filter(l => l.track && ccCheckUrl(l.url)).length;
+  if (bad) block.push(`URLが不正 ${bad}件`);
+  const badLp = it.links.filter(l => l.lp && l.asp && l.lpUrl && ccCheckUrl(l.lpUrl)).length;
+  if (badLp) block.push(`直接LPのURLが不正 ${badLp}件`);
+  const M = gmMediaIds(it).length;
+  if (it.override && !M) block.push('媒体が選ばれていません');
+  if (M > CC_LIMITS.media) block.push(`媒体は${CC_LIMITS.media}件までです`);
+  if (gmTracked(it) * M > CC_LIMITS.product) block.push(`発行本数が上限（${CC_LIMITS.product.toLocaleString()}本）を超えています`);
+  const asp = it.links.filter(l => l.track && l.lp && l.asp && !l.lpUrl).length;
+  if (asp) warn.push(`ASP: 直接LP URL未入力 ${asp}件（LPは撮影しません）`);
+  if (!it.adv.trim()) warn.push('広告主未入力');
+  if (it.sourceType === 'txt' && ccGarbled(it.text)) warn.push('文字化けの疑い');
+  const nm = gmName(it);
+  if (gm.items.some(x => x !== it && x.load === 'ok' && gmName(x) === nm)) warn.push('同じ名前の原稿があります');
+  if (it.truncated) warn.push(`URLが多すぎるため先頭${CC_LIMITS.urls}本のみ`);
+  return { block, warn };
+}
+function gmNeedsCheck(it) { const c = gmChecks(it); return it.status !== 'done' && (c.block.length + c.warn.length) > 0; }
+function gmIssuable(it) {
+  if (it.status === 'done' || it.load !== 'ok') return false;
+  if (gmChecks(it).block.length) return false;
+  return gmMediaIds(it).length > 0;
+}
+
+// ---------- モード切替 ----------
+function gmEnter() {
+  if (gm.active) return;
+  gm.active = true;
+  // 単一原稿の入力（または発行済みの結果）があれば、リストの1件目に移す
+  const text = $('gaText').value;
+  if (ga.result && ga.resultReq) {
+    const rq = ga.resultReq;
+    const it = gmNewItem({ text: rq.manuscript.text || '', sourceType: rq.manuscript.sourceType, sourceFilename: rq.manuscript.sourceFilename, sourceRef: rq.manuscript.sourceRef,
+      docxLinks: ga.docxLinks, name: rq.manuscript.name, adv: rq.manuscript.advertiserName || '', edits: new Map(ga.edits), fileName: rq.manuscript.sourceFilename || (rq.manuscript.sourceType === 'gdoc' ? 'Googleドキュメント' : '貼り付け') });
+    gmDetect(it);
+    Object.assign(it, { status: 'done', result: ga.result, req: rq, snapLinks: ga.resultLinks, resultTexts: ga.resultTexts, requestId: ga.requestId, requestSig: ga.requestSig });
+    gm.items.push(it);
+  } else if (text.trim()) {
+    const it = gmNewItem({ text, sourceType: ga.sourceType, sourceFilename: ga.sourceFilename, sourceRef: ga.sourceRef, enc: ga.fileBuf ? $('gaEncSel').value : null, fileBuf: ga.fileBuf,
+      docxLinks: ga.docxLinks, name: ga.nameAuto, nameEdited: ga.nameEdited ? $('gaName').value.trim() : '', adv: $('gaAdv').value.trim(), edits: new Map(ga.edits),
+      fileName: ga.sourceFilename || (ga.sourceType === 'gdoc' ? 'Googleドキュメント' : '貼り付け') });
+    if (!it.nameAuto && !it.name) it.nameAuto = gmName(it);
+    gmDetect(it);
+    gm.items.push(it);
+  }
+  ccStopLpPoll();
+  gmClearSingle();
+  gmApplyMode();
+}
+// 単一原稿の入力欄を空にする（確認なし。内容はリストに移し済み）
+function gmClearSingle() {
+  Object.assign(ga, { sourceType: 'paste', sourceFilename: null, sourceRef: null, fileBuf: null, nameAuto: '', nameEdited: false, docxLinks: [], links: [], edits: new Map(),
+    requestId: null, requestSig: '', result: null, resultReq: null, resultLinks: [], resultTexts: [], resultSig: '', lpItems: null });
+  $('gaText').value = ''; $('gaName').value = ''; $('gaEncRow').style.display = 'none';
+  ccDetect(); ccRenderResult();
+}
+function gmExit() {
+  gm.active = false;
+  Object.assign(gm, { items: [], sel: new Set(), open: new Set(), banner: '', kvWarn: false, prog: null, preview: null, filter: 'all' });
+  gmApplyMode();
+  ccUpdateBar();
+}
+function gmApplyMode() {
+  const on = gm.active;
+  $('measureView').classList.toggle('gm-on', on);
+  $('gaCard2').style.display = on ? 'none' : '';
+  $('gmCard').style.display = on ? '' : 'none';
+  $('gaResultCard').style.display = on ? 'none' : '';
+  if (on) $('gaLpCard').style.display = 'none';
+  $('gaAdvBox').style.display = on ? 'none' : '';
+  $('gaCampRow').style.display = on ? 'none' : '';
+  $('gaCard3Title').textContent = on ? '③ 出稿先（全原稿に共通）' : '③ 出稿先';
+  $('gmBarExtra').style.display = on ? '' : 'none';
+  $('gaFileInput').multiple = true;
+  gmRender();
+}
+
+// ---------- 取り込み（複数ファイル・複数Googleドキュメント・貼り付け追加） ----------
+function gmRoom() { return Math.max(0, CC_MULTI_MAX - gm.items.length); }
+function gmOverflowMsg(taken, rest) {
+  if (!rest.length) return '';
+  return `${CC_MULTI_MAX}件を超えたため、${taken ? `先頭の${taken}件のみ取り込みました。` : '取り込めませんでした。'}取り込めなかったもの: ${rest.slice(0, 10).join('、')}${rest.length > 10 ? ` ほか${rest.length - 10}件` : ''}`;
+}
+async function gmAddFiles(files) {
+  const list = [...files];
+  if (!list.length) return;
+  gmEnter();
+  const room = gmRoom();
+  const take = list.slice(0, room), over = list.slice(room).map(f => f.name);
+  const created = take.map(f => {
+    const it = gmNewItem({ fileName: f.name, load: 'loading', name: gmUniqueName(f.name.replace(/\.[^.]+$/, '').slice(0, 60)) });
+    gm.items.push(it);
+    return { f, it };
+  });
+  const overMsg = gmOverflowMsg(take.length, over);
+  if (!created.length) { ccMsg(overMsg || `上限${CC_MULTI_MAX}件に達しています。不要な原稿を削除してください。`, 'err'); gmRender(); return; }
+  ccMsg(`${created.length}件中 0件読み込み済み`);
+  gmRender();
+  let n = 0;
+  for (const { f, it } of created) {
+    const ext = ccFileExt(f.name);
+    if (ext !== 'txt' && ext !== 'docx') { it.load = 'error'; it.loadErr = '対応していない形式です（.txt / .docx のみ。.doc は Word で .docx に保存し直してください）'; }
+    else if (f.size > CC_LIMITS.fileBytes) { it.load = 'error'; it.loadErr = '大きすぎるため取り込めません（5MB超）'; }
+    else {
+      try {
+        const r = await ccReadManuscriptFile(f);
+        if (r.text.length > CC_LIMITS.textChars) { it.load = 'error'; it.loadErr = `長すぎるため取り込めません（上限 ${CC_LIMITS.textChars.toLocaleString()} 文字）`; }
+        else {
+          Object.assign(it, { text: r.text, sourceType: r.sourceType, sourceFilename: r.sourceFilename, enc: r.enc || null, fileBuf: r.fileBuf || null, docxLinks: r.docxLinks || [], load: 'ok' });
+          gmDetect(it);
+        }
+      } catch (e) { it.load = 'error'; it.loadErr = '読み込めませんでした（' + (e && e.message ? e.message : e) + '）'; }
+    }
+    n++;
+    ccMsg(`${created.length}件中 ${n}件読み込み済み`);
+    gmScheduleRender();
+  }
+  gmImportDone(created.map(x => x.it), overMsg);
+}
+function gmImportDone(items, overMsg) {
+  const failed = items.filter(it => it.load === 'error').length;
+  const ok = items.length - failed;
+  const need = items.filter(it => it.load === 'ok' && gmNeedsCheck(it)).length;
+  let msg = `✓ ${ok}件を取り込みました` + (need ? `（要確認 ${need}件）` : '') + (failed ? `。✕ ${failed}件は取り込めませんでした（リストに表示しています）` : '');
+  if (!ok && failed) msg = `✕ ${failed}件は取り込めませんでした（リストに表示しています）`;
+  if (overMsg) msg += '。' + overMsg;
+  ccMsg(msg, overMsg || failed ? 'warn' : 'ok');
+  gmRender();
+}
+function gmParseGdocLines() {
+  const lines = $('gaGdocUrl').value.split(/\r?\n/).map(s => s.trim());
+  const valid = [], bad = [];
+  let dup = 0;
+  lines.forEach((s, i) => {
+    if (!s) return;
+    if (!/^https:\/\/docs\.google\.com\/document\//.test(s)) { bad.push(i + 1); return; }
+    if (valid.includes(s)) { dup++; return; }
+    valid.push(s);
+  });
+  return { valid, bad, dup };
+}
+function gmUpdateGdocBtn() {
+  const { valid, bad, dup } = gmParseGdocLines();
+  const btn = $('gaGdocBtn');
+  if (btn.textContent !== '取得中…') btn.textContent = `取り込む（${valid.length}件）`;
+  btn.disabled = !valid.length || btn.textContent === '取得中…';
+  $('gmGdocNote').textContent = [bad.length ? `${bad.slice(0, 5).join('・')}行目: GoogleドキュメントのURLではありません` : '', dup ? `重複した${dup}行をまとめました` : ''].filter(Boolean).join('　');
+}
+async function gmOnGdocBtn() {
+  const { valid } = gmParseGdocLines();
+  if (!valid.length) { ccMsg('GoogleドキュメントのURLを貼り付けてください', 'err'); return; }
+  if (valid.length === 1 && !gm.active) { $('gaGdocUrl').value = valid[0]; await ccImportGdoc(); gmUpdateGdocBtn(); return; }
+  await gmAddGdocs(valid);
+}
+async function gmAddGdocs(urls) {
+  try { await ccEnsureToken(); } catch (e) { ccMsg(e.cancelled ? '' : '接続できませんでした。もう一度お試しください。', e.cancelled ? '' : 'err'); return; }
+  gmEnter();
+  const room = gmRoom();
+  const take = urls.slice(0, room), over = urls.slice(room);
+  const items = take.map(u => { const it = gmNewItem({ fileName: 'Googleドキュメント', sourceType: 'gdoc', sourceRef: u, load: 'loading', name: '' }); gm.items.push(it); return it; });
+  const overMsg = gmOverflowMsg(take.length, over);
+  if (!items.length) { ccMsg(overMsg || `上限${CC_MULTI_MAX}件に達しています。`, 'err'); gmRender(); return; }
+  const btn = $('gaGdocBtn');
+  btn.disabled = true; btn.textContent = '取得中…';
+  ccMsg(`Googleドキュメントを取得しています…（${items.length}件）`);
+  gmRender();
+  const queue = items.slice();
+  const worker = async () => { while (queue.length) { await gmFetchGdocInto(queue.shift()); gmScheduleRender(); } };
+  try { await Promise.all(Array.from({ length: Math.min(CC_GDOC_CONCURRENCY, queue.length) }, worker)); }
+  finally { btn.textContent = '取り込む'; gmUpdateGdocBtn(); }
+  gmImportDone(items, overMsg);
+}
+async function gmFetchGdocInto(it) {
+  it.load = 'loading'; it.loadErr = ''; it.gdocNotPublic = false;
+  try {
+    const r = await ccFetchGdoc(it.sourceRef);
+    if ((r.text || '').length > CC_LIMITS.textChars) { it.load = 'error'; it.loadErr = `長すぎるため取り込めません（上限 ${CC_LIMITS.textChars.toLocaleString()} 文字）`; return; }
+    Object.assign(it, { text: r.text || '', docxLinks: r.links || [], load: 'ok' });
+    if (r.title) { it.fileName = r.title; if (!it.nameAuto) it.nameAuto = gmUniqueName(String(r.title).slice(0, 60)); }
+    if (!it.nameAuto) it.nameAuto = gmUniqueName(gmName(it));
+    gmDetect(it);
+  } catch (e) {
+    it.load = 'error';
+    it.loadErr = e.cancelled ? 'パスワードが入力されなかったため取得していません' : ccGdocErrText(e);
+    it.gdocNotPublic = e.code === 'GDOC_NOT_PUBLIC';
+    if (!it.nameAuto) it.nameAuto = 'Googleドキュメント（取得できませんでした）';
+  }
+}
+function gmAddPaste() {
+  const text = $('gaText').value;
+  if (!text.trim()) { toast('貼り付け欄が空です'); return; }
+  if (text.length > CC_LIMITS.textChars) { ccMsg(`長すぎるため取り込めません（上限 ${CC_LIMITS.textChars.toLocaleString()} 文字）`, 'err'); return; }
+  if (!gm.active) { gmEnter(); }
+  else {
+    if (!gmRoom()) { ccMsg(`上限${CC_MULTI_MAX}件に達しています。不要な原稿を削除してください。`, 'err'); return; }
+    const it = gmNewItem({ text, sourceType: ga.sourceType, sourceFilename: ga.sourceFilename, sourceRef: ga.sourceRef, fileBuf: ga.fileBuf, enc: ga.fileBuf ? $('gaEncSel').value : null,
+      docxLinks: ga.docxLinks, name: ga.nameAuto, nameEdited: ga.nameEdited ? $('gaName').value.trim() : '', edits: new Map(ga.edits),
+      fileName: ga.sourceFilename || (ga.sourceType === 'gdoc' ? 'Googleドキュメント' : '貼り付け') });
+    if (!it.nameAuto && !it.name) it.nameAuto = gmUniqueName(gmName(it));
+    gmDetect(it);
+    gm.items.push(it);
+    gmClearSingle();
+  }
+  ccMsg(`原稿リストに追加しました（${gm.items.length}件）。続けて次の原稿を貼り付けられます。`, 'ok');
+  $('gaText').focus();
+  gmRender();
+}
+
+// ---------- 発行リクエスト ----------
+function gmBuildRequest(it) {
+  const errors = [];
+  const all = ccAgencyMedia();
+  const ov = it.override;
+  const date = (ov && ov.date) || $('gaDate').value || ccJstToday();
+  const name = gmName(it), adv = it.adv.trim();
+  const common = [date.replace(/-/g, ''), adv, name].filter(Boolean).join('_');
+  const media = gmMediaIds(it).map(id => all.find(m => m.id === id)).map(m => {
+    // 上書きしていない項目は共通（③の媒体ごとの入力）に追従
+    const base = ga.mediaInputs[m.id] || {}, own = (ov && ov.mediaInputs[m.id]) || {};
+    const pick = f => (own[f] != null && String(own[f]).trim() !== '') ? own[f] : base[f];
+    const count = ccParseIntInput(pick('count')), cost = ccParseIntInput(pick('cost'));
+    if (Number.isNaN(count)) errors.push(`「${m.name}」の配信数は半角の整数で入力してください`);
+    if (Number.isNaN(cost)) errors.push(`「${m.name}」の出稿費は整数（円）で入力してください`);
+    const d = pick('date') || '', t = pick('time') || '';
+    const startAt = (d || t) ? `${d || date}T${t || '00:00'}:00+09:00` : null;
+    return {
+      mediaId: m.id, mediaName: m.name, mediaCompany: m.mediaCompany || null, mediaCategory: 'agency', mediaKind: gbAgencyKind(m),
+      deliveryCount: Number.isNaN(count) ? null : count, costYen: Number.isNaN(cost) ? null : cost, costTax: pick('tax') === 'incl' ? 'incl' : 'excl',
+      startAt, campaignName: (common + '_' + m.name).slice(0, 200), campaignId: null,
+    };
+  });
+  const links = it.links.map(l => {
+    const o = { position: l.pos, url: l.url, track: !!l.track, lp: !!l.lp };
+    if (l.track) o.label = gmLabelOf(it, l).slice(0, 120);
+    if (l.lp && l.asp && l.lpUrl) {
+      const bad = ccCheckUrl(l.lpUrl);
+      if (bad) errors.push(`#${l.pos} の直接LPのURL: ${bad}`); else o.lpUrl = l.lpUrl;
+    }
+    return o;
+  });
+  return {
+    errors,
+    req: {
+      manuscript: { name, advertiserName: adv || null, sourceType: it.sourceType, sourceFilename: it.sourceFilename, sourceRef: it.sourceRef, text: it.text },
+      campaignDefaults: { nameTemplate: '{date}_{advertiser}_{manuscript}_{media}', startAt: `${date}T00:00:00+09:00`, deliveryCount: null, costYen: null, costTax: 'excl', memo: '' },
+      media, links,
+      options: { captureLp: true, groupSameUrl: false, forceNew: false },
+    }
+  };
+}
+// API のエラーを「止めるか」と日本語の説明にする（無料プランの上限は止める）
+function gmErrInfo(e) {
+  if (e.cancelled) return { stop: true, kind: 'cancel', note: 'パスワード未入力のため未実施', banner: 'パスワードが入力されなかったため、発行を中断しました。［残りを発行］で続きを発行できます。' };
+  const code = e.code || '';
+  if (e.status === 429 || ['RATE_LIMITED', 'CAP_REACHED', 'LOCKED'].includes(code)) {
+    const sec = e.details && e.details.retryAfterSec;
+    return { stop: true, kind: 'quota', note: '上限のため未実施',
+      banner: `無料プランの上限（短時間に発行できる回数）に達したため、発行を中断しました。${sec ? `約${Math.max(1, Math.ceil(sec / 60))}分後に` : 'しばらく待ってから'}［残りを発行］を押してください。上限が回復していない場合は再度停止します。` };
+  }
+  if (e.status === 503 || e.status === 502 || e.status === 504) {
+    return { stop: true, kind: 'quota', note: '上限のため未実施',
+      banner: `サーバーの処理上限（無料プランの1回あたりの処理時間など）に達したため、発行を中断しました（${e.status}）。時間をおいて［残りを発行］を押してください。URL数・媒体数の多い原稿は、媒体を分けると発行できる場合があります。上限が回復していない場合は再度停止します。` };
+  }
+  if (e.network) return { stop: true, kind: 'network', note: '通信エラーのため未実施', banner: '通信できなくなったため、発行を中断しました。接続を確認して［残りを発行］を押してください（同じ原稿は二重に発行されません）。' };
+  if (e.status >= 500) return { stop: false, msg: `サーバーでエラーが発生しました（${e.status}）。無料プランの上限（1回の処理で使えるデータベース操作数）に当たった可能性があります。［再試行］で同じ内容を再送できます（二重発行されません）。` };
+  const f = e.details && e.details.field;
+  const m = f && /^links\[(\d+)\]/.exec(f);
+  return { stop: false, msg: (m ? `#${+m[1] + 1}: ` : '') + (e.message || 'エラーが発生しました') };
+}
+async function gmIssue(mode) {
+  if (gm.running) return;
+  const errEl = $('gaBarErr');
+  errEl.textContent = '';
+  if (!gm.items.length) return;
+  // 発行前に必ず除外URLルール（配信停止URL等）を読む。計測対象が変わったら発行せず確認してもらう（単一原稿と同じ）
+  if (!ga.rulesLoaded) {
+    const sig = () => gm.items.map(it => it.links.map(l => l.track ? 1 : 0).join('')).join('|');
+    const before = sig();
+    try { await ccEnsureToken(); } catch (e) {
+      errEl.textContent = e.cancelled ? 'パスワードが入力されなかったため、発行していません。' : '接続できませんでした。もう一度お試しください。';
+      return;
+    }
+    if (!(await ccLoadExcludeRules())) { errEl.textContent = '除外URLルールを取得できなかったため、発行していません。もう一度お試しください。'; return; }
+    gm.items.forEach(gmDetect);
+    if (sig() !== before) {
+      errEl.textContent = '除外URLルール（配信停止URLなど）を反映し、「計測しない」URLを更新しました。②の原稿リストを確認してから、もう一度発行してください。';
+      gmRender();
+      $('gmCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    }
+  }
+  let targets = gm.items.filter(gmIssuable);
+  if (Array.isArray(mode)) targets = targets.filter(it => mode.includes(it));
+  else if (mode === 'failed') targets = targets.filter(it => it.status === 'error');
+  else if (mode === 'rest') targets = targets.filter(it => it.status !== 'error');
+  if (!targets.length) { errEl.textContent = '発行できる原稿がありません。②の要確認を直してください。'; return; }
+  try { await ccEnsureToken(); } catch (e) {
+    errEl.textContent = e.cancelled ? 'パスワードが入力されなかったため、発行していません。' : '接続できませんでした。もう一度お試しください。';
+    return;
+  }
+  gm.running = true; gm.stopReq = false; gm.stopKind = ''; gm.banner = '';
+  targets.forEach(it => { it.status = 'queued'; it.note = ''; it.error = ''; });
+  gm.prog = { total: targets.reduce((s, it) => s + gmMediaIds(it).length, 0), done: 0, items: targets.length, itemsDone: 0, lastSpoken: 0 };
+  gmRender();
+  const queue = targets.slice();
+  const worker = async () => { while (queue.length && !gm.stopReq) await gmIssueOne(queue.shift()); };
+  try {
+    await Promise.all(Array.from({ length: Math.min(CC_MULTI_CONCURRENCY, queue.length) }, worker));
+  } finally {
+    queue.forEach(it => { if (it.status === 'queued') { it.status = 'idle'; it.note = gm.stopKind === 'user' ? '中断のため未実施' : (it.note || '上限のため未実施'); } });
+    targets.forEach(it => { if (it.status === 'queued' || it.status === 'issuing') it.status = 'idle'; });
+    gm.running = false;
+  }
+  const done = targets.filter(it => it.status === 'done');
+  const okN = done.reduce((s, it) => s + it.req.media.length, 0);
+  if (gm.stopKind === 'user') gm.banner = `中断しました。完了した${okN}出稿は保存されています。［残りを発行］で続きを発行できます。`;
+  if (done.length) {
+    const ids = new Set(); done.forEach(it => gmMediaIds(it).forEach(id => ids.add(id)));
+    ccLsSet(CC_LAST_MEDIA_KEY, ga.selected.length ? ga.selected.slice() : [...ids]);
+    const advs = [...new Set(done.map(it => it.adv.trim()).filter(Boolean))];
+    if (advs.length) ccLsSet(CC_ADVERTISERS_KEY, [...advs, ...ccLs(CC_ADVERTISERS_KEY, []).filter(x => !advs.includes(x))].slice(0, 50));
+    ccRenderAdvList(); ccRenderSets();
+    if (!gm.preview) { const f = done[0]; gm.preview = { id: f.id, idx: 0 }; }
+  }
+  const failed = targets.filter(it => it.status === 'error').length;
+  gmRender();
+  if (okN) toast(`${okN}出稿を発行しました` + (failed ? `（${failed}原稿はエラー）` : ''), 4000);
+  const h = $('gmResultTitle');
+  if (h) { h.scrollIntoView({ behavior: 'smooth', block: 'start' }); try { h.focus({ preventScroll: true }); } catch (e) {} }
+}
+async function gmIssueOne(it) {
+  const { errors, req } = gmBuildRequest(it);
+  if (errors.length) { it.status = 'error'; it.error = errors.join(' / '); gmScheduleRender(); return; }
+  const sig = JSON.stringify(req);
+  if (sig !== it.requestSig || !it.requestId) { it.requestId = ccUuid(); it.requestSig = sig; }
+  req.requestId = it.requestId;
+  const snap = it.links.map(l => ({ pos: l.pos, start: l.start, end: l.end, url: l.url, track: l.track }));
+  it.status = 'issuing';
+  gmScheduleRender();
+  try {
+    const res = await ccApi('/issue', { method: 'POST', body: JSON.stringify(req), timeout: 60000 });
+    const data = await res.json();
+    Object.assign(it, { result: data, req, snapLinks: snap, resultTexts: ccBuildConverted(data, req, snap), status: 'done', note: '', error: '' });
+    if ((data.warnings || []).some(w => w && w.code === 'KV_WRITE_FAILED')) gm.kvWarn = true;
+    gm.prog.done += req.media.length; gm.prog.itemsDone++;
+    gmScheduleRender();
+    await gmSaveTexts(it);
+  } catch (e) {
+    const info = gmErrInfo(e);
+    if (info.stop) {
+      if (!gm.stopReq || !gm.banner) { gm.stopKind = info.kind; gm.banner = info.banner; }
+      gm.stopReq = true;
+      it.status = 'idle'; it.note = info.note;
+    } else { it.status = 'error'; it.error = info.msg; }
+    gmScheduleRender();
+  }
+}
+async function gmSaveTexts(it) {
+  try {
+    await ccApi(`/issue/${encodeURIComponent(it.result.batchId)}/texts`, {
+      method: 'PUT', body: JSON.stringify({ texts: it.resultTexts.map(t => ({ campaignId: t.campaign.campaignId, convertedText: t.plain })) })
+    });
+  } catch (e) {
+    if (!e.cancelled) toast(`「${gmName(it)}」の変換後の原稿を結果管理に保存できませんでした（コピー・ダウンロードは使えます）: ${e.message}`, 6000);
+  }
+}
+
+// ---------- ZIP（無圧縮 store・CRC32 自前実装・UTF-8 ファイル名フラグ付き） ----------
+const CC_CRC_TABLE = (() => {
+  const t = new Uint32Array(256);
+  for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; }
+  return t;
+})();
+function ccCrc32(u8) {
+  let c = 0xFFFFFFFF;
+  for (let i = 0; i < u8.length; i++) c = CC_CRC_TABLE[(c ^ u8[i]) & 0xFF] ^ (c >>> 8);
+  return (c ^ 0xFFFFFFFF) >>> 0;
+}
+// files: [{ name: 'フォルダ/ファイル.txt', data: Uint8Array }] → Uint8Array（ZIP）
+function ccZipStore(files) {
+  const enc = new TextEncoder();
+  const d = new Date();
+  const dosTime = (d.getHours() << 11) | (d.getMinutes() << 5) | Math.floor(d.getSeconds() / 2);
+  const dosDate = ((Math.max(1980, d.getFullYear()) - 1980) << 9) | ((d.getMonth() + 1) << 5) | d.getDate();
+  const parts = [], central = [];
+  let offset = 0;
+  for (const f of files) {
+    const name = enc.encode(f.name), data = f.data, crc = ccCrc32(data);
+    const lh = new Uint8Array(30 + name.length), lv = new DataView(lh.buffer);
+    lv.setUint32(0, 0x04034b50, true); lv.setUint16(4, 20, true); lv.setUint16(6, 0x0800, true); lv.setUint16(8, 0, true);
+    lv.setUint16(10, dosTime, true); lv.setUint16(12, dosDate, true); lv.setUint32(14, crc, true);
+    lv.setUint32(18, data.length, true); lv.setUint32(22, data.length, true); lv.setUint16(26, name.length, true); lv.setUint16(28, 0, true);
+    lh.set(name, 30);
+    const ch = new Uint8Array(46 + name.length), cv = new DataView(ch.buffer);
+    cv.setUint32(0, 0x02014b50, true); cv.setUint16(4, 20, true); cv.setUint16(6, 20, true); cv.setUint16(8, 0x0800, true); cv.setUint16(10, 0, true);
+    cv.setUint16(12, dosTime, true); cv.setUint16(14, dosDate, true); cv.setUint32(16, crc, true);
+    cv.setUint32(20, data.length, true); cv.setUint32(24, data.length, true); cv.setUint16(28, name.length, true);
+    cv.setUint32(42, offset, true);
+    ch.set(name, 46);
+    parts.push(lh, data); central.push(ch);
+    offset += lh.length + data.length;
+  }
+  const cdSize = central.reduce((s, c) => s + c.length, 0);
+  const end = new Uint8Array(22), ev = new DataView(end.buffer);
+  ev.setUint32(0, 0x06054b50, true); ev.setUint16(8, files.length, true); ev.setUint16(10, files.length, true);
+  ev.setUint32(12, cdSize, true); ev.setUint32(16, offset, true);
+  const out = new Uint8Array(offset + cdSize + 22);
+  let p = 0;
+  for (const a of [...parts, ...central, end]) { out.set(a, p); p += a.length; }
+  return out;
+}
+function ccZipName(s) { return ccSanitizeFilename(s).replace(/[. ]+$/, '') || '原稿'; }
+function ccEncodeText(text, enc) {
+  if (enc === 'shift_jis') return ccEncodeSjis(text);
+  return { bytes: new TextEncoder().encode(text), bad: 0 };
+}
+function ccDownloadBlob(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+// 原稿名のフォルダ（同名は (2)…）に 出稿名.txt を入れる
+function gmZipFiles(items, enc) {
+  const files = [], folders = new Set();
+  let bad = 0;
+  items.forEach(it => {
+    let folder = ccZipName(gmName(it));
+    for (let k = 2; folders.has(folder); k++) folder = ccZipName(gmName(it)) + `(${k})`;
+    folders.add(folder);
+    const used = new Set();
+    it.resultTexts.forEach(t => {
+      let fn = ccZipName(t.name || t.mediaName);
+      for (let k = 2; used.has(fn); k++) fn = ccZipName(t.name || t.mediaName) + `(${k})`;
+      used.add(fn);
+      const r = ccEncodeText(t.plain, enc);
+      bad += r.bad;
+      files.push({ name: `${folder}/${fn}.txt`, data: r.bytes });
+    });
+  });
+  return { files, bad };
+}
+function gmZipFileName(items) {
+  const advs = [...new Set(items.map(it => it.adv.trim()).filter(Boolean))];
+  return ccZipName([ccJstToday().replace(/-/g, ''), advs.length === 1 ? advs[0] : '', '他媒体入稿'].filter(Boolean).join('_')) + '.zip';
+}
+function gmDownloadZip(items, filename) {
+  const enc = ($('gmEnc') || {}).value || 'utf-8';
+  const { files, bad } = gmZipFiles(items, enc);
+  if (!files.length) { toast('ダウンロードできる原稿がありません'); return; }
+  try {
+    ccDownloadBlob(new Blob([ccZipStore(files)], { type: 'application/zip' }), filename);
+    if (bad) toast(`Shift_JIS で表せない文字が ${bad} 文字あったため「?」に置き換えました`, 5000);
+  } catch (e) {
+    // ZIP が作れない場合の代替: 1つの .txt に見出し付きで連結
+    const all = items.map(it => it.resultTexts.map(t => `■■■ ${gmName(it)} ／ ${t.mediaName} ／ 出稿名: ${t.name} ■■■\n\n${t.plain}`).join('\n\n\n')).join('\n\n\n');
+    ccDownload(all, filename.replace(/\.zip$/, '.txt'), enc);
+    toast('ZIPを作れなかったため、1つの.txtにまとめてダウンロードしました', 5000);
+  }
+}
+// 発行URL一覧（原稿・広告主・媒体・位置・ラベル・元URL・計測URL）
+function gmUrlRows() {
+  const rows = [];
+  gm.items.filter(it => it.status === 'done').forEach(it => it.resultTexts.forEach(t => (t.campaign.links || []).forEach(l =>
+    rows.push([gmName(it), it.adv.trim(), t.mediaName, String(l.position), l.label || '', l.url || '', l.trackingUrl || '']))));
+  return rows;
+}
+const GM_URL_HEAD = ['原稿', '広告主', '媒体', '位置', 'ラベル', '元URL（遷移先）', '計測URL'];
+function gmCopyUrls(btn) {
+  const rows = [GM_URL_HEAD, ...gmUrlRows()];
+  ccCopyText(rows.map(r => r.map(c => String(c).replace(/[\t\r\n]/g, ' ')).join('\t')).join('\n'), btn);
+}
+function gmDownloadCsv() {
+  const enc = ($('gmEnc') || {}).value || 'utf-8';
+  const csv = ccCsv([GM_URL_HEAD, ...gmUrlRows()]);
+  const name = gmZipFileName(gm.items.filter(it => it.status === 'done')).replace(/\.zip$/, '_計測URL.csv');
+  if (enc === 'shift_jis') {
+    const r = ccEncodeSjis(csv);
+    if (r.bad) toast(`Shift_JIS で表せない文字が ${r.bad} 文字あったため「?」に置き換えました`, 5000);
+    ccDownloadBlob(new Blob([r.bytes], { type: 'text/csv;charset=shift_jis' }), name);
+  } else ccDownloadBlob(new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' }), name);
+}
+
+// ---------- 描画 ----------
+function gmScheduleRender() {
+  if (gm.renderTimer) return;
+  gm.renderTimer = setTimeout(() => { gm.renderTimer = null; gmRender(); }, 30);
+}
+function gmStatusHtml(it) {
+  if (it.load === 'loading') return '<span class="badge badge-gray">… 読み込み中</span>';
+  if (it.status === 'done') return '<span class="badge badge-ok">✓ 完了</span>';
+  if (it.status === 'issuing') return '<span class="badge badge-info">⟳ 発行中</span>';
+  if (it.status === 'queued') return '<span class="badge badge-gray">… 待機中</span>';
+  if (it.status === 'error') return `<span class="badge badge-err">✕ エラー</span><div class="ga-sub" style="color:#b91c1c">${escHtml(it.error)}</div>`;
+  const c = gmChecks(it);
+  const note = it.note || (c.block.length ? '要確認のため対象外' : '');
+  return `<span class="badge badge-gray">未発行</span>${note ? `<div class="ga-sub">${escHtml(note)}</div>` : ''}`;
+}
+function gmCheckHtml(it) {
+  const c = gmChecks(it);
+  if (c.loading) return '<span class="text-muted">—</span>';
+  if (it.load === 'error') return `<span class="badge badge-err">✕ ${escHtml(c.block[0])}</span>`;
+  const all = [...c.block.map(t => ['warn', '⚠ ' + t]), ...c.warn.map(t => ['warn', '⚠ ' + t])];
+  if (!all.length) return '<span class="badge badge-ok">✓ OK</span>';
+  return all.slice(0, 2).map(([k, t]) => `<div><span class="badge badge-${k} gm-why" data-act="open-check" style="cursor:pointer">${escHtml(t)}</span></div>`).join('') + (all.length > 2 ? `<div class="ga-sub">ほか${all.length - 2}件</div>` : '');
+}
+function gmRowLocked(it) { return gm.running || it.status === 'done' || it.load === 'loading'; }
+function gmUrlTable(it) {
+  if (it.load !== 'ok') return '';
+  if (!it.links.length) return '<div class="empty-state" style="color:#666">原稿にURLが見つかりませんでした。<span class="text-muted">http:// または https:// から始まるURLが対象です。</span></div>';
+  const lock = gmRowLocked(it);
+  const dis = lock ? 'disabled' : '';
+  const labelCount = new Map();
+  it.links.filter(l => l.track).forEach(l => { const k = gmLabelOf(it, l); labelCount.set(k, (labelCount.get(k) || 0) + 1); });
+  const rows = it.links.map((l, i) => {
+    const badges = [];
+    if (l.cls.kind === 'ok') badges.push(['ok', '✓ 検出']);
+    else if (l.cls.kind === 'excluded') badges.push(['warn', '⚠ ' + l.cls.msg]);
+    else badges.push(['err', '✕ ' + l.cls.msg]);
+    if (l.dupOf) badges.push(['gray', `同じURL（#${l.dupOf}と同一）`]);
+    const showLp = l.asp && l.lp;
+    if (showLp && l.track && !l.lpUrl) badges.push(['warn', '⚠ 直接LP URL未入力']);
+    const fk = `${it.id}:${i}`;
+    return `<tr data-li="${i}">
+      <td><input type="checkbox" class="gm-track" data-fk="${fk}:t" aria-label="${escHtml(gmName(it))} #${l.pos} を計測する" ${l.track ? 'checked' : ''} ${l.locked || lock ? 'disabled' : ''}></td>
+      <td>${l.pos}</td>
+      <td><input type="text" class="ga-label gm-label" data-fk="${fk}:l" maxlength="60" aria-label="#${l.pos} のラベル" value="${escHtml(l.label)}" placeholder="${escHtml(gmName(it) + '_' + l.pos)}" ${l.track && !lock ? '' : 'disabled'}>${l.track && labelCount.get(gmLabelOf(it, l)) > 1 ? '<div class="ga-warn-sm">同じラベルがあります</div>' : ''}</td>
+      <td><input type="text" class="ga-url gm-url" data-fk="${fk}:u" aria-label="#${l.pos} の遷移先URL" value="${escHtml(l.url)}" title="${escHtml(l.url)}" ${dis}>
+        ${l.wordDisplay ? `<div class="ga-sub">Wordのリンク: 表示「${escHtml(l.wordDisplay)}」</div>` : ''}</td>
+      <td>${showLp ? `<input type="text" class="ga-url gm-lpurl" data-fk="${fk}:p" style="min-width:200px" aria-label="#${l.pos} の直接LPのURL" placeholder="https://…（ASPのみ）" value="${escHtml(l.lpUrl)}" ${dis}>` : '<span class="text-muted">—</span>'}</td>
+      <td><input type="checkbox" class="gm-lp" data-fk="${fk}:c" aria-label="#${l.pos} のLPを取得する" ${l.lp ? 'checked' : ''} ${l.cls.kind === 'invalid' || l.cls.kind === 'merge' || lock ? 'disabled' : ''}></td>
+      <td>${badges.map(([c, t]) => `<span class="badge badge-${c}" style="margin:1px 2px 1px 0">${escHtml(t)}</span>`).join('')}</td>
+    </tr>`;
+  }).join('');
+  return (it.truncated ? `<div class="ga-banner warn">URLが多すぎるため、先頭の${CC_LIMITS.urls}本だけを対象にしています（${it.truncated}本は対象外）。</div>` : '') +
+    `<div class="ga-table-wrap"><table class="ga-table"><thead><tr><th scope="col">計測</th><th scope="col">#</th><th scope="col">ラベル</th><th scope="col">遷移先URL（検出）</th><th scope="col">直接LP URL（ASPのみ）</th><th scope="col">LP</th><th scope="col">状態</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+function gmOverrideHtml(it) {
+  const lock = gmRowLocked(it) ? 'disabled' : '';
+  const ov = it.override;
+  let h = `<div class="gm-ov"><b style="font-size:13px">出稿先:</b>
+    <label class="ga-inline-chk"><input type="radio" name="gmov-${it.id}" class="gm-ovmode" value="common" ${ov ? '' : 'checked'} ${lock}> 共通を使う</label>
+    <label class="ga-inline-chk"><input type="radio" name="gmov-${it.id}" class="gm-ovmode" value="own" ${ov ? 'checked' : ''} ${lock}> この原稿だけ変える</label>`;
+  if (ov) {
+    const all = ccAgencyMedia();
+    h += `<div class="gm-ov-box">
+      <div class="ga-sub" style="margin-bottom:4px">媒体（${ov.selected.length}件選択中）</div>
+      <div class="ga-mlist" style="max-height:180px">${Object.keys(AGENCY_KINDS).map(kind => {
+        const ms = all.filter(m => gbAgencyKind(m) === kind);
+        return ms.length ? `<div class="ga-mgroup-h ga-mkind-h" style="cursor:default">${escHtml(AGENCY_KINDS[kind])}</div>` + ms.map(m => `<label class="ga-mitem"><input type="checkbox" class="gm-ovm" value="${escHtml(m.id)}" ${ov.selected.includes(m.id) ? 'checked' : ''} ${lock}> <span>${escHtml(ccMediaLabel(m))}</span></label>`).join('') : '';
+      }).join('')}</div>
+      <div class="ga-row"><div style="max-width:190px"><label for="gmovd-${it.id}">出稿日（空欄=共通）</label><input type="date" id="gmovd-${it.id}" class="gm-ovdate" data-fk="${it.id}:od" value="${escHtml(ov.date || '')}" ${lock}></div></div>
+      ${ov.selected.length ? `<details class="mt-2"><summary style="cursor:pointer;font-size:13px;font-weight:600">媒体ごとの配信数・出稿費（空欄=共通の値）</summary><div class="ga-table-wrap mt-2"><table class="ga-table ga-mtable"><thead><tr><th>媒体</th><th>配信数</th><th>出稿費(円)</th></tr></thead><tbody>${
+        ov.selected.map(id => all.find(m => m.id === id)).filter(Boolean).map(m => { const v = ov.mediaInputs[m.id] || {}; return `<tr data-mid="${escHtml(m.id)}"><td>${escHtml(m.name)}</td>
+          <td><input type="text" inputmode="numeric" class="gm-ovin" data-f="count" data-fk="${it.id}:oc:${escHtml(m.id)}" value="${escHtml(v.count || '')}" placeholder="共通" aria-label="${escHtml(m.name)} の配信数" ${lock}></td>
+          <td><input type="text" inputmode="numeric" class="gm-ovin" data-f="cost" data-fk="${it.id}:oy:${escHtml(m.id)}" value="${escHtml(v.cost || '')}" placeholder="共通" aria-label="${escHtml(m.name)} の出稿費" ${lock}></td></tr>`; }).join('')
+      }</tbody></table></div></details>` : ''}
+      <div class="mt-2"><button type="button" class="btn-outline btn-sm" data-act="ov-reset" ${lock}>共通に戻す</button></div>
+    </div>`;
+  }
+  return h + '</div>';
+}
+function gmDetailHtml(it) {
+  const parts = [];
+  if (it.status === 'done') parts.push(`<div class="ga-banner info">発行済みです（変更できません）。<a href="${escHtml(ccResultsUrl(it.result.batchId))}" target="_blank" rel="noopener">この原稿の結果を見る ↗</a></div>`);
+  if (it.load === 'error') {
+    parts.push(`<div class="ga-banner err">${escHtml(it.loadErr)}</div>`);
+    if (it.sourceType === 'gdoc') {
+      parts.push(`<div class="ga-sub">${escHtml(it.sourceRef || '')}</div><div class="mt-2"><button type="button" class="btn-outline btn-sm" data-act="refetch">再取得</button></div>`);
+      if (it.gdocNotPublic) parts.push('<div class="measure-hint mt-2">代わりの手順: ①Googleドキュメントで [ファイル] → [ダウンロード] → [テキスト(.txt)] または [Word(.docx)] を選ぶ　②[ファイル]タブでそのファイルを選ぶ</div>');
+    }
+    return parts.join('');
+  }
+  if (it.load === 'loading') return '<div class="text-muted">読み込み中…</div>';
+  parts.push(`<div style="font-size:13px;font-weight:700;margin-bottom:6px">計測URLの確認（この原稿）<span class="ga-sub" style="font-weight:400;margin-left:8px">ASPのURLは直接LPのURLを入れるとLPを撮影します</span></div>`);
+  parts.push(gmUrlTable(it));
+  if (it.fileBuf && it.sourceType === 'txt') {
+    parts.push(`<div class="ga-enc-row"><label style="margin:0" for="gmenc-${it.id}">文字コード</label><select id="gmenc-${it.id}" class="gm-enc" ${gmRowLocked(it) ? 'disabled' : ''}>${[['utf-8', 'UTF-8'], ['shift_jis', 'Shift_JIS'], ['euc-jp', 'EUC-JP']].map(([v, t]) => `<option value="${v}" ${it.enc === v ? 'selected' : ''}>${t}</option>`).join('')}</select>
+      <span class="${ccGarbled(it.text) ? 'ga-warn-sm' : 'text-muted'}">${ccGarbled(it.text) ? '⚠ 文字化けしているようです。文字コードを選んでください' : '変更するとこのファイルだけ読み直します'}</span></div>`);
+  }
+  parts.push(gmOverrideHtml(it));
+  return parts.join('');
+}
+function gmRowVisible(it) {
+  switch (gm.filter) {
+    case 'warn': return gmNeedsCheck(it);
+    case 'idle': return it.status !== 'done';
+    case 'error': return it.status === 'error' || it.load === 'error';
+    default: return true;
+  }
+}
+function gmRenderList() {
+  const items = gm.items;
+  const multi = items.length >= 2;
+  const nWarn = items.filter(gmNeedsCheck).length;
+  const nErr = items.filter(it => it.status === 'error' || it.load === 'error').length;
+  const nIdle = items.filter(it => it.status !== 'done').length;
+  const nOk = items.filter(it => it.load === 'ok' && it.status !== 'done' && !gmNeedsCheck(it)).length;
+  $('gmCardTitle').textContent = multi ? '② 原稿リスト' : `② 原稿リスト（${items.length}件）`;
+  $('gmSummary').textContent = multi ? `${items.length}原稿　OK ${nOk} ／ ⚠要確認 ${nWarn} ／ ✕エラー ${nErr}` + (items.length >= CC_MULTI_MAX ? `　（上限${CC_MULTI_MAX}件に達しています）` : '') : '';
+  $('gmTools').style.display = multi ? '' : 'none';
+  $('gmNextWarn').style.display = nWarn ? '' : 'none';
+  if (!['all', 'warn', 'idle', 'error'].includes(gm.filter)) gm.filter = 'all';
+  const fc = { all: items.length, warn: nWarn, idle: nIdle, error: nErr };
+  if (gm.filter !== 'all' && !fc[gm.filter]) gm.filter = 'all';
+  $('gmFilters').innerHTML = [['all', 'すべて'], ['warn', '⚠要確認'], ['idle', '未発行'], ['error', '✕エラー']].map(([k, t]) =>
+    `<button type="button" class="btn-outline btn-sm gm-filter ${gm.filter === k ? 'on' : ''}" data-filter="${k}" aria-pressed="${gm.filter === k}" ${fc[k] || k === 'all' ? '' : 'disabled'}>${t} ${fc[k]}</button>`).join('');
+  gm.sel.forEach(id => { if (!gmFind(id)) gm.sel.delete(id); });
+  const nSel = gm.sel.size;
+  $('gmAdvApply').textContent = nSel ? `選択した${nSel}原稿に適用` : '適用';
+  $('gmAdvScopeBox').style.display = nSel ? 'none' : '';
+  $('gmBulkBar').style.display = nSel ? '' : 'none';
+  $('gmBulkCount').textContent = `${nSel}件選択中`;
+  $('gmLockNote').style.display = gm.running ? '' : 'none';
+  const dis = gm.running ? 'disabled' : '';
+  const rows = items.filter(gmRowVisible).map(it => {
+    const c = gmChecks(it);
+    const lock = gmRowLocked(it);
+    const open = gm.open.has(it.id) || (items.length === 1 && !gm.open.has('closed:' + it.id));
+    const cls = it.status === 'error' || it.load === 'error' ? 'ga-row-err' : (gmNeedsCheck(it) ? 'gm-row-warn' : '');
+    const nm = gmName(it);
+    const M = gmMediaIds(it).length;
+    return `<tr class="${cls}" data-id="${it.id}">
+      <td><input type="checkbox" class="gm-sel" aria-label="${escHtml(nm)}を選択" ${gm.sel.has(it.id) ? 'checked' : ''} ${dis}></td>
+      <td><input type="text" class="gm-name" data-fk="${it.id}:name" maxlength="60" value="${escHtml(it.name)}" placeholder="${escHtml(nm)}" aria-label="${escHtml(it.fileName || nm)} の原稿名" ${lock ? 'disabled' : ''}>
+        <div class="ga-sub gm-fname" title="${escHtml(it.fileName)}">${escHtml(it.fileName || '—')}</div></td>
+      <td><input type="text" class="gm-adv" data-fk="${it.id}:adv" maxlength="100" list="gaAdvList" autocomplete="off" value="${escHtml(it.adv)}" placeholder="未入力" aria-label="${escHtml(nm)} の広告主" ${lock ? 'disabled' : ''}></td>
+      <td style="white-space:nowrap">${it.load === 'ok' ? (it.links.length ? `${gmTracked(it)} / ${it.links.length}` : '<span class="ga-warn-sm">URLなし</span>') : '—'}</td>
+      <td>${it.override ? `<button type="button" class="badge badge-info gm-linkbtn" data-act="open">上書き</button><div class="ga-sub">${M}媒体</div>` : `共通<div class="ga-sub">${M}媒体</div>`}</td>
+      <td>${gmCheckHtml(it)}</td>
+      <td>${gmStatusHtml(it)}</td>
+      <td style="white-space:nowrap"><button type="button" class="btn-outline btn-sm" data-act="toggle" aria-expanded="${open}" aria-controls="gmd-${it.id}" aria-label="${escHtml(nm)}の詳細を${open ? '閉じる' : '開く'}">${open ? '閉じる ▲' : '開く ▼'}</button>
+        <button type="button" class="btn-outline btn-sm" data-act="del" aria-label="${escHtml(nm)}を削除" ${dis}>削除</button></td>
+    </tr>
+    <tr class="gm-detail" id="gmd-${it.id}" data-id="${it.id}" ${open ? '' : 'hidden'}><td colspan="8">${open ? gmDetailHtml(it) : ''}</td></tr>`;
+  }).join('');
+  $('gmList').innerHTML = items.length ? `<div class="ga-table-wrap"><table class="ga-table gm-table"><caption class="sr-only" style="position:absolute;left:-9999px">原稿リスト ${items.length}件、要確認${nWarn}件</caption>
+    <thead><tr><th scope="col"><input type="checkbox" id="gmSelAll" aria-label="全選択" ${nSel && nSel === items.length ? 'checked' : ''} ${dis}></th><th scope="col">原稿名（ファイル名）</th><th scope="col">広告主</th><th scope="col">計測/検出</th><th scope="col">出稿先</th><th scope="col">確認</th><th scope="col">状態</th><th scope="col">操作</th></tr></thead>
+    <tbody>${rows || '<tr><td colspan="8" class="text-muted">この条件に合う原稿はありません。</td></tr>'}</tbody></table></div>` : '<div class="text-muted">原稿を取り込むと、ここにリストが表示されます。</div>';
+}
+function gmUpdateBar() {
+  const btn = $('gaIssueBtn');
+  const items = gm.items;
+  const prog = $('gmProg');
+  $('gmStopBtn').style.display = gm.running ? '' : 'none';
+  prog.style.display = gm.running ? '' : 'none';
+  btn.style.display = gm.running ? 'none' : '';
+  if (gm.running) {
+    const p = gm.prog;
+    const pct = p.total ? Math.round(p.done / p.total * 100) : 0;
+    $('gaBarText').textContent = `発行中… ${p.done} / ${p.total} 出稿（${p.itemsDone} / ${p.items} 原稿）`;
+    $('gaBarReason').textContent = '';
+    prog.setAttribute('aria-valuenow', String(pct));
+    $('gmProgFill').style.width = pct + '%';
+    $('gmProgPct').textContent = pct + '%';
+    $('gmFailBtn').style.display = 'none'; $('gmRestBtn').style.display = 'none';
+    return;
+  }
+  const pending = items.filter(it => it.status !== 'done' && it.load !== 'loading');
+  const targets = items.filter(gmIssuable);
+  const K = targets.reduce((s, it) => s + gmMediaIds(it).length, 0);
+  const blocked = pending.filter(it => gmChecks(it).block.length);
+  const anyDone = items.some(it => it.status === 'done');
+  let text = '', reason = '';
+  if (!items.length) reason = '原稿を取り込んでください';
+  else if (items.some(it => it.load === 'loading')) reason = '読み込み中です…';
+  if (!items.length) text = '';
+  else if (!pending.length) text = `✓ すべての原稿（${items.length}件）を発行しました`;
+  else {
+    const noOv = pending.every(it => !it.override);
+    const allN = pending.reduce((s, it) => s + gmMediaIds(it).length, 0);
+    text = anyDone ? (targets.length ? `未発行の${targets.length}原稿 = ${K}出稿を発行します` : `未発行 ${pending.length}原稿（要確認のため発行できません）`)
+      : (noOv ? `${pending.length}原稿 × ${ga.selected.length}媒体 = ${allN}出稿` : `${pending.length}原稿 = ${allN}出稿`) + (blocked.length ? `。うち要確認${blocked.length}原稿は除いて、${targets.length}原稿=${K}出稿を発行します` : 'を発行します');
+    if (!ga.selected.length && pending.some(it => !it.override)) reason = '媒体を1つ以上選んでください';
+    else if (!targets.length) reason = '発行できる原稿がありません（すべて要確認）';
+    const noAdv = targets.filter(it => !it.adv.trim()).length;
+    if (!reason && noAdv) reason = `広告主未入力 ${noAdv}原稿を含みます`;
+    const kv = targets.reduce((s, it) => s + gmTracked(it) * gmMediaIds(it).length, 0);
+    if (!reason && kv > CC_KV_DAILY_WARN) reason = `計測URLが${kv.toLocaleString()}本になります。無料プランの1日の書込上限（約1,000回）を超えると、発行はできますが表示が遅くなる場合があります`;
+  }
+  $('gaBarText').textContent = text;
+  $('gaBarReason').textContent = reason;
+  btn.disabled = !K || items.some(it => it.load === 'loading');
+  btn.textContent = K ? `${K}出稿を発行` : '発行';
+  const failed = items.filter(it => it.status === 'error' && gmIssuable(it));
+  const rest = items.filter(it => it.status === 'idle' && it.note && gmIssuable(it));
+  const fb = $('gmFailBtn'), rb = $('gmRestBtn');
+  fb.style.display = failed.length ? '' : 'none';
+  rb.style.display = rest.length ? '' : 'none';
+  fb.textContent = `失敗分のみ再試行（${failed.reduce((s, it) => s + gmMediaIds(it).length, 0)}出稿）`;
+  rb.textContent = `残りを発行（${rest.reduce((s, it) => s + gmMediaIds(it).length, 0)}出稿）`;
+}
+function gmPreviewHtml() {
+  const p = gm.preview && gmFind(gm.preview.id);
+  if (!p || p.status !== 'done' || !p.resultTexts[gm.preview.idx]) return '';
+  const cur = p.resultTexts[gm.preview.idx];
+  const out = cur.pieces.map(x => x.mark ? `<mark title="元URL: ${escHtml(x.from)}">${escHtml(x.t)}</mark>` : escHtml(x.t)).join('');
+  return `<div class="gm-preview mt-2">
+    <div style="font-size:13px;margin-bottom:6px">プレビュー: <b>${escHtml(gmName(p))}</b> × <b>${escHtml(cur.mediaName)}</b>${cur.mediaCompany ? `（${escHtml(cur.mediaCompany)}）` : ''}　<span class="text-muted">出稿名: ${escHtml(cur.name)}</span></div>
+    <div class="ga-out" id="gmOut" tabindex="0" aria-label="変換後の原稿">${out}</div>
+    <div class="ga-actions">
+      <button type="button" class="btn-primary btn-sm" data-gmr="copy-cur">コピー</button>
+      <button type="button" class="btn-outline btn-sm" data-gmr="dl-cur">.txtダウンロード</button>
+      <span class="text-muted" style="color:#444">置換 ${cur.replaced}本 / 未置換 ${cur.notReplaced}本（計測しない・除外）</span>
+    </div></div>`;
+}
+function gmRenderResult() {
+  const card = $('gmResultCard');
+  const items = gm.items;
+  const touched = items.filter(it => it.status !== 'idle' || it.note);
+  const show = gm.active && (gm.running || touched.length > 0);
+  card.style.display = show ? '' : 'none';
+  if (!show) return;
+  const done = items.filter(it => it.status === 'done');
+  const nDone = done.reduce((s, it) => s + it.resultTexts.length, 0);
+  const nErr = items.filter(it => it.status === 'error').length;
+  const nRest = items.filter(it => it.status === 'idle' && it.note).length;
+  const nOut = items.filter(it => it.status === 'idle' && !it.note && !gmIssuable(it)).length;
+  $('gmResultSummary').textContent = `発行済み ${nDone}出稿 / エラー ${nErr}原稿 / 未実施 ${nRest}原稿 / 対象外 ${nOut}原稿`;
+  // 列 = 媒体（発行済みの結果と、未発行の原稿の出稿先の和集合）
+  const cols = [];
+  const addCol = (id, name) => { if (!cols.some(c => String(c.id) === String(id))) cols.push({ id: String(id), name }); };
+  done.forEach(it => it.resultTexts.forEach(t => addCol(t.campaign.mediaId, t.mediaName)));
+  const all = ccAgencyMedia();
+  touched.filter(it => it.status !== 'done').forEach(it => gmMediaIds(it).forEach(id => { const m = all.find(x => x.id === id); if (m) addCol(id, m.name); }));
+  const cell = (it, col) => {
+    const nm = gmName(it);
+    if (it.status === 'done') {
+      const idx = it.resultTexts.findIndex(t => String(t.campaign.mediaId) === col.id);
+      if (idx < 0) return '<td class="text-muted">—</td>';
+      const sel = gm.preview && gm.preview.id === it.id && gm.preview.idx === idx;
+      return `<td class="${sel ? 'gm-cell-sel' : ''}"><span class="badge badge-ok">✓</span> <button type="button" class="btn-outline btn-sm" data-gmr="show" data-id="${it.id}" data-idx="${idx}" aria-label="${escHtml(nm)} × ${escHtml(col.name)}：完了。プレビューを表示">表示</button> <button type="button" class="btn-outline btn-sm" data-gmr="copy" data-id="${it.id}" data-idx="${idx}" aria-label="${escHtml(nm)} × ${escHtml(col.name)} をコピー">コピー</button> ${ccToMainBtnHtml(col.id, `data-gmr="to-main" data-id="${it.id}" data-idx="${idx}"`)}</td>`;
+    }
+    if (!gmMediaIds(it).includes(col.id)) return '<td class="text-muted">—</td>';
+    if (it.status === 'issuing') return '<td><span class="badge badge-info">⟳ 発行中</span></td>';
+    if (it.status === 'queued') return '<td><span class="badge badge-gray">… 待機中</span></td>';
+    if (it.status === 'error') return '<td><span class="badge badge-err">✕ 失敗</span></td>';
+    return `<td><span class="badge badge-gray">… ${escHtml(it.note || '未発行')}</span></td>`;
+  };
+  const rows = touched.map(it => `<tr><th scope="row" style="text-align:left;font-weight:600">${escHtml(gmName(it))}${it.adv.trim() ? `<div class="ga-sub">${escHtml(it.adv)}</div>` : ''}${it.status === 'error' ? `<div class="ga-sub" style="color:#b91c1c">${escHtml(it.error)}</div>` : ''}</th>
+    ${cols.map(c => cell(it, c)).join('')}
+    <td style="white-space:nowrap">${it.status === 'done' ? `<button type="button" class="btn-outline btn-sm" data-gmr="zip-one" data-id="${it.id}">ZIP</button> <a class="btn-outline btn-sm" style="text-decoration:none;border-radius:8px;display:inline-block" href="${escHtml(ccResultsUrl(it.result.batchId))}" target="_blank" rel="noopener" aria-label="${escHtml(gmName(it))} の結果を結果管理で見る">結果 ↗</a>` : (it.status === 'error' && !gm.running ? `<button type="button" class="btn-outline btn-sm" data-gmr="retry-one" data-id="${it.id}">再試行</button>` : '')}</td></tr>`).join('');
+  const blocked = items.filter(it => it.status !== 'done' && !gmIssuable(it) && !gm.running);
+  const batches = [...new Set(done.map(it => it.result.batchId))];
+  const banner = (gm.banner ? `<div class="ga-banner err" role="alert">✕ ${escHtml(gm.banner)}</div>` : '') +
+    (gm.kvWarn ? '<div class="ga-banner warn">無料プランの1日の書込上限（KV 1,000回/日）に達した可能性があります。計測URLは正常に動きますが、リダイレクトの高速化用データを一部書き込めませんでした（翌日に自動で解消）。</div>' : '');
+  $('gmResultBody').innerHTML = banner + (nDone ? `<div class="ga-actions" style="margin-top:0">
+      <button type="button" class="btn-primary btn-sm" data-gmr="zip-all">全件ZIPでダウンロード（.txt ${nDone}本）</button>
+      <button type="button" class="btn-outline btn-sm" data-gmr="copy-urls">発行URL一覧を全件コピー</button>
+      <button type="button" class="btn-outline btn-sm" data-gmr="csv">発行URL一覧CSV</button>
+      <label for="gmEnc" style="margin:0;font-size:13px">文字コード</label><select id="gmEnc" aria-label="ダウンロードの文字コード"><option value="utf-8">UTF-8</option><option value="shift_jis">Shift_JIS</option></select>
+      ${batches.length === 1 ? `<a class="btn-outline btn-sm" style="text-decoration:none;border-radius:8px" href="${escHtml(ccResultsUrl(batches[0]))}" target="_blank" rel="noopener">この入稿の結果を見る ↗</a>` : `<span class="ga-sub">結果管理は原稿ごとの「結果 ↗」から見られます（発行が原稿ごとのため）</span>`}
+    </div>` : '') +
+    `<div class="ga-table-wrap mt-2 gm-matrix"><table class="ga-table"><caption class="sr-only" style="position:absolute;left:-9999px">原稿 × 媒体の発行結果</caption><thead><tr><th scope="col">原稿</th>${cols.map(c => `<th scope="col">${escHtml(c.name)}</th>`).join('')}<th scope="col">原稿ごと</th></tr></thead><tbody>${rows}</tbody></table></div>` +
+    gmPreviewHtml() +
+    (blocked.length ? `<div class="ga-banner warn mt-2">発行されていない原稿（要確認）${blocked.length}件: ${blocked.map(it => `<button type="button" class="gm-linkbtn" data-gmr="fix" data-id="${it.id}">${escHtml(gmName(it))}</button>`).join('、')}　<span class="ga-sub">（クリックで②の該当行を開きます）</span></div>` : '') +
+    `<div class="ga-actions"><button type="button" class="btn-secondary btn-sm" data-gmr="new" ${gm.running ? 'disabled' : ''}>新しい入稿を始める</button></div>`;
+}
+function gmRenderCommonNote() {
+  const n = gm.items.filter(it => it.override && it.status !== 'done').length;
+  $('gmCommonNote').innerHTML = gm.active
+    ? `<div class="ga-sub">出稿名: 自動（{日付}_{広告主}_{原稿名}_{媒体名}）。媒体ごとの配信数・出稿費は、個別に入力していない全原稿に入ります（通常は結果管理で後から入力できます）。</div>` +
+      (n ? `<div class="ga-warn-sm mt-2">${n}原稿は個別設定のため、ここを変えても変わりません。</div>` : '')
+    : '';
+}
+function gmRender() {
+  if (!gm.active) { $('gmCommonNote').innerHTML = ''; return; }
+  const ae = document.activeElement;
+  const fk = ae && ae.dataset ? ae.dataset.fk : null;
+  const selStart = fk && ae.selectionStart != null ? ae.selectionStart : null;
+  gmRenderList();
+  gmRenderResult();
+  gmRenderCommonNote();
+  gmUpdateBar();
+  if (fk) {
+    const n = document.querySelector(`[data-fk="${CSS.escape(fk)}"]`);
+    if (n && n !== ae) { try { n.focus({ preventScroll: true }); if (selStart != null && n.setSelectionRange) n.setSelectionRange(selStart, selStart); } catch (e) {} }
+  }
+}
+
+// ---------- 操作 ----------
+function gmEdit(it, l, patch) {
+  it.edits.set(l.key, { ...(it.edits.get(l.key) || {}), ...patch });
+  Object.assign(l, patch);
+}
+function gmShowUndo(msg, restore) {
+  clearTimeout(gm.undoTimer);
+  gm.undo = restore;
+  const u = $('gmUndo');
+  u.innerHTML = `${escHtml(msg)} <button type="button" class="btn-outline btn-sm" id="gmUndoBtn">元に戻す</button>`;
+  u.style.display = '';
+  const hide = () => { u.style.display = 'none'; gm.undo = null; };
+  gm.undoTimer = setTimeout(function tick() { if (u.contains(document.activeElement)) { gm.undoTimer = setTimeout(tick, 2000); return; } hide(); }, 10000);
+  $('gmUndoBtn').addEventListener('click', () => { if (gm.undo) gm.undo(); clearTimeout(gm.undoTimer); hide(); });
+}
+function gmDelete(ids) {
+  const del = gm.items.map((it, i) => ({ it, i })).filter(x => ids.includes(x.it.id));
+  if (!del.length) return;
+  if (del.some(x => x.it.status === 'done') && !confirm('発行済みの原稿を含みます。リストから外しますか？（発行済みの計測URLは無効になりません。リストから外すだけです）')) return;
+  gm.items = gm.items.filter(it => !ids.includes(it.id));
+  ids.forEach(id => { gm.sel.delete(id); gm.open.delete(id); if (gm.preview && gm.preview.id === id) gm.preview = null; });
+  const label = del.length === 1 ? `「${gmName(del[0].it)}」を削除しました` : `${del.length}件の原稿を削除しました`;
+  const restore = () => {
+    if (!gm.active) gmEnter();
+    del.forEach(x => gm.items.splice(Math.min(x.i, gm.items.length), 0, x.it));
+    gmRender();
+  };
+  if (!gm.items.length) { gmExit(); ccMsg(''); }
+  else gmRender();
+  gmShowUndo(label, restore);
+  if (!gm.items.length) { const b = $('gaFileBtn'); if (b && b.offsetParent) b.focus(); }
+}
+function gmApplyAdv() {
+  const v = $('gmAdvAll').value.trim();
+  if (!v) { toast('広告主を入力してください'); $('gmAdvAll').focus(); return; }
+  const scope = (document.querySelector('input[name="gmAdvScope"]:checked') || {}).value || 'empty';
+  const targets = gm.items.filter(it => it.status !== 'done' && it.load !== 'error' && (gm.sel.size ? gm.sel.has(it.id) : (scope === 'all' || !it.adv.trim())));
+  if (!targets.length) { toast('対象の原稿がありません'); return; }
+  const before = targets.map(it => [it, it.adv]);
+  targets.forEach(it => { it.adv = v; });
+  gmRender();
+  gmShowUndo(`${targets.length}件に広告主『${v}』を設定しました`, () => { before.forEach(([it, a]) => { it.adv = a; }); gmRender(); });
+}
+function gmNextWarn() {
+  const list = gm.items.filter(gmNeedsCheck);
+  if (!list.length) return;
+  if (gm.filter !== 'all' && gm.filter !== 'warn') gm.filter = 'all';
+  gm.warnCursor = (gm.warnCursor + 1) % list.length;
+  const it = list[gm.warnCursor];
+  gm.open.add(it.id);
+  gmRender();
+  const tr = document.querySelector(`#gmList tr[data-id="${it.id}"]:not(.gm-detail)`);
+  if (tr) {
+    tr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    const b = tr.querySelector('[data-act="toggle"]'); if (b) b.focus({ preventScroll: true });
+  }
+  $('gmLive').textContent = `要確認 ${gm.warnCursor + 1}/${list.length}: ${gmName(it)}`;
+}
+function gmOnListEvent(e) {
+  const t = e.target;
+  if (t.id === 'gmSelAll' && e.type === 'change') { gm.sel = t.checked ? new Set(gm.items.map(it => it.id)) : new Set(); gmRender(); return; }
+  const tr = t.closest('tr[data-id]');
+  if (!tr) return;
+  const it = gmFind(tr.dataset.id);
+  if (!it) return;
+  const later = () => setTimeout(gmRender, 0);
+  if (e.type === 'click') {
+    const a = t.closest('[data-act]');
+    if (!a) return;
+    switch (a.dataset.act) {
+      case 'toggle': {
+        const open = gm.open.has(it.id) || (gm.items.length === 1 && !gm.open.has('closed:' + it.id));
+        if (open) { gm.open.delete(it.id); gm.open.add('closed:' + it.id); } else { gm.open.add(it.id); gm.open.delete('closed:' + it.id); }
+        gmRender();
+        const b = document.querySelector(`#gmList tr[data-id="${it.id}"] [data-act="toggle"]`); if (b) b.focus({ preventScroll: true });
+        break;
+      }
+      case 'open': case 'open-check': gm.open.add(it.id); gm.open.delete('closed:' + it.id); gmRender(); break;
+      case 'del': gmDelete([it.id]); break;
+      case 'refetch': gmFetchGdocInto(it).then(gmRender); gmRender(); break;
+      case 'ov-reset': it.override = null; gmRender(); break;
+    }
+    return;
+  }
+  const li = t.closest('tr[data-li]');
+  const l = li ? it.links[+li.dataset.li] : null;
+  const c = t.classList;
+  if (c.contains('gm-sel') && e.type === 'change') { if (t.checked) gm.sel.add(it.id); else gm.sel.delete(it.id); gmRender(); }
+  else if (c.contains('gm-name')) { it.name = t.value; if (e.type === 'change') later(); else { gmRenderLightCounts(); } }
+  else if (c.contains('gm-adv')) { it.adv = t.value; if (e.type === 'change') later(); else gmRenderLightCounts(); }
+  else if (l && c.contains('gm-track') && e.type === 'change') {
+    const ed = it.edits.get(l.key) || {};
+    gmEdit(it, l, { track: t.checked });
+    if (ed.lp == null) l.lp = t.checked && !l.locked;
+    gmRender();
+  }
+  else if (l && c.contains('gm-lp') && e.type === 'change') { gmEdit(it, l, { lp: t.checked }); gmRender(); }
+  else if (l && c.contains('gm-label')) { gmEdit(it, l, { label: t.value }); if (e.type === 'change') later(); }
+  else if (l && c.contains('gm-lpurl')) { gmEdit(it, l, { lpUrl: t.value.trim() }); if (e.type === 'change') later(); else gmRenderLightCounts(); }
+  else if (l && c.contains('gm-url') && e.type === 'change') {
+    const v = t.value.trim();
+    if (!v || v === l.url) { t.value = l.url; return; }
+    if (it.text.slice(l.start, l.end) === l.url) it.text = it.text.slice(0, l.start) + v + it.text.slice(l.end);
+    gmDetect(it); later();
+  }
+  else if (c.contains('gm-enc') && e.type === 'change') {
+    if (!it.fileBuf) return;
+    it.enc = t.value;
+    it.text = ccDecodeText(it.fileBuf, t.value).text;
+    gmDetect(it); gmRender();
+  }
+  else if (c.contains('gm-ovmode') && e.type === 'change') {
+    it.override = t.value === 'own' ? (it.override || { selected: ga.selected.slice(), date: '', mediaInputs: {} }) : null;
+    gmRender();
+  }
+  else if (c.contains('gm-ovm') && e.type === 'change' && it.override) {
+    const ids = it.override.selected.filter(x => x !== t.value);
+    if (t.checked) ids.push(t.value);
+    const all = ccAgencyMedia();
+    it.override.selected = all.filter(m => ids.includes(m.id)).map(m => m.id);
+    gmRender();
+  }
+  else if (c.contains('gm-ovdate') && it.override) { it.override.date = t.value; if (e.type === 'change') later(); }
+  else if (c.contains('gm-ovin') && it.override) {
+    const mid = t.closest('[data-mid]').dataset.mid;
+    it.override.mediaInputs[mid] = { ...(it.override.mediaInputs[mid] || {}), [t.dataset.f]: t.value };
+    if (e.type === 'change') {
+      const n = ccParseIntInput(t.value);
+      if (Number.isNaN(n)) toast('半角の整数で入力してください（カンマ・全角数字は自動で直します）');
+      else { t.value = n == null ? '' : String(n); it.override.mediaInputs[mid][t.dataset.f] = t.value; }
+      later();
+    }
+  }
+}
+// 入力中は表を描き直さず（フォーカスを保つ）、件数・固定バーだけ更新する
+function gmRenderLightCounts() { gmUpdateBar(); }
+function gmOnResultClick(e) {
+  const b = e.target.closest('[data-gmr]');
+  if (!b) return;
+  const it = b.dataset.id ? gmFind(b.dataset.id) : null;
+  const enc = ($('gmEnc') || {}).value || 'utf-8';
+  switch (b.dataset.gmr) {
+    case 'show': gm.preview = { id: it.id, idx: +b.dataset.idx }; gmRenderResult(); { const o = $('gmOut'); if (o) o.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } break;
+    case 'copy': ccCopyText(it.resultTexts[+b.dataset.idx].plain, b); break;
+    case 'copy-cur': { const p = gmFind(gm.preview.id); ccCopyText(p.resultTexts[gm.preview.idx].plain, b); break; }
+    case 'dl-cur': { const p = gmFind(gm.preview.id); const t = p.resultTexts[gm.preview.idx]; ccDownload(t.plain, ccZipName(t.name || t.mediaName) + '.txt', enc); break; }
+    case 'zip-all': { const d = gm.items.filter(x => x.status === 'done'); gmDownloadZip(d, gmZipFileName(d)); break; }
+    case 'zip-one': gmDownloadZip([it], ccZipName(gmName(it)) + '.zip'); break;
+    case 'copy-urls': gmCopyUrls(b); break;
+    case 'csv': gmDownloadCsv(); break;
+    case 'to-main': { const t = it.resultTexts[+b.dataset.idx]; ccOpenInDelivery(t.campaign.mediaId, t.plain, ccReqDate(it.req, t.campaign.mediaId)); break; }
+    case 'retry-one': if (it) gmIssue([it]); break;
+    case 'fix': gm.open.add(it.id); gm.filter = 'all'; gmRender(); { const tr = document.querySelector(`#gmList tr[data-id="${it.id}"]`); if (tr) tr.scrollIntoView({ behavior: 'smooth', block: 'center' }); } break;
+    case 'new':
+      if (!confirm('原稿リストと結果を消して、新しい入稿を始めますか？（発行済みの計測URLは結果管理に残ります）')) return;
+      gmExit(); ccMsg(''); window.scrollTo({ top: 0, behavior: 'smooth' });
+      break;
+  }
+}
+
+// ---------- 自社広告: 元の配信機（クリックメーラー/配配メール/MM）のメイン画面で原稿作成 ----------
+function ccToMainSource(mediaId) {
+  const m = mediaList.find(x => String(x.id) === String(mediaId) && x.deliverySystem === 'agency');
+  if (!m || gbAgencyKind(m) !== 'own') return null;
+  return { agency: m, src: gbSourceMedia(m) };
+}
+function ccToMainBtnHtml(mediaId, attrs) {
+  const r = ccToMainSource(mediaId);
+  if (!r) return '';
+  if (!r.src) return `<button type="button" class="btn-outline btn-sm" ${attrs} title="媒体管理で「配信に使う配信機の媒体」を設定すると使えます">配信機で原稿作成</button>`;
+  const label = (DELIVERY_SYSTEMS[r.src.deliverySystem || 'MM'] || {}).label || '';
+  return `<button type="button" class="btn-outline btn-sm" ${attrs}>${escHtml(label.replace(/（MM）$/, ''))}で原稿作成</button>`;
+}
+// 発行時の出稿日（媒体ごとの指定 → 原稿の出稿日）。YYYY-MM-DD
+function ccReqDate(req, mediaId) {
+  if (!req) return '';
+  const m = (req.media || []).find(x => String(x.mediaId) === String(mediaId));
+  const s = (m && m.startAt) || (req.campaignDefaults && req.campaignDefaults.startAt) || '';
+  return /^\d{4}-\d{2}-\d{2}/.test(s) ? s.slice(0, 10) : '';
+}
+// メイン画面へ: 配信機ラジオ → 媒体（ヘッダー/フッター）→ 日付入力＆置換 → 本文＝変換後原稿
+function ccOpenInDelivery(mediaId, plain, dateStr) {
+  const r = ccToMainSource(mediaId);
+  if (!r) return;
+  if (!r.src) { toast('この自社広告の媒体には配信機の媒体が紐付いていません。媒体管理の「代理店」タブで「配信に使う配信機の媒体」を選んでください', 6000); return; }
+  const ds = r.src.deliverySystem || 'MM';
+  const cur = el.bodyText.value;
+  if (cur.trim() && cur !== plain && !confirm('メイン画面の本文に入力中の内容があります。この変換後の原稿で置き換えますか？')) return;
+  showView('main');
+  const radio = document.querySelector(`input[name="deliverySystem"][value="${ds}"]`);
+  if (radio && !radio.checked) { radio.checked = true; radio.dispatchEvent(new Event('change')); }
+  renderSelect();
+  el.mediaSelect.value = r.src.id;
+  handleMediaChange();
+  el.bodyText.value = convertNametags(plain, ds);
+  if (dateStr) {
+    el.dateInput.value = dateStr.replace(/-/g, '');
+    syncInputToPicker();
+    replaceDate();
+  }
+  handleBodyChange();
+  updateBmLinks();
+  toast(`${DELIVERY_SYSTEMS[ds].label}「${r.src.name}」で原稿作成を開きました（本文は計測URLに変換済み）`, 4500);
+  el.bodyText.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
 // ---------- 画面の初期化 ----------
 // 除外URLルール（配信停止URL等）をサーバから読み、URL一覧の「計測する/しない」を判定し直す
 let ccRulesPromise = null;
@@ -3617,6 +4840,8 @@ function ccLoadExcludeRules() {
         ga.excludeRules = d.items || [];
         ga.rulesLoaded = true;
         ccDetect();
+        // 原稿リストの未発行の原稿も判定し直す（配信停止URL等を「計測しない」に）
+        if (gm.active) { gm.items.forEach(it => { if (it.status !== 'done') gmDetect(it); }); gmScheduleRender(); }
         return true;
       } catch (e) { return false; }
       finally { ccRulesPromise = null; }
@@ -3643,6 +4868,8 @@ function ccOpenView() {
   if (!$('gaDate').value) $('gaDate').value = ccJstToday();
   ccUpdateConn();
   ccRenderMedia(); ccRenderMediaTable(); ccRenderAdvList(); ccUpdateCampDefault(); ccUpdateBar();
+  gmUpdateGdocBtn();
+  if (gm.active) gmRender();
   ccLoadRemoteHints();
 }
 function ccInitView() {
@@ -3671,8 +4898,9 @@ function ccInitView() {
     $('gaEncNote').className = garbled ? 'ga-warn-sm' : 'text-muted';
     ccDetect();
   });
-  $('gaGdocBtn').addEventListener('click', ccImportGdoc);
-  $('gaGdocUrl').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); ccImportGdoc(); } });
+  $('gaGdocBtn').addEventListener('click', gmOnGdocBtn);
+  $('gaGdocUrl').addEventListener('input', gmUpdateGdocBtn);
+  $('gaGdocUrl').addEventListener('keydown', e => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); gmOnGdocBtn(); } });
   $('gaName').addEventListener('input', () => { ga.nameEdited = !!$('gaName').value.trim(); ccRenderUrls(); ccUpdateCampDefault(); ccMarkStale(); });
   const ul = $('gaUrlList');
   ['change', 'input'].forEach(ev => ul.addEventListener(ev, ccOnUrlListEvent));
@@ -3704,9 +4932,16 @@ function ccInitView() {
     ccSetSelected(ids);
   });
   $('gaMediaList').addEventListener('click', e => {
+    const kh = e.target.closest('[data-kind]');
+    if (kh) {
+      const ms = ccAgencyMedia().filter(m => gbAgencyKind(m) === kh.dataset.kind).map(m => m.id);
+      const allOn = ms.every(id => ga.selected.includes(id));
+      ccSetSelected(allOn ? ga.selected.filter(id => !ms.includes(id)) : [...ga.selected, ...ms.filter(id => !ga.selected.includes(id))]);
+      return;
+    }
     const h = e.target.closest('[data-company]');
     if (h) {
-      const ms = ccAgencyMedia().filter(m => (m.mediaCompany || '').trim() === h.dataset.company).map(m => m.id);
+      const ms = ccAgencyMedia().filter(m => (m.mediaCompany || '').trim() === h.dataset.company && (!h.dataset.ckind || gbAgencyKind(m) === h.dataset.ckind)).map(m => m.id);
       const allOn = ms.every(id => ga.selected.includes(id));
       ccSetSelected(allOn ? ga.selected.filter(id => !ms.includes(id)) : [...ga.selected, ...ms.filter(id => !ga.selected.includes(id))]);
       return;
@@ -3770,7 +5005,37 @@ function ccInitView() {
     }
     ccMarkStale();
   });
-  $('gaIssueBtn').addEventListener('click', ccIssue);
+  $('gaIssueBtn').addEventListener('click', () => { if (gm.active) gmIssue('all'); else ccIssue(); });
+  // 複数原稿
+  $('gmPasteAddBtn').addEventListener('click', gmAddPaste);
+  const gl = $('gmList');
+  ['change', 'input', 'click'].forEach(ev => gl.addEventListener(ev, gmOnListEvent));
+  $('gmResultBody').addEventListener('click', gmOnResultClick);
+  $('gmFilters').addEventListener('click', e => { const b = e.target.closest('[data-filter]'); if (b) { gm.filter = b.dataset.filter; gmRender(); } });
+  $('gmNextWarn').addEventListener('click', gmNextWarn);
+  $('gmAdvApply').addEventListener('click', gmApplyAdv);
+  $('gmAdvAll').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); gmApplyAdv(); } });
+  $('gmDelAll').addEventListener('click', () => gmDelete(gm.items.map(it => it.id)));
+  $('gmBulkDel').addEventListener('click', () => gmDelete([...gm.sel]));
+  $('gmBulkClear').addEventListener('click', () => { gm.sel.clear(); gmRender(); });
+  $('gmBulkCommon').addEventListener('click', () => { gm.items.forEach(it => { if (gm.sel.has(it.id) && it.status !== 'done') it.override = null; }); gmRender(); });
+  $('gmStopBtn').addEventListener('click', () => { if (!gm.running) return; gm.stopReq = true; gm.stopKind = 'user'; $('gmStopBtn').disabled = true; setTimeout(() => { $('gmStopBtn').disabled = false; }, 1500); toast('実行中の発行が終わったら止めます'); });
+  $('gmFailBtn').addEventListener('click', () => gmIssue('failed'));
+  $('gmRestBtn').addEventListener('click', () => gmIssue('rest'));
+  // ページ全体をドロップ領域に（どのタブでも。既存のドロップ領域で処理済みなら何もしない）
+  const mv = $('measureView');
+  const hasFiles = e => e.dataTransfer && [...(e.dataTransfer.types || [])].includes('Files');
+  mv.addEventListener('dragover', e => { if (!hasFiles(e)) return; e.preventDefault(); mv.classList.add('gm-dragging'); });
+  mv.addEventListener('dragleave', e => { if (!e.relatedTarget || !mv.contains(e.relatedTarget)) mv.classList.remove('gm-dragging'); });
+  mv.addEventListener('drop', e => {
+    mv.classList.remove('gm-dragging');
+    if (e.defaultPrevented || !e.dataTransfer || !e.dataTransfer.files || !e.dataTransfer.files.length) return;
+    e.preventDefault();
+    ccHandleDropFiles(e.dataTransfer.files);
+  });
+  // 媒体の選択・出稿日・媒体ごとの入力が変わったら原稿リストも更新
+  ['gaMediaList', 'gaChips', 'gaMediaTable'].forEach(id => $(id).addEventListener('change', () => { if (gm.active) gmScheduleRender(); }));
+  $('gaDate').addEventListener('change', () => { if (gm.active) gmScheduleRender(); });
   $('gaBarErr').addEventListener('click', e => { if (e.target.closest('[data-ga="retry"]')) ccIssue(); });
   $('gaResultBody').addEventListener('click', ccOnResultClick);
   $('gaCopyTableBtn').addEventListener('click', e => {
@@ -3795,7 +5060,7 @@ function ccInitView() {
     const body = el.bodyText.value;
     if (!body.trim()) { toast('本文が空です'); return; }
     const cur = $('gaText').value;
-    if (cur.trim() && cur !== body && !confirm('代理店入稿画面の原稿を、この本文で置き換えますか？')) return;
+    if (cur.trim() && cur !== body && !confirm('他媒体入稿画面の原稿を、この本文で置き換えますか？')) return;
     ccSetManuscript(body, { sourceType: 'paste', name: (el.subjectInput.value || '').trim() });
     ccOpenView();
     ccMsg('メイン画面の本文を取り込みました。', 'ok');
@@ -3847,14 +5112,15 @@ async function init() {
   });
   $('gbSearch').addEventListener('input', e => { gbSearchText = e.target.value; renderAdminList(); });
   $('gbOnlyNoCompany').addEventListener('change', e => { gbOnlyNoCompany = e.target.checked; renderAdminList(); });
-  $('gbCopyArea').addEventListener('click', e => { if (e.target.closest('#gbCopyCmBtn')) gbCopyClickmailerToAgency(); });
+  $('gbKindTabs').addEventListener('click', e => { const b = e.target.closest('[data-kindtab]'); if (b) { gbAgencyKindTab = b.dataset.kindtab; renderAdminList(); } });
+  $('gbCopyArea').addEventListener('click', e => { const b = e.target.closest('[data-copyds]'); if (b) gbCopyClickmailerToAgency(b.dataset.copyds); });
   gbRenderCompanyList();
   el.backToMainBtn.addEventListener('click', () => showView('main'));
   el.compareBtn.addEventListener('click', () => showView('compare'));
   el.backFromCompareBtn.addEventListener('click', () => showView('main'));
   el.runCompareBtn.addEventListener('click', runCompare);
 
-  // 代理店入稿ビュー（GA）と配配メールからの導線
+  // 他媒体入稿ビュー（GA）と配配メールからの導線
   ccInitView();
 
   // Media select
