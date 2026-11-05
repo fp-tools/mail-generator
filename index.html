@@ -566,7 +566,8 @@ const STORAGE_KEY = 'mailgen_media_v1';
 const PRESET_KEY = 'mailgen_presets_v1';
 const MEDIA_VERSION_KEY = 'mailgen_media_version_v1';
 const DELIVERY_SYSTEM_KEY = 'mailgen_delivery_system_v1';
-const WORKER_URL = 'https://mail-generator-proxy.hot-japan1989.workers.dev/github-api';
+const WORKER_URL = 'https://mail-generator-proxy.soga-naoya.workers.dev/github-api';
+const EDIT_PW_KEY = 'mailgen_edit_pw_v1';
 const GITHUB_OWNER = 'fp-tools';
 const GITHUB_REPO = 'mail-generator';
 const GITHUB_FILE = 'media.json';
@@ -1525,6 +1526,7 @@ const SHARED_HEADERS = { 'Accept': 'application/vnd.github.v3+json', 'Content-Ty
 
 async function pushSharedChange(mutator) {
   let lastErr;
+  let pwPrompts = 0;
   for (let attempt = 0; attempt < 3; attempt++) {
     try {
       // 1) 最新の共有データを取得
@@ -1546,7 +1548,20 @@ async function pushSharedChange(mutator) {
       const encoded = btoa(unescape(encodeURIComponent(JSON.stringify({ _version: version, items: next }, null, 2))));
       const body = { message: `媒体データを更新 (${new Date().toLocaleString('ja-JP')})`, content: encoded, branch: GITHUB_BRANCH };
       if (sha) body.sha = sha;
-      const putRes = await fetch(SHARED_API, { method: 'PUT', headers: SHARED_HEADERS, body: JSON.stringify(body) });
+      const pw = localStorage.getItem(EDIT_PW_KEY) || '';
+      const putRes = await fetch(SHARED_API, { method: 'PUT', headers: { ...SHARED_HEADERS, 'X-Edit-Password': pw }, body: JSON.stringify(body) });
+      if (putRes.status === 401) {
+        let code = '';
+        try { code = (await putRes.clone().json()).code || ''; } catch (e) {}
+        if (code === 'BAD_PASSWORD' && pwPrompts < 3) {
+          pwPrompts++;
+          const input = window.prompt(pw ? '編集用パスワードが違います。もう一度入力してください。' : '媒体データを保存するには編集用パスワードが必要です。入力してください（このブラウザに記憶されます）。', '');
+          if (input === null) throw new Error('パスワードが入力されなかったため保存を中止しました');
+          localStorage.setItem(EDIT_PW_KEY, input);
+          attempt--; // パスワード入力はやり直し回数に数えない
+          continue;
+        }
+      }
       if (putRes.status === 409 || putRes.status === 422) { lastErr = new Error('同時更新のため再試行'); continue; }
       if (!putRes.ok) {
         let msg = `更新エラー: ${putRes.status}`;
