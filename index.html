@@ -214,6 +214,111 @@ hr{border:none;border-top:1px solid #eee;margin:16px 0}
 .measure-table-wrap table{border-collapse:collapse;width:100%;font-size:12px}
 .measure-table-wrap th,.measure-table-wrap td{border:1px solid #e0e0e0;padding:6px 8px;text-align:left;white-space:nowrap}
 .measure-table-wrap th{background:#f5f5f7;font-weight:700}
+.header-actions{flex-wrap:wrap;justify-content:flex-end}
+a.btn-nav{text-decoration:none;display:inline-block;border-radius:7px}
+
+/* ===== 共通: ダイアログ（D-1 パスワード / GB-2 媒体追加） ===== */
+.d1-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:10000;display:flex;align-items:center;justify-content:center;padding:16px}
+.d1-dialog{background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.2);width:100%;max-width:420px;max-height:92vh;overflow:auto}
+.d1-dialog.wide{max-width:520px}
+.d1-head{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:#f0f0ff;border-bottom:1px solid #e0e0ff}
+.d1-head h3{font-size:15px;font-weight:700;color:#333}
+.d1-x{background:none;color:#444;font-size:20px;padding:0 6px;line-height:1}
+.d1-body{padding:16px 20px;font-size:14px;color:#333}
+.d1-body p{margin-bottom:12px;line-height:1.6}
+.d1-pwrow{display:flex;gap:6px}
+.d1-pwrow input{flex:1;padding:9px 12px;border:1.5px solid #ddd;border-radius:8px;font-size:14px}
+.d1-err{color:#b91c1c;font-size:13px;min-height:1.2em;margin:6px 0}
+.d1-remember{display:flex !important;align-items:center;gap:6px;font-weight:400 !important;margin:4px 0 0 !important;color:#333 !important}
+.d1-note{font-size:12px;color:#666;margin-left:22px}
+.d1-foot{display:flex;justify-content:flex-end;gap:8px;padding:12px 20px;border-top:1px solid #eee}
+.d1-dialog input[type=password]:focus{border-color:#4949FF;outline:none}
+.ga-main :focus-visible,.d1-dialog :focus-visible,#adminView :focus-visible{outline:2px solid #4949FF;outline-offset:2px}
+.gb-fieldset{border:1.5px solid #e5e7eb;border-radius:8px;padding:8px 12px 10px;margin-bottom:12px}
+.gb-fieldset legend{font-size:13px;font-weight:700;color:#444;padding:0 4px}
+.gb-fieldset label{display:inline-flex;align-items:center;gap:5px;font-weight:400;color:#333;margin:4px 12px 0 0;font-size:14px}
+.gb-summary{font-size:13px;color:#333;background:#f5f5ff;border:1px solid #d0d0ff;border-radius:6px;padding:6px 10px;margin-top:8px}
+.gb-warn{font-size:12px;color:#92400e;background:#fef3c7;border-radius:6px;padding:4px 8px;margin-top:4px}
+.gb-field-err{font-size:12px;color:#b91c1c;margin-top:4px}
+
+/* ===== 媒体管理（代理店区分） ===== */
+.gb-count{font-size:12px;color:#666;font-weight:400;margin-left:4px}
+.gb-agency-bar{background:#fafafe;border:1px solid #e5e7f5;border-radius:8px;padding:10px 12px;margin-bottom:12px}
+.gb-agency-bar .inline-group input[type=text]{max-width:320px}
+.gb-copy-hint{margin-top:8px}
+.badge-company{background:#f3f4f6;color:#444;margin-left:6px}
+.badge-warn{background:#fef3c7;color:#92400e}
+.badge-ok{background:#dcfce7;color:#166534}
+.badge-err{background:#fee2e2;color:#b91c1c}
+.badge-info{background:#e0e7ff;color:#3535cc}
+
+/* ===== 代理店入稿（GA） ===== */
+.ga-main{padding-bottom:110px}
+.ga-demo-banner{background:#b91c1c;color:#fff;font-weight:700;text-align:center;padding:8px;border-radius:8px;margin-bottom:12px}
+.ga-conn-row{display:flex;align-items:center;gap:8px;justify-content:flex-end;margin-bottom:8px;flex-wrap:wrap}
+.ga-conn{font-size:13px;font-weight:600;color:#444}
+.ga-conn.ok{color:#166534}
+.ga-conn.ng{color:#92400e}
+.ga-textarea{height:220px}
+.ga-textarea.dragover,.ga-drop.dragover{border:2px dashed #4949FF !important;background:#f5f5ff}
+.ga-drop{border:2px dashed #cfd2e6;border-radius:10px;padding:24px;text-align:center;color:#444;font-size:14px;line-height:2}
+.ga-msg{font-size:13px;margin-top:8px;min-height:1em;line-height:1.6}
+.ga-msg.ok{color:#166534}
+.ga-msg.err{color:#b91c1c}
+.ga-msg.warn{color:#92400e;background:#fef3c7;border-radius:6px;padding:8px 10px}
+.ga-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px}
+.ga-row > div{flex:1;min-width:180px}
+.ga-enc-row{display:flex;align-items:center;gap:8px;margin-top:6px;font-size:13px;flex-wrap:wrap}
+.ga-enc-row select{width:auto}
+.ga-toolbar{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+.ga-inline-chk{display:inline-flex !important;align-items:center;gap:5px;font-weight:400 !important;color:#333 !important;margin:0 0 0 8px !important;font-size:13px !important}
+.ga-table-wrap{overflow-x:auto;border:1px solid #e0e0e0;border-radius:8px}
+.ga-table{border-collapse:collapse;width:100%;font-size:13px}
+.ga-table th,.ga-table td{border-bottom:1px solid #eee;padding:6px 8px;text-align:left;vertical-align:top}
+.ga-table th{background:#f5f5f7;font-weight:700;white-space:nowrap;position:sticky;top:0}
+.ga-table tr:hover td{background:#fafaff}
+.ga-table input[type=text]{padding:5px 8px;font-size:13px;border-radius:6px}
+.ga-table .ga-url{font-family:monospace;font-size:12px;min-width:260px}
+.ga-table .ga-label{min-width:140px}
+.ga-row-err td{background:#fff1f2 !important}
+.ga-warn-sm{font-size:11px;color:#92400e}
+.ga-sub{font-size:12px;color:#666;margin-top:3px}
+.ga-media-tools{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:8px}
+.ga-media-tools input[type=text]{flex:1;min-width:180px}
+.ga-media-tools select{width:auto;max-width:200px}
+.ga-mlist{max-height:320px;overflow-y:auto;border:1.5px solid #e5e7eb;border-radius:8px}
+.ga-mgroup-h{display:block;width:100%;text-align:left;background:#f5f5f7;color:#333;border-radius:0;padding:6px 10px;font-size:12px;border-bottom:1px solid #eee}
+.ga-mgroup-h:hover{background:#eaeaff}
+.ga-mitem{display:flex !important;align-items:center;gap:8px;padding:6px 12px;border-bottom:1px solid #f3f3f3;font-weight:400 !important;color:#222 !important;margin:0 !important;font-size:14px !important;cursor:pointer}
+.ga-mitem:hover{background:#f5f5ff}
+.ga-chips{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:8px 0}
+.ga-chip{display:inline-flex;align-items:center;gap:4px;background:#e0e0ff;color:#3535cc;border-radius:20px;padding:3px 4px 3px 10px;font-size:12px;font-weight:600}
+.ga-chip button{background:none;color:#3535cc;padding:0 6px;font-size:14px;line-height:1}
+.ga-mtable input[type=text],.ga-mtable input[type=date],.ga-mtable input[type=time],.ga-mtable select{padding:4px 6px;font-size:13px;width:auto;max-width:130px}
+.ga-bar{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1.5px solid #e0e0ff;box-shadow:0 -2px 12px rgba(0,0,0,.08);z-index:90;padding:10px 16px;display:none}
+.ga-bar.show{display:block}
+.ga-bar-in{max-width:920px;margin:0 auto;display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:space-between}
+.ga-bar-text{font-size:14px;font-weight:600;color:#333}
+.ga-bar-reason{font-size:12px;color:#92400e;display:block;font-weight:400}
+.ga-bar-err{font-size:13px;color:#b91c1c;width:100%}
+.ga-banner{border-radius:8px;padding:10px 12px;font-size:13px;margin-bottom:10px;line-height:1.6}
+.ga-banner.warn{background:#fef3c7;color:#92400e}
+.ga-banner.err{background:#fee2e2;color:#b91c1c}
+.ga-banner.info{background:#f5f5ff;color:#333;border:1px solid #d0d0ff}
+.ga-rtabs{display:flex;gap:4px;flex-wrap:wrap;border-bottom:2px solid #eee;margin-bottom:10px}
+.ga-rtabs .admin-tab{padding:6px 12px;font-size:13px}
+.ga-out{border:1.5px solid #ddd;border-radius:8px;padding:10px 12px;font-family:"MS Gothic","Courier New",monospace;font-size:13px;white-space:pre-wrap;word-break:break-all;line-height:1.6;max-height:420px;overflow-y:auto;background:#fcfcfd}
+.ga-out mark{background:#e0e7ff;color:#1e1b8a;text-decoration:underline;padding:0 1px;border-radius:2px}
+.ga-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px}
+.ga-actions select{width:auto}
+.ga-lp-card{border:1.5px solid #e5e7eb;border-radius:10px;padding:10px 12px;margin-bottom:8px;font-size:13px;line-height:1.7}
+.ga-lp-url{font-family:monospace;font-size:12px;word-break:break-all}
+.ga-lp-mis{margin:4px 0 0 0;padding-left:18px}
+@media (max-width:640px){
+  .app-header{padding:10px 12px}
+  .ga-bar-in{flex-direction:column;align-items:stretch}
+  .ga-bar-in button{width:100%;min-height:48px}
+}
 </style>
 </head>
 <body>
@@ -222,7 +327,8 @@ hr{border:none;border-top:1px solid #eee;margin:16px 0}
   <h1>Mail Generator</h1>
   <div class="header-actions">
     <button class="btn-nav" id="compareBtn">比較</button>
-    <button class="btn-nav" id="measureBtn">クリック計測</button>
+    <button class="btn-nav" id="measureBtn">代理店入稿</button>
+    <a class="btn-nav" id="ccResultsLink" href="#" target="_blank" rel="noopener">結果を見る ↗</a>
     <button class="btn-nav" id="adminBtn">管理画面</button>
   </div>
 </header>
@@ -349,16 +455,14 @@ hr{border:none;border-top:1px solid #eee;margin:16px 0}
       <div id="depCharPreview" class="dep-char-preview"></div>
       <div id="hmTrackPanel" style="display:none;background:#e8f5e9;border:1.5px solid #a5d6a7;border-radius:10px;padding:14px;margin-bottom:12px">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-          <span style="font-size:13px;font-weight:700;color:#1b5e20">クリック計測URLに変換（click-isadmcp）</span>
+          <span style="font-size:13px;font-weight:700;color:#1b5e20">クリック計測URLに変換</span>
           <button class="btn-secondary btn-sm" id="hmTrackCloseBtn">閉じる</button>
         </div>
-        <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px">
-          <label style="font-size:13px;white-space:nowrap">テンプレート</label>
-          <select id="hmTrackTemplate" style="flex:1"><option value="">-- 読み込み中… --</option></select>
+        <div style="font-size:12px;color:#1b5e20;margin-bottom:10px;line-height:1.7">計測URLの発行は「代理店入稿」画面で行います。原稿のURLを検出し、媒体ごとに計測URLを発行して変換後の原稿を作ります（LPの取得状況も確認できます）。</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn-primary btn-sm" id="hmTrackApplyBtn">この本文を代理店入稿に送る</button>
+          <button class="btn-outline btn-sm" id="hmTrackOpenBtn">代理店入稿を開く</button>
         </div>
-        <div style="font-size:12px;color:#1b5e20;margin-bottom:10px">本文中のURLを検出し、選択したテンプレートでトラッキングURLに一括変換します。</div>
-        <button class="btn-primary btn-sm" id="hmTrackApplyBtn">本文のURLを一括変換</button>
-        <div id="hmTrackStatus" class="measure-status"></div>
       </div>
       <textarea class="body-textarea" id="bodyText" placeholder="本文を入力してください"></textarea>
     </div>
@@ -418,9 +522,18 @@ hr{border:none;border-top:1px solid #eee;margin:16px 0}
         <input type="file" id="importFile" accept=".csv" style="display:none">
       </div>
       <div class="admin-tabs">
-        <button class="admin-tab" data-tab="haihai">配配メール</button>
-        <button class="admin-tab" data-tab="MM">メールマーケティング（MM）</button>
-        <button class="admin-tab" data-tab="clickmailer">クリックメーラー</button>
+        <button class="admin-tab" data-tab="haihai">配配メール<span class="gb-count" data-count="haihai"></span></button>
+        <button class="admin-tab" data-tab="MM">メールマーケティング（MM）<span class="gb-count" data-count="MM"></span></button>
+        <button class="admin-tab" data-tab="clickmailer">クリックメーラー<span class="gb-count" data-count="clickmailer"></span></button>
+        <button class="admin-tab" data-tab="agency" title="外部広告の媒体（代理店の計測の出稿先）">代理店<span class="gb-count" data-count="agency"></span></button>
+      </div>
+      <div id="gbAgencyBar" class="gb-agency-bar" style="display:none">
+        <div class="text-muted" style="margin-bottom:6px">外部広告の媒体（代理店の計測の出稿先）です。「代理店入稿」画面の媒体選択に表示されます。</div>
+        <div class="inline-group">
+          <input type="text" id="gbSearch" placeholder="検索: 媒体名・媒体社名" aria-label="代理店の媒体を検索">
+          <label class="ga-inline-chk"><input type="checkbox" id="gbOnlyNoCompany"> 媒体社名が未入力のものだけ表示<span id="gbNoCompanyCount"></span></label>
+        </div>
+        <div id="gbCopyArea" class="gb-copy-hint"></div>
       </div>
       <div id="mediaListContainer"></div>
     </div>
@@ -468,71 +581,160 @@ hr{border:none;border-top:1px solid #eee;margin:16px 0}
 </main>
 </div><!-- /compareView -->
 
-<!-- ========== クリック計測 VIEW ========== -->
+<!-- ========== 代理店入稿 VIEW（GA-1） ========== -->
 <div id="measureView" class="view">
-<main>
+<main class="ga-main">
   <div class="card">
     <div class="card-header">
-      <h2>クリック計測（click-isadmcp 連携）</h2>
+      <h2>代理店入稿</h2>
       <button class="btn-secondary btn-sm" id="backFromMeasureBtn">← メインへ戻る</button>
     </div>
     <div class="card-body">
-      <div class="measure-token-row">
-        <span id="isadmcpTokenStatus" class="measure-token-status">トークン未設定</span>
-        <label style="display:inline-flex;align-items:center;gap:5px;font-size:13px;cursor:pointer"><input type="checkbox" id="isadmcpMockChk"> デモ用モックモード（仮データ）</label>
-        <button class="btn-outline btn-sm" id="isadmcpSetTokenBtn">APIトークンを設定/変更</button>
-        <button class="btn-outline btn-sm" id="isadmcpClearTokenBtn">トークン削除</button>
+      <div class="ga-conn-row">
+        <span id="gaConnStatus" class="ga-conn" role="status"></span>
+        <button class="btn-outline btn-sm" id="gaConnBtn" type="button" style="display:none">入力する</button>
       </div>
-      <div class="measure-hint">元URLを click-isadmcp のトラッキングURLに変換します。配信機を使わない広告のクリック計測にも使えます。</div>
+      <div class="measure-hint">広告主から受け取った原稿のURLを計測URLに変換し、媒体ごとの原稿を作ります。上から順に ①原稿 → ②URL → ③出稿先 を入れて、画面下の「一括発行」を押してください。</div>
     </div>
   </div>
 
-  <!-- 単体URL変換 -->
-  <div class="card">
-    <div class="card-header"><h2>URLを変換</h2></div>
+  <!-- ① 原稿を取り込む -->
+  <div class="card" id="gaCard1">
+    <div class="card-header"><h2>① 原稿を取り込む</h2></div>
     <div class="card-body">
-      <div class="measure-field">
-        <label>テンプレート</label>
-        <div style="display:flex;gap:8px;align-items:center">
-          <select id="isadmcpTemplate" style="flex:1"><option value="">-- 読み込み中… --</option></select>
-          <button class="btn-outline btn-sm" id="isadmcpReloadTplBtn">再読込</button>
+      <div class="admin-tabs" role="tablist" aria-label="原稿の取り込み方法">
+        <button class="admin-tab active" type="button" role="tab" aria-selected="true" data-gatab="paste">貼り付け</button>
+        <button class="admin-tab" type="button" role="tab" aria-selected="false" data-gatab="file">ファイル</button>
+        <button class="admin-tab" type="button" role="tab" aria-selected="false" data-gatab="gdoc">Googleドキュメント</button>
+      </div>
+      <div id="gaPanePaste" role="tabpanel">
+        <label for="gaText">原稿</label>
+        <textarea id="gaText" class="ga-textarea" placeholder="広告主から受け取った原稿を貼り付けてください。URLだけの一覧でも変換できます。（.txt / .docx ファイルをここにドロップしても取り込めます）"></textarea>
+        <div id="gaEncRow" class="ga-enc-row" style="display:none">
+          <label for="gaEncSel" style="margin:0">文字コード</label>
+          <select id="gaEncSel"><option value="utf-8">UTF-8</option><option value="shift_jis">Shift_JIS</option><option value="euc-jp">EUC-JP</option></select>
+          <span id="gaEncNote" class="text-muted"></span>
         </div>
       </div>
-      <div class="measure-field">
-        <label for="isadmcpUrl">元URL</label>
-        <input type="text" id="isadmcpUrl" placeholder="https://example.com/lp">
-      </div>
-      <div class="measure-field">
-        <label for="isadmcpLabel">ラベル（任意・計測データの識別名）</label>
-        <input type="text" id="isadmcpLabel" placeholder="例: 6月号_LP">
-      </div>
-      <button class="btn-primary" id="isadmcpConvertBtn">変換する</button>
-      <div class="measure-field" style="margin-top:12px">
-        <label for="isadmcpResult">トラッキングURL</label>
-        <div style="display:flex;gap:8px">
-          <input type="text" id="isadmcpResult" readonly placeholder="ここに変換結果が表示されます" style="flex:1">
-          <button class="btn-secondary btn-sm" id="isadmcpCopyBtn">コピー</button>
+      <div id="gaPaneFile" role="tabpanel" style="display:none">
+        <div id="gaDrop" class="ga-drop">
+          ファイルをここにドロップ<br>
+          または <button class="btn-outline btn-sm" type="button" id="gaFileBtn">ファイルを選ぶ</button>
+          <input type="file" id="gaFileInput" accept=".txt,.docx" style="display:none">
+          <div class="text-muted">対応: .txt（UTF-8 / Shift_JIS / EUC-JP）、.docx（Word）。Wordのハイパーリンク（表示文字と別のURL）も検出します。<br>変換後の原稿はテキストで出力します（Wordの書式は引き継がれません）。ヘッダー・フッター・脚注・テキストボックスは読み込みません。</div>
         </div>
       </div>
-      <div id="isadmcpConvertStatus" class="measure-status"></div>
+      <div id="gaPaneGdoc" role="tabpanel" style="display:none">
+        <label for="gaGdocUrl">GoogleドキュメントのURL</label>
+        <div class="inline-group">
+          <input type="text" id="gaGdocUrl" placeholder="https://docs.google.com/document/d/…">
+          <button class="btn-primary btn-sm" type="button" id="gaGdocBtn">取り込む</button>
+        </div>
+        <div class="text-muted mt-2">共有設定を一時的に変えた場合は、取り込み後に元へ戻してください。</div>
+      </div>
+      <div id="gaImportMsg" class="ga-msg" role="status" aria-live="polite"></div>
+      <div class="ga-row">
+        <div>
+          <label for="gaName">原稿名</label>
+          <input type="text" id="gaName" maxlength="60" placeholder="自動（ファイル名・タイトル・先頭行）">
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- 計測データ & スプレッドシート同期 -->
-  <div class="card">
-    <div class="card-header"><h2>計測データ</h2></div>
+  <!-- ② 検出したURL -->
+  <div class="card" id="gaCard2">
+    <div class="card-header"><h2>② 検出したURL</h2><span id="gaUrlSummary" class="text-muted" aria-live="polite"></span></div>
     <div class="card-body">
-      <div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;margin-bottom:10px">
-        <div class="measure-field" style="margin:0"><label>From</label><input type="date" id="isadmcpFrom"></div>
-        <div class="measure-field" style="margin:0"><label>To</label><input type="date" id="isadmcpTo"></div>
-        <button class="btn-primary btn-sm" id="isadmcpStatsBtn">計測データ取得</button>
-        <button class="btn-success btn-sm" id="isadmcpSheetBtn">スプレッドシートへ同期</button>
+      <div class="ga-toolbar">
+        <button class="btn-outline btn-sm" type="button" data-gabulk="all">全て計測する</button>
+        <button class="btn-outline btn-sm" type="button" data-gabulk="none">全て計測しない</button>
+        <button class="btn-outline btn-sm" type="button" data-gabulk="reset">既定に戻す</button>
+        <label class="ga-inline-chk"><input type="checkbox" id="gaGroupSame"> 同じURLは1本にまとめる</label>
       </div>
-      <div id="isadmcpStatsStatus" class="measure-status"></div>
-      <div id="isadmcpStatsTable" class="measure-table-wrap"></div>
+      <div id="gaUrlList"></div>
+    </div>
+  </div>
+
+  <!-- ③ 出稿先 -->
+  <div class="card" id="gaCard3">
+    <div class="card-header"><h2>③ 出稿先</h2></div>
+    <div class="card-body">
+      <div class="ga-row" style="margin-top:0">
+        <div>
+          <label for="gaAdv">広告主</label>
+          <input type="text" id="gaAdv" maxlength="100" list="gaAdvList" autocomplete="off">
+          <datalist id="gaAdvList"></datalist>
+          <div id="gaAdvNote" class="ga-warn-sm" style="margin-top:3px">広告主を入れると、広告主別レポートに集計されます。あとから設定画面で追加できます。</div>
+        </div>
+        <div style="max-width:190px">
+          <label for="gaDate">出稿日</label>
+          <input type="date" id="gaDate">
+        </div>
+      </div>
+      <div class="ga-row">
+        <div>
+          <label for="gaCampName">出稿名（共通部分）</label>
+          <input type="text" id="gaCampName" maxlength="100">
+          <div class="ga-sub">実際の出稿名は媒体ごとに「共通部分_媒体名」になります。空にすると既定値に戻ります。</div>
+        </div>
+      </div>
+      <hr>
+      <label>媒体（代理店区分）</label>
+      <div class="ga-media-tools">
+        <input type="text" id="gaMediaSearch" placeholder="検索: 媒体名・媒体社名" aria-label="媒体を検索">
+        <button class="btn-outline btn-sm" type="button" id="gaLastMediaBtn">前回と同じ媒体</button>
+        <select id="gaSetSel" aria-label="媒体セット"><option value="">セットから選ぶ…</option></select>
+        <button class="btn-outline btn-sm" type="button" id="gaSetDelBtn">セットを削除</button>
+      </div>
+      <div class="ga-chips" id="gaChips"></div>
+      <div id="gaMediaList" class="ga-mlist"></div>
+      <div class="ga-media-tools mt-2">
+        <input type="text" id="gaSetName" maxlength="30" placeholder="セット名（例: 金融系いつもの5媒体）" aria-label="セット名">
+        <button class="btn-outline btn-sm" type="button" id="gaSetSaveBtn">今の選択をセットとして保存</button>
+      </div>
+      <details id="gaMediaDetails" class="mt-2">
+        <summary style="cursor:pointer;font-size:13px;font-weight:600;color:#444">媒体ごとの出稿日・配信数・出稿費を入力する（任意）</summary>
+        <div class="ga-table-wrap mt-2"><div id="gaMediaTable"></div></div>
+        <div class="ga-sub">配信数: 媒体から報告された配信数（あとから入力できます。0は未入力と同じ扱い）。出稿費: CPC（クリック単価）の算出に使います。</div>
+      </details>
+    </div>
+  </div>
+
+  <!-- ④ 結果 -->
+  <div class="card" id="gaResultCard">
+    <div class="card-header">
+      <h2>④ 結果 <span id="gaResultSummary" class="text-muted"></span></h2>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end">
+        <button class="btn-outline btn-sm" type="button" id="gaCopyTableBtn" style="display:none">全件コピー(表)</button>
+        <button class="btn-outline btn-sm" type="button" id="gaCsvBtn" style="display:none">CSV</button>
+        <a class="btn-primary btn-sm" id="gaResultLink" href="#" target="_blank" rel="noopener" style="display:none;text-decoration:none;border-radius:8px">この出稿の結果を見る ↗</a>
+      </div>
+    </div>
+    <div class="card-body" id="gaResultBody">
+      <div class="text-muted">発行すると、ここに媒体ごとの原稿が表示されます。</div>
+    </div>
+  </div>
+
+  <!-- LP取得状況（GA-2） -->
+  <div class="card" id="gaLpCard" style="display:none">
+    <div class="card-header">
+      <h2>LPの取得と解析 <span id="gaLpSummary" class="text-muted"></span></h2>
+      <button class="btn-outline btn-sm" type="button" id="gaLpRefreshBtn">最新の状態に更新</button>
+    </div>
+    <div class="card-body">
+      <div class="ga-banner info">AIによる参考情報であり、景品表示法・薬機法・特定商取引法等の法的判断を代替しません。</div>
+      <div id="gaLpList" aria-live="polite"></div>
     </div>
   </div>
 </main>
+<div class="ga-bar" id="gaBar">
+  <div class="ga-bar-in">
+    <div class="ga-bar-text"><span id="gaBarText"></span><span class="ga-bar-reason" id="gaBarReason"></span></div>
+    <button class="btn-primary" type="button" id="gaIssueBtn" aria-describedby="gaBarReason">一括発行して原稿を変換</button>
+    <div class="ga-bar-err" id="gaBarErr" role="alert"></div>
+  </div>
+</div>
 </div><!-- /measureView -->
 
 <!-- Toast -->
@@ -597,6 +799,17 @@ const NAMETAGS = {
   clickmailer: { full: '[$c_U_FULLNAME$]', last: '[$c_U_LASTNAME$]' },
 };
 function getNametags(ds) { return NAMETAGS[ds] || MM_NAMETAGS; }
+// 媒体管理の区分（タブ・編集フォーム・媒体追加）。agency は DELIVERY_SYSTEMS に入れない
+// （メイン画面の配信機ラジオ・媒体プルダウン・ネームタグ・ブックマークレットに影響させないため。設計書 6.1）
+const MEDIA_CATEGORIES = {
+  haihai:      { label: '配配メール' },
+  MM:          { label: 'メールマーケティング（MM）' },
+  clickmailer: { label: 'クリックメーラー' },
+  agency:      { label: '代理店（外部広告）' },
+};
+let editPwMem = ''; // 「記憶しない」を選んだ編集パスワード（このページを開いている間だけ保持）
+let gbSearchText = '';
+let gbOnlyNoCompany = false;
 
 // ========== State ==========
 let mediaList = [];
@@ -697,7 +910,7 @@ function csvToMedia(text) {
   if (rows.length < 2) return [];
   return rows.slice(1).map(parts => {
     const v = i => parts[i] || '';
-    return {
+    const item = {
       id: v(0),
       sortOrder: parseInt(v(1), 10) || 0,
       columnName: v(2),
@@ -709,6 +922,11 @@ function csvToMedia(text) {
       header: v(8),
       footer: v(9),
     };
+    // 追加列（媒体社名・コピー元ID・メモ）。旧CSV（10列）は項目を作らない
+    if (item.deliverySystem === 'agency' || v(10)) item.mediaCompany = v(10);
+    if (v(11)) item.sourceId = v(11);
+    if (item.deliverySystem === 'agency' || v(12)) item.memo = v(12);
+    return item;
   });
 }
 
@@ -768,6 +986,8 @@ function showView(name) {
   el.compareView.classList.toggle('active', name === 'compare');
   const mv = $('measureView');
   if (mv) mv.classList.toggle('active', name === 'measure');
+  const bar = $('gaBar');
+  if (bar) bar.classList.toggle('show', name === 'measure');
 }
 
 let toastTimer;
@@ -1174,12 +1394,45 @@ function attachDragHandlers() {
 }
 
 // ========== Admin Panel ==========
+function gbCount(cat) { return mediaList.filter(m => (m.deliverySystem || 'MM') === cat).length; }
+// クリックメーラーの媒体のうち、まだ代理店区分にコピーしていないもの（sourceId で判定。何度押しても重複しない）
+function gbPendingCopies(list) {
+  return list.filter(m => m.deliverySystem === 'clickmailer' &&
+    !list.some(x => x.deliverySystem === 'agency' && String(x.sourceId || '') === String(m.id)));
+}
 function renderAdminList() {
-  // タブ（配信機）でフィルタ
-  document.querySelectorAll('.admin-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === currentAdminTab));
-  const sorted = [...mediaList]
+  gbRenderCompanyList();
+  // タブ（配信機・区分）でフィルタ
+  document.querySelectorAll('.admin-tab[data-tab]').forEach(t => {
+    t.classList.toggle('active', t.dataset.tab === currentAdminTab);
+  });
+  document.querySelectorAll('[data-count]').forEach(s => { s.textContent = String(gbCount(s.dataset.count)); });
+  const isAgency = currentAdminTab === 'agency';
+  const bar = $('gbAgencyBar');
+  if (bar) bar.style.display = isAgency ? '' : 'none';
+  const seedBtn = $('addHaihaiSeedBtn');
+  if (seedBtn) seedBtn.style.display = isAgency ? 'none' : '';
+  let sorted = [...mediaList]
     .filter(m => (m.deliverySystem || 'MM') === currentAdminTab)
     .sort((a,b) => (a.sortOrder||99)-(b.sortOrder||99));
+  if (isAgency) {
+    const noCo = sorted.filter(m => !(m.mediaCompany || '').trim());
+    $('gbNoCompanyCount').textContent = `（${noCo.length}）`;
+    const pending = gbPendingCopies(mediaList).length;
+    $('gbCopyArea').innerHTML =
+      (pending ? `<button type="button" class="btn-outline btn-sm" id="gbCopyCmBtn">クリックメーラーの媒体 ${pending}件を代理店にコピー</button> <span class="text-muted">コピー済みの媒体は重複しません</span>` : '') +
+      (noCo.length ? `<div class="measure-hint mt-2">ⓘ 媒体社名が未入力の代理店媒体が ${noCo.length}件あります。媒体社名を入力してください。</div>` : '');
+    const q = gbSearchText.trim().toLowerCase();
+    const total = sorted.length;
+    sorted = sorted.filter(m => (!q || (m.name || '').toLowerCase().includes(q) || (m.mediaCompany || '').toLowerCase().includes(q)) &&
+                                (!gbOnlyNoCompany || !(m.mediaCompany || '').trim()));
+    if (!sorted.length) {
+      el.mediaListContainer.innerHTML = total
+        ? '<div class="empty-state" style="color:#666">条件に合う媒体がありません。</div>'
+        : '<div class="empty-state" style="color:#666">代理店の媒体はまだありません。「+ 媒体を追加」を押すか、上のボタンでクリックメーラーの媒体をコピーしてください。</div>';
+      return;
+    }
+  }
   if (!sorted.length) {
     el.mediaListContainer.innerHTML = '<div class="empty-state">この配信機の媒体は登録されていません</div>';
     return;
@@ -1189,43 +1442,63 @@ function renderAdminList() {
 
 function renderMediaItem(m) {
   const isOpen = openEditId === m.id;
+  const cur = m.deliverySystem || 'MM';
+  const isAgency = cur === 'agency';
+  const id = escHtml(m.id);
+  const badge = isAgency
+    ? ((m.mediaCompany || '').trim() ? `<span class="badge badge-company">${escHtml(m.mediaCompany)}</span>` : '<span class="badge badge-gray" style="margin-left:6px">媒体社未設定</span>')
+    : `<span class="badge badge-primary" style="margin-left:4px">${escHtml(m.deliveryTime||'')}</span>`;
   return `
-  <div class="media-item" id="media-item-${m.id}" data-id="${m.id}">
+  <div class="media-item" id="media-item-${id}" data-id="${id}">
     <div class="media-item-header" onclick="toggleEdit('${m.id}')">
       <div>
         <span class="drag-handle" draggable="true" onclick="event.stopPropagation()" title="ドラッグして並び替え">⠿</span>
         <span class="media-item-title">${escHtml(m.name)}</span>
-        <span class="badge badge-primary" style="margin-left:4px">${m.deliveryTime||''}</span>
+        ${badge}
       </div>
       <div class="media-item-actions" onclick="event.stopPropagation()">
         <button class="btn-secondary btn-sm" onclick="copyMediaItem('${m.id}')">複製</button>
         <button class="btn-danger btn-sm" onclick="deleteMediaItem('${m.id}')">削除</button>
       </div>
     </div>
-    <div class="media-edit-form ${isOpen ? 'open' : ''}" id="edit-form-${m.id}">
+    <div class="media-edit-form ${isOpen ? 'open' : ''}" id="edit-form-${id}" data-orig-cat="${escHtml(cur)}">
       <div class="form-row">
-        <label>媒体名</label>
-        <input type="text" id="edit-name-${m.id}" value="${escHtml(m.name)}">
+        <label for="edit-name-${id}">媒体名</label>
+        <input type="text" id="edit-name-${id}" value="${escHtml(m.name)}">
+        <div class="gb-field-err" id="edit-name-err-${id}" role="alert"></div>
       </div>
       <div class="form-row">
-        <label>配信機</label>
-        <select id="edit-ds-${m.id}" style="max-width:260px">${
+        <label for="edit-ds-${id}">配信機（区分）</label>
+        <select id="edit-ds-${id}" style="max-width:260px" onchange="gbToggleCat(this)">${
           (() => {
-            const cur = m.deliverySystem || 'MM';
-            const keys = Object.keys(DELIVERY_SYSTEMS);
+            const keys = Object.keys(MEDIA_CATEGORIES);
             if (!keys.includes(cur)) keys.push(cur);
-            return keys.map(k => `<option value="${escHtml(k)}" ${k === cur ? 'selected' : ''}>${escHtml(DELIVERY_SYSTEMS[k] ? DELIVERY_SYSTEMS[k].label : k)}</option>`).join('');
+            return keys.map(k => `<option value="${escHtml(k)}" ${k === cur ? 'selected' : ''}>${escHtml(MEDIA_CATEGORIES[k] ? MEDIA_CATEGORIES[k].label : k)}</option>`).join('');
           })()
         }</select>
+        <div class="gb-warn gb-cat-note" style="display:none">この媒体を使った出稿の記録は、発行時点の名前で残ります。</div>
       </div>
+      <div class="gb-ag-fields" style="${isAgency ? '' : 'display:none'}">
+        <div class="form-row">
+          <label for="edit-company-${id}">媒体社名 <span style="color:#b91c1c">*</span>（媒体を運営する会社）</label>
+          <input type="text" id="edit-company-${id}" maxlength="60" value="${escHtml(m.mediaCompany||'')}" list="gbCompanyList">
+          <div class="gb-field-err" id="edit-company-err-${id}" role="alert"></div>
+        </div>
+        <div class="form-row">
+          <label for="edit-memo-${id}">メモ（任意）</label>
+          <input type="text" id="edit-memo-${id}" maxlength="200" value="${escHtml(m.memo||'')}">
+        </div>
+        <div class="measure-hint">ⓘ 媒体名や媒体社名を変えても、過去の計測データには発行時点の名前が残ります。</div>
+      </div>
+      <div class="gb-ds-fields" style="${isAgency ? 'display:none' : ''}">
       <div class="form-row">
         <label>配信時刻</label>
         <div class="delivery-time-row">
-          <select id="edit-hour-${m.id}">${
+          <select id="edit-hour-${id}">${
             Array.from({length:24},(_,i)=>i).map(h=>`<option value="${h}" ${(parseInt((m.deliveryTime||'10:00').split(':')[0])||0)===h?'selected':''}>${String(h).padStart(2,'0')}</option>`).join('')
           }</select>
           <span>:</span>
-          <select id="edit-min-${m.id}">
+          <select id="edit-min-${id}">
             <option value="00" ${(m.deliveryTime||'').endsWith(':00')?'selected':''}>00</option>
             <option value="30" ${(m.deliveryTime||'').endsWith(':30')?'selected':''}>30</option>
           </select>
@@ -1233,19 +1506,20 @@ function renderMediaItem(m) {
       </div>
       <div class="form-row">
         <label>カラム名</label>
-        <input type="text" id="edit-segid-${m.id}" value="${escHtml(m.segmentId||'')}" placeholder="例: アフィリ通信">
+        <input type="text" id="edit-segid-${id}" value="${escHtml(m.segmentId||'')}" placeholder="例: アフィリ通信">
       </div>
       <div class="form-row">
         <label>From表示名（配信予約フォームの「From表示名」に自動入力）</label>
-        <input type="text" id="edit-fromname-${m.id}" value="${escHtml(m.fromName||'')}">
+        <input type="text" id="edit-fromname-${id}" value="${escHtml(m.fromName||'')}">
       </div>
       <div class="form-row">
         <label>ヘッダー <button type="button" class="btn-outline btn-sm" style="margin-left:8px;font-size:11px;padding:3px 8px" onclick="insertDateTagTo('edit-header-${m.id}')">日付挿入 202x.xx.xx</button></label>
-        <textarea id="edit-header-${m.id}" style="height:160px">${escHtml(m.header||'')}</textarea>
+        <textarea id="edit-header-${id}" style="height:160px">${escHtml(m.header||'')}</textarea>
       </div>
       <div class="form-row">
         <label>フッター</label>
-        <textarea id="edit-footer-${m.id}" style="height:160px">${escHtml(m.footer||'')}</textarea>
+        <textarea id="edit-footer-${id}" style="height:160px">${escHtml(m.footer||'')}</textarea>
+      </div>
       </div>
       <div class="btn-row">
         <button class="btn-primary" onclick="saveMediaItem('${m.id}')">保存</button>
@@ -1253,6 +1527,23 @@ function renderMediaItem(m) {
       </div>
     </div>
   </div>`;
+}
+
+// 編集フォームの区分を切り替えたら項目の出し分けを即時に切り替える（入力済みの値は保持）
+function gbToggleCat(sel) {
+  const form = sel.closest('.media-edit-form');
+  if (!form) return;
+  const ag = sel.value === 'agency';
+  form.querySelector('.gb-ag-fields').style.display = ag ? '' : 'none';
+  form.querySelector('.gb-ds-fields').style.display = ag ? 'none' : '';
+  form.querySelector('.gb-cat-note').style.display = (form.dataset.origCat === 'agency' && !ag) ? '' : 'none';
+}
+
+function gbRenderCompanyList() {
+  let dl = $('gbCompanyList');
+  if (!dl) { dl = document.createElement('datalist'); dl.id = 'gbCompanyList'; document.body.appendChild(dl); }
+  const names = [...new Set(mediaList.map(m => (m.mediaCompany || '').trim()).filter(Boolean))].sort();
+  dl.innerHTML = names.map(n => `<option value="${escHtml(n)}"></option>`).join('');
 }
 
 function toggleEdit(id) {
@@ -1272,11 +1563,29 @@ function saveMediaItem(oldId) {
   const footer = $(`edit-footer-${oldId}`).value;
   const segmentId = ($(`edit-segid-${oldId}`) ? $(`edit-segid-${oldId}`).value.trim() : '');
   const fromName = ($(`edit-fromname-${oldId}`) ? $(`edit-fromname-${oldId}`).value.trim() : '');
+  const mediaCompany = ($(`edit-company-${oldId}`) ? $(`edit-company-${oldId}`).value.trim() : '');
+  const memo = ($(`edit-memo-${oldId}`) ? $(`edit-memo-${oldId}`).value.trim() : '');
+  const nameErr = $(`edit-name-err-${oldId}`), coErr = $(`edit-company-err-${oldId}`);
+  if (nameErr) nameErr.textContent = '';
+  if (coErr) coErr.textContent = '';
 
-  if (!name) { toast('媒体名を入力してください'); return; }
+  if (!name) {
+    if (nameErr) nameErr.textContent = '媒体名を入力してください';
+    toast('媒体名を入力してください');
+    $(`edit-name-${oldId}`).focus();
+    return;
+  }
+  if (ds === 'agency' && !mediaCompany) {
+    if (coErr) coErr.textContent = '媒体社名を入力してください';
+    toast('媒体社名を入力してください');
+    $(`edit-company-${oldId}`).focus();
+    return;
+  }
   if (idx === -1) { toast('エラー: 媒体が見つかりません'); return; }
 
   const updated = { ...mediaList[idx], id: newId, sortOrder: sort, name, deliverySystem: ds, deliveryTime: `${hour}:${min}`, header, footer, segmentId, fromName };
+  if (ds === 'agency' || mediaList[idx].mediaCompany !== undefined || mediaCompany) updated.mediaCompany = mediaCompany;
+  if (ds === 'agency' || mediaList[idx].memo !== undefined || memo) updated.memo = memo;
   mediaList[idx] = updated;
   saveMedia(mediaList);
   openEditId = null;
@@ -1325,19 +1634,136 @@ function copyMediaItem(id) {
   }, 100);
 }
 
+// GB-2 媒体追加ダイアログ: 登録先（複数可）を選んで、区分ごとに1件ずつ作成する（2件目以降の sourceId は1件目の id）
 function addNewMedia() {
-  const id = getNextId(mediaList);
-  const newMedia = { id, sortOrder: mediaList.length + 1, name: '新規媒体', deliverySystem: currentAdminTab, deliveryTime: '10:00', header: '', footer: '', segmentId: '', fromName: '' };
-  mediaList.push(newMedia);
-  saveMedia(mediaList);
-  openEditId = id;
+  const prevFocus = document.activeElement;
+  const wrap = document.createElement('div');
+  wrap.className = 'd1-backdrop';
+  const initCat = MEDIA_CATEGORIES[currentAdminTab] ? currentAdminTab : 'MM';
+  wrap.innerHTML = `<div class="d1-dialog wide" role="dialog" aria-modal="true" aria-labelledby="gbAddTitle">
+    <div class="d1-head"><h3 id="gbAddTitle">媒体を追加</h3><button type="button" class="d1-x" aria-label="閉じる">×</button></div>
+    <div class="d1-body">
+      <fieldset class="gb-fieldset"><legend>登録先（複数選べます）</legend>
+        ${Object.keys(MEDIA_CATEGORIES).map(k => `<label><input type="checkbox" class="gb-cat" value="${escHtml(k)}" ${k === initCat ? 'checked' : ''}> ${escHtml(MEDIA_CATEGORIES[k].label)}</label>`).join('')}
+        <div style="margin-top:6px"><button type="button" class="btn-outline btn-sm gb-both">クリックメーラーと代理店の両方</button></div>
+        <div class="text-muted mt-2" style="color:#666">ⓘ 複数を選ぶと、それぞれに1件ずつ作成されます。作成後は、それぞれ別々に編集します。</div>
+        <div class="gb-field-err gb-cat-err" role="alert"></div>
+      </fieldset>
+      <div class="form-row" style="margin-bottom:10px">
+        <label for="gbAddName">媒体名 <span style="color:#b91c1c">*</span></label>
+        <input type="text" id="gbAddName" maxlength="60">
+        <div class="gb-field-err gb-name-err" role="alert"></div>
+        <div class="gb-dup"></div>
+      </div>
+      <div class="form-row gb-add-co" style="display:none">
+        <label for="gbAddCompany">媒体社名 <span style="color:#b91c1c">*</span></label>
+        <input type="text" id="gbAddCompany" maxlength="60" list="gbCompanyList">
+        <div class="gb-field-err gb-co-err" role="alert"></div>
+        <div class="text-muted" style="color:#666">（媒体名＝配信の名称、媒体社名＝媒体を運営する会社）</div>
+      </div>
+      <div class="gb-summary" aria-live="polite"></div>
+    </div>
+    <div class="d1-foot"><button type="button" class="btn-secondary gb-cancel">キャンセル</button><button type="button" class="btn-primary gb-ok">作成する</button></div>
+  </div>`;
+  document.body.appendChild(wrap);
+  gbRenderCompanyList();
+  const q = s => wrap.querySelector(s);
+  const cats = () => [...wrap.querySelectorAll('.gb-cat:checked')].map(c => c.value);
+  const update = () => {
+    const cs = cats();
+    q('.gb-add-co').style.display = cs.includes('agency') ? '' : 'none';
+    q('.gb-summary').textContent = cs.length ? '作成されるもの: ' + cs.map(c => `${MEDIA_CATEGORIES[c].label}に1件`).join('・') : '登録先を選んでください';
+    const name = q('#gbAddName').value.trim();
+    const dups = cs.filter(c => name && mediaList.some(m => (m.deliverySystem || 'MM') === c && (m.name || '').trim() === name));
+    q('.gb-dup').innerHTML = dups.map(c => `<div class="gb-warn">${escHtml(MEDIA_CATEGORIES[c].label)}に同じ名前の媒体があります（作成はできます）</div>`).join('');
+  };
+  const close = () => { document.removeEventListener('keydown', onKey, true); wrap.remove(); if (prevFocus && prevFocus.focus) prevFocus.focus(); };
+  const onKey = e => {
+    if (e.key === 'Escape') { e.preventDefault(); close(); return; }
+    if (e.key === 'Tab') {
+      const f = [...wrap.querySelectorAll('button,input')].filter(x => !x.disabled && x.offsetParent !== null);
+      const i = f.indexOf(document.activeElement);
+      if (e.shiftKey && i <= 0) { e.preventDefault(); f[f.length - 1].focus(); }
+      else if (!e.shiftKey && i === f.length - 1) { e.preventDefault(); f[0].focus(); }
+    }
+  };
+  document.addEventListener('keydown', onKey, true);
+  wrap.addEventListener('change', update);
+  q('#gbAddName').addEventListener('input', update);
+  q('.gb-both').addEventListener('click', () => {
+    wrap.querySelectorAll('.gb-cat').forEach(c => { if (c.value === 'clickmailer' || c.value === 'agency') c.checked = true; });
+    update();
+  });
+  q('.d1-x').addEventListener('click', close);
+  q('.gb-cancel').addEventListener('click', close);
+  q('.gb-ok').addEventListener('click', () => {
+    const cs = cats();
+    const name = q('#gbAddName').value.trim();
+    const company = q('#gbAddCompany').value.trim();
+    q('.gb-cat-err').textContent = cs.length ? '' : '登録先を1つ以上選んでください';
+    q('.gb-name-err').textContent = name ? '' : '媒体名を入力してください';
+    q('.gb-co-err').textContent = (cs.includes('agency') && !company) ? '媒体社名を入力してください' : '';
+    if (!cs.length) return;
+    if (!name) { q('#gbAddName').focus(); return; }
+    if (cs.includes('agency') && !company) { q('#gbAddCompany').focus(); return; }
+    close();
+    gbCreateMedia(cs, name, company);
+  });
+  update();
+  setTimeout(() => q('#gbAddName').focus(), 0);
+}
+
+function gbCreateMedia(cats, name, company) {
+  // 採番は mutator の中で（最新の一覧に対して）行う。同時に他の人が追加しても上書きしない（設計書 6.2）
+  let created = [];
+  const mutator = list => {
+    created = [];
+    let firstId = null;
+    cats.forEach(cat => {
+      const id = getNextId(list);
+      const maxSort = list.reduce((mx, m) => Math.max(mx, m.sortOrder || 0), 0);
+      const item = { id, sortOrder: maxSort + 1, columnName: '', name, deliveryTime: '10:00', deliverySystem: cat, segmentId: '', fromName: '', header: '', footer: '' };
+      if (cat === 'agency') { item.mediaCompany = company; item.memo = ''; }
+      if (firstId) item.sourceId = firstId;
+      list.push(item);
+      created.push({ id, cat });
+      if (!firstId) firstId = id;
+    });
+    return list;
+  };
+  const local = mutator(JSON.parse(JSON.stringify(mediaList)));
+  saveMedia(local);
+  const here = created.find(c => c.cat === currentAdminTab) || created[0];
+  currentAdminTab = here.cat;
+  openEditId = here.id;
   renderAdminList();
   renderSelect();
-  // Scroll to new item
+  toast(cats.map(c => MEDIA_CATEGORIES[c].label).join('と') + 'に作成しました');
   setTimeout(() => {
-    const el_ = document.getElementById(`media-item-${id}`);
+    const el_ = document.getElementById(`media-item-${here.id}`);
     if (el_) el_.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, 100);
+  autoSync(mutator);
+}
+
+// クリックメーラーの媒体を代理店区分へコピー（設計書 6.3。sourceId で重複を防ぐので2回押しても増えない）
+function gbCopyClickmailerToAgency() {
+  const mutator = list => {
+    gbPendingCopies(list).forEach(m => {
+      const maxAg = list.filter(x => x.deliverySystem === 'agency').reduce((mx, x) => Math.max(mx, x.sortOrder || 0), 0);
+      const maxAll = list.reduce((mx, x) => Math.max(mx, x.sortOrder || 0), 0);
+      list.push({ ...m, id: getNextId(list), deliverySystem: 'agency', mediaCompany: '', memo: '', sourceId: m.id, sortOrder: Math.max(maxAg, maxAll) + 1 });
+    });
+    return list;
+  };
+  const n = gbPendingCopies(mediaList).length;
+  if (!n) { toast('コピーするクリックメーラーの媒体はありません（コピー済み）'); return; }
+  saveMedia(mutator(JSON.parse(JSON.stringify(mediaList))));
+  currentAdminTab = 'agency';
+  renderAdminList();
+  renderSelect();
+  toast(`${n}件をコピーしました。媒体社名を入力してください`, 4000);
+  autoSync(mutator);
 }
 
 // ========== 配配メール初期媒体（テンプレート） ==========
@@ -1485,7 +1911,7 @@ function addHaihaiSeedMedia() {
 
 // ========== Import / Export ==========
 function mediaToCSV(list) {
-  const cols = ['媒体ID','表示順','カラム名','媒体名','配信時刻','配信システム','セグメントID','差出人名','ヘッダー','フッター'];
+  const cols = ['媒体ID','表示順','カラム名','媒体名','配信時刻','配信システム','セグメントID','差出人名','ヘッダー','フッター','媒体社名','コピー元ID','メモ'];
   const q = v => {
     const s = String(v == null ? '' : v);
     return (s.includes(',') || s.includes('\n') || s.includes('"'))
@@ -1498,7 +1924,8 @@ function mediaToCSV(list) {
       m.id, m.sortOrder, m.columnName || '', m.name || '',
       m.deliveryTime || '10:00', m.deliverySystem || 'MM',
       m.segmentId || '', m.fromName || '',
-      m.header || '', m.footer || ''
+      m.header || '', m.footer || '',
+      m.mediaCompany || '', m.sourceId || '', m.memo || ''
     ].map(q).join(','));
   }
   return rows.join('\r\n');
@@ -1548,16 +1975,28 @@ async function pushSharedChange(mutator) {
       const encoded = btoa(unescape(encodeURIComponent(JSON.stringify({ _version: version, items: next }, null, 2))));
       const body = { message: `媒体データを更新 (${new Date().toLocaleString('ja-JP')})`, content: encoded, branch: GITHUB_BRANCH };
       if (sha) body.sha = sha;
-      const pw = localStorage.getItem(EDIT_PW_KEY) || '';
+      let storedPw = '';
+      try { storedPw = localStorage.getItem(EDIT_PW_KEY) || ''; } catch (e) {}
+      const pw = storedPw || editPwMem || '';
       const putRes = await fetch(SHARED_API, { method: 'PUT', headers: { ...SHARED_HEADERS, 'X-Edit-Password': pw }, body: JSON.stringify(body) });
       if (putRes.status === 401) {
         let code = '';
         try { code = (await putRes.clone().json()).code || ''; } catch (e) {}
         if (code === 'BAD_PASSWORD' && pwPrompts < 3) {
           pwPrompts++;
-          const input = window.prompt(pw ? '編集用パスワードが違います。もう一度入力してください。' : '媒体データを保存するには編集用パスワードが必要です。入力してください（このブラウザに記憶されます）。', '');
-          if (input === null) throw new Error('パスワードが入力されなかったため保存を中止しました');
-          localStorage.setItem(EDIT_PW_KEY, input);
+          // 記憶していた値が誤り（初回）→ 記憶を消して「変更されたようです」。ダイアログで入れた値が誤り → 「違います」
+          const savedWasWrong = !!storedPw && pwPrompts === 1;
+          try { localStorage.removeItem(EDIT_PW_KEY); } catch (e) {}
+          editPwMem = '';
+          const r = await openPwDialog({
+            title: '編集パスワード',
+            desc: savedWasWrong ? '保存していたパスワードが変更されたようです。新しいパスワードを入力してください。' : '媒体情報の保存には編集パスワードが必要です。',
+            error: (pw && !savedWasWrong) ? 'パスワードが違います。もう一度入力してください。' : '',
+            okLabel: '保存する', rememberDefault: true,
+          });
+          if (!r) throw new Error('パスワードが入力されなかったため保存を中止しました');
+          editPwMem = r.password;
+          if (r.remember) { try { localStorage.setItem(EDIT_PW_KEY, r.password); } catch (e) {} }
           attempt--; // パスワード入力はやり直し回数に数えない
           continue;
         }
@@ -1936,223 +2375,1403 @@ function generateHmReserve() {
   return `javascript:(function(){${code}})();`;
 }
 
-// ========== click-isadmcp 連携（クリック計測） ==========
-// ベースURL・エンドポイントは引き継ぎ書§2の /api/v1 契約に準拠（変更時はここだけ直す）
-const ISADMCP_API_BASE = 'https://click-isadmcp.com/api/v1';
-const ISADMCP_TOKEN_KEY = 'isadmcp_token';
-const ISADMCP_MOCK_KEY = 'isadmcp_mock';
+// ========== 代理店入稿（クリック計測 click-counter 連携） ==========
+// API仕様: click-counter/API.md。APIのベースURLは次の1行だけを変更する（本番: https://cc.click-isadmcp.com/v1）
+const CC_API_BASE = 'https://cc-app.soga-naoya.workers.dev/v1';
+const CC_ORIGIN = CC_API_BASE.replace(/\/v1\/?$/, '');
+const CC_TOKEN_KEY = 'cc_issue_token';            // sessionStorage（発行トークン）
+const CC_ISSUE_PW_KEY = 'cc_issue_pw_v1';         // localStorage（「このブラウザに記憶する」を選んだ場合のみ）
+const CC_LAST_MEDIA_KEY = 'cc_last_media_v1';     // 前回と同じ媒体
+const CC_MEDIA_SETS_KEY = 'cc_media_sets_v1';     // 媒体セット（個人。最大10件）
+const CC_ADVERTISERS_KEY = 'cc_advertisers_v1';   // 広告主の入力候補
+// 付録C U-06: ASPドメインのURLは自動撮影しない（README の初期値と同じ。サーバ側の設定が正）
+const CC_ASP_DOMAINS = ['px.a8.net', 'ck.jp.ap.valuecommerce.com', 'h.accesstrade.net', 't.afi-b.com', 'af.moshimo.com', 't.felmat.net', 'click.j-a-net.jp', 'www.rentracks.jp', 'www.infotop.jp/click.php'];
+const CC_TRACKING_HOSTS = ['t.click-isadmcp.com', 'cc-redirect.soga-naoya.workers.dev'];
+const CC_LIMITS = { fileBytes: 5 * 1024 * 1024, textChars: 200000, urls: 200, media: 50, product: 1500, sets: 10 };
+const CC_MERGE_RE = /<<:[^>]*:>>|\[\$[^\]]*\$\]|\$\$:URL_[^$]*:\$\$|##__[^#\s]*__##/;
+// URL本体: ASCII の URL 文字と差し込みタグだけを許す（全角文字・全角括弧・「」で止まる）
+const CC_URL_RE = /https?:\/\/(?:<<:[^>\n]*?:>>|\[\$[^\]\n]*?\$\]|##__[A-Za-z0-9_]*__##|[A-Za-z0-9\-._~:/?#[\]@!$&'()*+,;=%])+/g;
+const CC_CAPTURE_ERR = {
+  TIMEOUT: 'ページの読み込みに時間がかかり、取得できませんでした',
+  HTTP_5XX: 'ページがエラーを返しました。URLを確認してください',
+  BROWSER_ERROR: 'ページを表示できませんでした',
+  DNS_FAILED: 'ページのアドレスが見つかりませんでした。URLを確認してください',
+  PRIVATE_ADDRESS: 'このアドレスは取得できません（社内・非公開のアドレス）',
+  CAP_REACHED: '今日の撮影上限に達しました。明日自動で再開します',
+  BOT_BLOCKED: 'ボット対策により取得できませんでした',
+};
 
-// ===== モック（デモ）モード: A側API未稼働でもUI/UX検証できるよう仮データで動かす =====
-// 既定はON。チェックを外すと本番APIへ。
-function isadmcpMockEnabled() {
-  try { return (localStorage.getItem(ISADMCP_MOCK_KEY) || 'on') !== 'off'; } catch (e) { return true; }
-}
-function isadmcpMockLinks() {
-  try { return JSON.parse(localStorage.getItem('isadmcp_mock_links') || '[]'); } catch (e) { return []; }
-}
-function isadmcpSaveMockLinks(a) {
-  try { localStorage.setItem('isadmcp_mock_links', JSON.stringify(a)); } catch (e) {}
-}
-function isadmcpMockHash(s) { let h = 0; for (let i = 0; i < s.length; i++) { h = (h * 31 + s.charCodeAt(i)) >>> 0; } return h; }
-function isadmcpMockCode(s) { return ('00000000' + isadmcpMockHash(s).toString(36)).slice(-8); }
+const ga = {
+  sourceType: 'paste', sourceFilename: null, sourceRef: null,
+  fileBuf: null, fileName: '', nameAuto: '', nameEdited: false,
+  docxLinks: [], links: [], edits: new Map(), truncated: 0,
+  selected: [], mediaInputs: {}, campNameEdited: false,
+  excludeRules: [], advertisersRemote: [],
+  issuing: false, requestId: null, requestSig: '',
+  result: null, resultReq: null, resultLinks: [], resultTexts: [], resultSig: '', activeIdx: 0,
+  lpItems: null, lpTimer: null, lpStartedAt: 0, lpError: '',
+  detectTimer: null,
+};
 
-async function isadmcpMockApi(path, options = {}) {
-  await new Promise(r => setTimeout(r, 300)); // 疑似ネットワーク遅延
-  const method = (options.method || 'GET').toUpperCase();
-  let body = {}; try { body = options.body ? JSON.parse(options.body) : {}; } catch (e) {}
-  if (path === '/templates') {
-    return { templates: [
-      { id: '1', name: '通常配信テンプレート', description: 'メルマガ標準', sendNumber: 1001 },
-      { id: '2', name: '号外テンプレート', description: '号外用', sendNumber: 1002 },
-      { id: '3', name: '広告A 計測用（非配信機）', description: '配信機を使わない広告', sendNumber: 2001 }
-    ] };
-  }
-  if (path === '/links' && method === 'POST') {
-    const url = body.originalUrl || '';
-    const tracking = 'https://trk-demo.example.jp/' + isadmcpMockCode(url);
-    const links = isadmcpMockLinks();
-    let rec = links.find(l => l.originalUrl === url);
-    if (!rec) {
-      rec = { id: String(links.length + 1), label: body.label || '', trackingUrl: tracking, originalUrl: url,
-        clicks: isadmcpMockHash(url) % 500, uniqueClicks: isadmcpMockHash(url) % 300,
-        lastClickedAt: '2026-06-15 ' + String(9 + isadmcpMockHash(url) % 9) + ':' + ('0' + (isadmcpMockHash(url) % 60)).slice(-2) };
-      links.push(rec); isadmcpSaveMockLinks(links);
-    } else if (body.label) { rec.label = body.label; isadmcpSaveMockLinks(links); }
-    return { id: rec.id, trackingUrl: rec.trackingUrl, originalUrl: url, templateId: body.templateId, label: rec.label };
-  }
-  if (path.indexOf('/stats') === 0) {
-    let items = isadmcpMockLinks();
-    if (!items.length) {
-      items = [
-        { id: '1', label: '6月号_LP', trackingUrl: 'https://trk-demo.example.jp/a1b2c3d4', originalUrl: 'https://example.com/lp', clicks: 312, uniqueClicks: 201, lastClickedAt: '2026-06-15 18:42' },
-        { id: '2', label: '広告A', trackingUrl: 'https://trk-demo.example.jp/9f8e7d6c', originalUrl: 'https://example.com/ad', clicks: 88, uniqueClicks: 65, lastClickedAt: '2026-06-15 12:10' }
-      ];
-    }
-    return { items };
-  }
-  if (path === '/sheets/sync' && method === 'POST') {
-    const n = isadmcpMockLinks().length || 2;
-    return { status: 'ok', updatedRows: n, spreadsheetUrl: 'https://docs.google.com/spreadsheets/d/DEMO_MOCK_SHEET/edit' };
-  }
-  return {};
+// ---------- 共通 ----------
+function ccResultsUrl(batchId) {
+  return CC_ORIGIN + '/' + (batchId ? '#/campaigns?batchId=' + encodeURIComponent(batchId) : '');
 }
-
-function getIsadmcpToken(promptIfMissing) {
-  let t = '';
-  try { t = localStorage.getItem(ISADMCP_TOKEN_KEY) || ''; } catch (e) {}
-  if (!t && promptIfMissing) {
-    t = (window.prompt('click-isadmcp のAPIトークンを入力してください（初回のみ・この端末のlocalStorageに保存されます）') || '').trim();
-    if (t) { try { localStorage.setItem(ISADMCP_TOKEN_KEY, t); } catch (e) {} }
-  }
-  return t;
+function ccJstToday() {
+  try { return new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Tokyo' }).format(new Date()); }
+  catch (e) { const d = new Date(Date.now() + 9 * 3600e3); return d.toISOString().slice(0, 10); }
 }
-
-function setIsadmcpToken() {
-  let cur = ''; try { cur = localStorage.getItem(ISADMCP_TOKEN_KEY) || ''; } catch (e) {}
-  const t = (window.prompt('click-isadmcp のAPIトークンを入力してください', cur) || '').trim();
-  if (t) { try { localStorage.setItem(ISADMCP_TOKEN_KEY, t); } catch (e) {} toast('トークンを保存しました'); }
-  updateIsadmcpTokenStatus();
+function ccFmtJst(iso) {
+  if (!iso) return '';
+  try {
+    const p = new Intl.DateTimeFormat('ja-JP', { timeZone: 'Asia/Tokyo', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }).format(new Date(iso));
+    return p;
+  } catch (e) { return String(iso); }
 }
-
-function clearIsadmcpToken() {
-  try { localStorage.removeItem(ISADMCP_TOKEN_KEY); } catch (e) {}
-  toast('トークンを削除しました');
-  updateIsadmcpTokenStatus();
+function ccUuid() {
+  if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+  const b = crypto.getRandomValues(new Uint8Array(16));
+  return Array.from(b, x => x.toString(16).padStart(2, '0')).join('');
 }
-
-function updateIsadmcpTokenStatus() {
-  const elx = $('isadmcpTokenStatus'); if (!elx) return;
-  const chk = $('isadmcpMockChk'); if (chk) chk.checked = isadmcpMockEnabled();
-  if (isadmcpMockEnabled()) { elx.textContent = 'モックモード（仮データで動作中）'; elx.classList.add('ok'); return; }
-  let t = ''; try { t = localStorage.getItem(ISADMCP_TOKEN_KEY) || ''; } catch (e) {}
-  if (t) { elx.textContent = 'トークン設定済み'; elx.classList.add('ok'); }
-  else { elx.textContent = 'トークン未設定'; elx.classList.remove('ok'); }
+function ccLs(key, fallback) { try { const v = JSON.parse(localStorage.getItem(key) || 'null'); return v == null ? fallback : v; } catch (e) { return fallback; } }
+function ccLsSet(key, v) { try { localStorage.setItem(key, JSON.stringify(v)); } catch (e) {} }
+async function ccFetchTimeout(url, opts, ms) {
+  const ac = new AbortController();
+  const t = setTimeout(() => ac.abort(), ms || 30000);
+  try { return await fetch(url, { ...opts, signal: ac.signal }); } finally { clearTimeout(t); }
 }
+function ccSanitizeFilename(s) { return String(s || '原稿').replace(/[\\/:*?"<>|\r\n\t]/g, '').slice(0, 120) || '原稿'; }
 
-async function isadmcpApi(path, options = {}) {
-  if (isadmcpMockEnabled()) return isadmcpMockApi(path, options);
-  const token = getIsadmcpToken(true);
-  if (!token) throw new Error('APIトークンが未設定です');
-  const res = await fetch(ISADMCP_API_BASE + path, {
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + token,
-      ...(options.headers || {})
-    }
+// ---------- D-1 パスワードダイアログ（共通部品） ----------
+// o: { title, desc, okLabel, error, rememberDefault, submit?: async (pw, remember) => null(成功) | {error, bad?, lock?} }
+// submit なし: {password, remember} を返す。submit あり: 成功で true。キャンセルは null。
+function openPwDialog(o) {
+  return new Promise(resolve => {
+    const prevFocus = document.activeElement;
+    const wrap = document.createElement('div');
+    wrap.className = 'd1-backdrop';
+    wrap.innerHTML = `<div class="d1-dialog" role="dialog" aria-modal="true" aria-labelledby="d1Title" aria-describedby="d1Desc">
+      <div class="d1-head"><h3 id="d1Title">${escHtml(o.title)}</h3><button type="button" class="d1-x" aria-label="閉じる">×</button></div>
+      <div class="d1-body">
+        <p id="d1Desc">${escHtml(o.desc)}</p>
+        <label for="d1Pw">パスワード</label>
+        <div class="d1-pwrow"><input type="password" id="d1Pw" maxlength="128" autocomplete="current-password"><button type="button" class="btn-outline btn-sm d1-eye" aria-pressed="false">表示</button></div>
+        <div class="d1-err" role="alert"></div>
+        <label class="d1-remember"><input type="checkbox" class="d1-rem" ${o.rememberDefault === false ? '' : 'checked'}> このブラウザに記憶する</label>
+        <div class="d1-note">共有のパソコンでは外してください</div>
+      </div>
+      <div class="d1-foot"><button type="button" class="btn-secondary d1-cancel">キャンセル</button><button type="button" class="btn-primary d1-ok">${escHtml(o.okLabel || 'OK')}</button></div>
+    </div>`;
+    document.body.appendChild(wrap);
+    const q = s => wrap.querySelector(s);
+    const pw = q('#d1Pw'), ok = q('.d1-ok'), err = q('.d1-err');
+    if (o.error) err.textContent = o.error;
+    let busy = false;
+    const close = val => {
+      document.removeEventListener('keydown', onKey, true);
+      wrap.remove();
+      if (prevFocus && prevFocus.focus) { try { prevFocus.focus(); } catch (e) {} }
+      resolve(val);
+    };
+    const submit = async () => {
+      if (busy) return;
+      const v = pw.value;
+      if (!v) { err.textContent = 'パスワードを入力してください。'; pw.focus(); return; }
+      const remember = q('.d1-rem').checked;
+      if (!o.submit) { close({ password: v, remember }); return; }
+      busy = true; ok.disabled = true; pw.disabled = true;
+      const label = ok.textContent; ok.textContent = '確認中…'; err.textContent = '';
+      let r;
+      try { r = await o.submit(v, remember); } catch (e) { r = { error: e.message || 'エラーが発生しました' }; }
+      busy = false; ok.textContent = label; pw.disabled = false;
+      if (!r) { close(true); return; }
+      err.textContent = r.error || 'エラーが発生しました';
+      if (r.lock) { ok.disabled = true; return; }
+      ok.disabled = false;
+      if (r.bad) pw.value = '';
+      pw.focus();
+    };
+    const onKey = e => {
+      if (e.key === 'Escape') { e.preventDefault(); if (!busy) close(null); return; }
+      if (e.key === 'Tab') {
+        const f = [...wrap.querySelectorAll('button,input')].filter(x => !x.disabled);
+        if (!f.length) return;
+        const i = f.indexOf(document.activeElement);
+        if (e.shiftKey && (i <= 0)) { e.preventDefault(); f[f.length - 1].focus(); }
+        else if (!e.shiftKey && i === f.length - 1) { e.preventDefault(); f[0].focus(); }
+      }
+    };
+    document.addEventListener('keydown', onKey, true);
+    pw.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); submit(); } });
+    ok.addEventListener('click', submit);
+    q('.d1-cancel').addEventListener('click', () => { if (!busy) close(null); });
+    q('.d1-x').addEventListener('click', () => { if (!busy) close(null); });
+    q('.d1-eye').addEventListener('click', function () {
+      const show = pw.type === 'password';
+      pw.type = show ? 'text' : 'password';
+      this.setAttribute('aria-pressed', String(show));
+      this.textContent = show ? '隠す' : '表示';
+    });
+    setTimeout(() => pw.focus(), 0);
   });
+}
+
+// ---------- 認証（発行トークン） ----------
+function ccGetToken() {
+  try {
+    const o = JSON.parse(sessionStorage.getItem(CC_TOKEN_KEY) || 'null');
+    if (o && o.token && (!o.expiresAt || Date.parse(o.expiresAt) > Date.now() + 30000)) return o;
+  } catch (e) {}
+  return null;
+}
+function ccSetToken(o) {
+  try { if (o) sessionStorage.setItem(CC_TOKEN_KEY, JSON.stringify(o)); else sessionStorage.removeItem(CC_TOKEN_KEY); } catch (e) {}
+  ccUpdateConn();
+}
+function ccUpdateConn(state) {
+  const s = $('gaConnStatus'), b = $('gaConnBtn');
+  if (!s) return;
+  const t = ccGetToken();
+  if (state === 'offline') { s.className = 'ga-conn ng'; s.textContent = '⚠ 接続できません'; b.textContent = '再試行'; b.style.display = ''; return; }
+  if (t) {
+    const h = t.expiresAt ? Math.max(0, Math.floor((Date.parse(t.expiresAt) - Date.now()) / 3600e3)) : null;
+    s.className = 'ga-conn ok'; s.textContent = '● 発行できます' + (h != null ? `（あと${h < 1 ? '1時間未満' : h + '時間'}）` : '');
+    b.style.display = 'none';
+  } else {
+    s.className = 'ga-conn ng'; s.textContent = '○ パスワードが必要です';
+    b.textContent = '入力する'; b.style.display = '';
+  }
+}
+async function ccLogin(password) {
+  let res;
+  try {
+    res = await ccFetchTimeout(CC_API_BASE + '/auth/login', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password, client: 'generator' })
+    }, 10000);
+  } catch (e) {
+    return { error: e && e.name === 'AbortError' ? '通信に時間がかかっています。もう一度お試しください。' : '接続できませんでした。通信状況を確認して、もう一度お試しください。', network: true };
+  }
+  let data = {};
+  try { data = await res.json(); } catch (e) {}
+  if (res.ok && data && data.token) { ccSetToken({ token: data.token, expiresAt: data.expiresAt || null }); return { ok: true }; }
+  const err = (data && data.error) || {};
+  if (res.status === 429) {
+    const sec = (err.details && err.details.retryAfterSec) || 900;
+    return { error: `失敗が続いたため、${Math.max(1, Math.ceil(sec / 60))}分後に再度お試しください。`, lock: true };
+  }
+  if (res.status === 401) {
+    const r = err.details && err.details.remainingAttempts;
+    return { error: 'パスワードが違います。もう一度入力してください。' + (r != null ? `（あと${r}回失敗するとロックされます）` : ''), bad: true };
+  }
+  return { error: err.message || `エラーが発生しました（${res.status}）`, network: true };
+}
+let ccTokenPromise = null;
+async function ccEnsureToken(force) {
+  if (!force) { const t = ccGetToken(); if (t) return t.token; }
+  if (ccTokenPromise) return ccTokenPromise;
+  ccTokenPromise = (async () => {
+    let note = '';
+    let saved = '';
+    try { saved = localStorage.getItem(CC_ISSUE_PW_KEY) || ''; } catch (e) {}
+    if (saved) {
+      const r = await ccLogin(saved);
+      if (r.ok) return ccGetToken().token;
+      if (r.bad) {
+        try { localStorage.removeItem(CC_ISSUE_PW_KEY); } catch (e) {}
+        note = '保存していたパスワードが変更されたようです。新しいパスワードを入力してください。';
+      }
+    }
+    const ok = await openPwDialog({
+      title: '発行パスワード', desc: note || '計測URLの発行にはパスワードが必要です。', okLabel: '続ける', rememberDefault: true,
+      submit: async (pw, remember) => {
+        const r = await ccLogin(pw);
+        if (!r.ok) return r;
+        try { if (remember) localStorage.setItem(CC_ISSUE_PW_KEY, pw); else localStorage.removeItem(CC_ISSUE_PW_KEY); } catch (e) {}
+        return null;
+      }
+    });
+    if (!ok) { const e = new Error('パスワードが入力されなかったため中止しました'); e.cancelled = true; throw e; }
+    return ccGetToken().token;
+  })();
+  try {
+    const tok = await ccTokenPromise;
+    ccTokenPromise = null;
+    if (!ga.hintsLoaded) setTimeout(ccLoadRemoteHints, 0); // 除外URLルール・広告主候補を取得
+    return tok;
+  } finally { ccTokenPromise = null; }
+}
+async function ccApi(path, opts = {}, retried) {
+  const token = await ccEnsureToken();
+  const headers = { ...(opts.headers || {}), Authorization: 'Bearer ' + token };
+  if (opts.body && typeof opts.body === 'string') headers['Content-Type'] = 'application/json';
+  let res;
+  try {
+    res = await ccFetchTimeout(CC_API_BASE + path, { method: opts.method || 'GET', body: opts.body, headers }, opts.timeout || 30000);
+  } catch (e) {
+    const er = new Error(e && e.name === 'AbortError' ? '通信がタイムアウトしました。もう一度お試しください。' : '接続できませんでした。通信状況を確認して、もう一度お試しください。');
+    er.network = true;
+    throw er;
+  }
+  if (res.status === 401 && !retried) {
+    ccSetToken(null);
+    await ccEnsureToken(true);
+    return ccApi(path, opts, true);
+  }
   if (!res.ok) {
-    let msg = 'APIエラー ' + res.status;
-    try { const err = await res.json(); msg = (err && err.error && err.error.message) || err.message || msg; } catch (e) {}
-    if (res.status === 401) msg = '認証エラー（401）：トークンを確認してください';
-    throw new Error(msg);
+    let data = {};
+    try { data = await res.json(); } catch (e) {}
+    const err = (data && data.error) || {};
+    const er = new Error(err.message || `エラーが発生しました（${res.status}）`);
+    er.status = res.status; er.code = err.code || ''; er.details = err.details || null;
+    throw er;
   }
-  return res.json();
+  return res;
 }
 
-async function loadIsadmcpTemplates(selectEl) {
-  if (!selectEl) return;
-  selectEl.innerHTML = '<option value="">-- 読み込み中… --</option>';
+// ---------- 原稿の取り込み（.txt 文字コード判定 / .docx 自前パーサ） ----------
+function ccDecodeText(buf, forced) {
+  const b = new Uint8Array(buf);
+  if (forced) return { text: new TextDecoder(forced).decode(b), enc: forced };
+  if (b[0] === 0xEF && b[1] === 0xBB && b[2] === 0xBF) return { text: new TextDecoder('utf-8').decode(b), enc: 'utf-8' };
+  if (b[0] === 0xFF && b[1] === 0xFE) return { text: new TextDecoder('utf-16le').decode(b), enc: 'utf-16le' };
+  if (b[0] === 0xFE && b[1] === 0xFF) return { text: new TextDecoder('utf-16be').decode(b), enc: 'utf-16be' };
+  try { return { text: new TextDecoder('utf-8', { fatal: true }).decode(b), enc: 'utf-8' }; } catch (e) {}
+  const score = s => {
+    let n = 0;
+    for (const ch of s) {
+      const c = ch.codePointAt(0);
+      if (c === 0xFFFD || (c < 0x20 && c !== 9 && c !== 10 && c !== 13) || (c >= 0x80 && c < 0xA0) || (c >= 0xFF61 && c <= 0xFF9F)) n++;
+    }
+    return n;
+  };
+  const sj = new TextDecoder('shift_jis').decode(b);
+  const eu = new TextDecoder('euc-jp').decode(b);
+  return score(eu) < score(sj) ? { text: eu, enc: 'euc-jp' } : { text: sj, enc: 'shift_jis' };
+}
+function ccGarbled(text) {
+  if (!text) return false;
+  const bad = (text.match(/�/g) || []).length;
+  return bad > 0 && bad / text.length > 0.002;
+}
+async function ccUnzip(buf, wanted) {
+  const dv = new DataView(buf);
+  const u8 = new Uint8Array(buf);
+  let eocd = -1;
+  for (let i = u8.length - 22; i >= Math.max(0, u8.length - 65557); i--) {
+    if (dv.getUint32(i, true) === 0x06054b50) { eocd = i; break; }
+  }
+  if (eocd < 0) throw new Error('Word（.docx）形式ではありません');
+  const count = dv.getUint16(eocd + 10, true);
+  let p = dv.getUint32(eocd + 16, true);
+  const out = {};
+  for (let n = 0; n < count; n++) {
+    if (p + 46 > u8.length || dv.getUint32(p, true) !== 0x02014b50) throw new Error('ファイルが壊れています');
+    const method = dv.getUint16(p + 10, true);
+    const csize = dv.getUint32(p + 20, true);
+    const nlen = dv.getUint16(p + 28, true), elen = dv.getUint16(p + 30, true), clen = dv.getUint16(p + 32, true);
+    const lho = dv.getUint32(p + 42, true);
+    const name = new TextDecoder().decode(u8.subarray(p + 46, p + 46 + nlen));
+    p += 46 + nlen + elen + clen;
+    if (!wanted.includes(name)) continue;
+    if (dv.getUint32(lho, true) !== 0x04034b50) throw new Error('ファイルが壊れています');
+    const start = lho + 30 + dv.getUint16(lho + 26, true) + dv.getUint16(lho + 28, true);
+    const data = u8.subarray(start, start + csize);
+    if (method === 0) out[name] = data;
+    else if (method === 8) {
+      if (typeof DecompressionStream === 'undefined') throw new Error('このブラウザは .docx の読み込みに対応していません');
+      const stream = new Blob([data]).stream().pipeThrough(new DecompressionStream('deflate-raw'));
+      out[name] = new Uint8Array(await new Response(stream).arrayBuffer());
+    } else throw new Error('未対応の圧縮形式です');
+  }
+  return out;
+}
+async function ccDocxToText(buf) {
+  const files = await ccUnzip(buf, ['word/document.xml', 'word/_rels/document.xml.rels']);
+  if (!files['word/document.xml']) throw new Error('Wordの本文が見つかりません');
+  const dec = new TextDecoder('utf-8');
+  const rels = {};
+  if (files['word/_rels/document.xml.rels']) {
+    const rd = new DOMParser().parseFromString(dec.decode(files['word/_rels/document.xml.rels']), 'application/xml');
+    for (const r of rd.getElementsByTagName('Relationship')) {
+      rels[r.getAttribute('Id')] = { target: r.getAttribute('Target') || '', external: r.getAttribute('TargetMode') === 'External' };
+    }
+  }
+  const doc = new DOMParser().parseFromString(dec.decode(files['word/document.xml']), 'application/xml');
+  if (doc.getElementsByTagName('parsererror').length) throw new Error('Wordの本文を読み込めません');
+  const W = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main';
+  const R = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships';
+  const links = [];
+  const lines = [];
+  let cur = '';
+  const fstack = [];
+  const emit = s => {
+    const f = fstack[fstack.length - 1];
+    if (f) { if (f.phase === 'res') f.res += s; } else cur += s;
+  };
+  const linkText = (disp, url) => {
+    const d = disp.trim();
+    links.push({ display: d, url });
+    if (!d) return url;
+    if (d === url || d.replace(/\/$/, '') === url.replace(/\/$/, '')) return disp;
+    return `${disp}（${url}）`;
+  };
+  const fieldResult = (instr, res) => {
+    const m = instr.match(/HYPERLINK\s+"([^"]+)"/i);
+    if (m && !/\\l\s/.test(instr) && /^https?:\/\//i.test(m[1])) return linkText(res, m[1]);
+    return res;
+  };
+  const walk = node => {
+    for (const c of node.childNodes) {
+      if (c.nodeType !== 1 || c.namespaceURI !== W) continue;
+      switch (c.localName) {
+        case 't': emit(c.textContent); break;
+        case 'tab': emit('\t'); break;
+        case 'br': case 'cr': emit('\n'); break;
+        case 'noBreakHyphen': emit('-'); break;
+        case 'instrText': { const f = fstack[fstack.length - 1]; if (f && f.phase === 'instr') f.instr += c.textContent; break; }
+        case 'fldChar': {
+          const t = c.getAttributeNS(W, 'fldCharType') || c.getAttribute('w:fldCharType');
+          if (t === 'begin') fstack.push({ instr: '', res: '', phase: 'instr' });
+          else if (t === 'separate') { const f = fstack[fstack.length - 1]; if (f) f.phase = 'res'; }
+          else if (t === 'end') { const f = fstack.pop(); if (f) emit(fieldResult(f.instr, f.res)); }
+          break;
+        }
+        case 'fldSimple': {
+          const f = { instr: c.getAttributeNS(W, 'instr') || c.getAttribute('w:instr') || '', res: '', phase: 'res' };
+          fstack.push(f); walk(c); fstack.pop();
+          emit(fieldResult(f.instr, f.res));
+          break;
+        }
+        case 'hyperlink': {
+          const rid = c.getAttributeNS(R, 'id') || c.getAttribute('r:id');
+          const rel = rid && rels[rid];
+          if (rel && rel.external && /^https?:\/\//i.test(rel.target)) {
+            const f = { instr: '', res: '', phase: 'res' };
+            fstack.push(f); walk(c); fstack.pop();
+            emit(linkText(f.res, rel.target));
+          } else walk(c);
+          break;
+        }
+        case 'p':
+          walk(c);
+          if (!fstack.length) { lines.push(cur); cur = ''; } else emit('\n');
+          break;
+        case 'delText': case 'del': case 'txbxContent': case 'pPr': case 'rPr': case 'sectPr':
+        case 'footnoteReference': case 'endnoteReference': case 'drawing': case 'pict': case 'object':
+          break;
+        default: walk(c);
+      }
+    }
+  };
+  walk(doc.getElementsByTagNameNS(W, 'body')[0] || doc.documentElement);
+  if (cur) lines.push(cur);
+  while (lines.length && !lines[lines.length - 1].trim()) lines.pop();
+  return { text: lines.join('\n'), links };
+}
+
+function ccMsg(text, cls) {
+  const m = $('gaImportMsg');
+  m.className = 'ga-msg' + (cls ? ' ' + cls : '');
+  m.textContent = text || '';
+}
+function ccSwitchTab(tab) {
+  document.querySelectorAll('[data-gatab]').forEach(b => {
+    const on = b.dataset.gatab === tab;
+    b.classList.toggle('active', on);
+    b.setAttribute('aria-selected', String(on));
+  });
+  $('gaPanePaste').style.display = tab === 'paste' ? '' : 'none';
+  $('gaPaneFile').style.display = tab === 'file' ? '' : 'none';
+  $('gaPaneGdoc').style.display = tab === 'gdoc' ? '' : 'none';
+}
+function ccSetManuscript(text, o) {
+  if (text.length > CC_LIMITS.textChars) {
+    ccMsg(`長すぎるため取り込めません（上限 ${CC_LIMITS.textChars.toLocaleString()} 文字）`, 'err');
+    return false;
+  }
+  $('gaText').value = text;
+  ga.sourceType = o.sourceType || 'paste';
+  ga.sourceFilename = o.sourceFilename || null;
+  ga.sourceRef = o.sourceRef || null;
+  ga.docxLinks = o.docxLinks || [];
+  ga.fileBuf = o.fileBuf || null;
+  ga.nameAuto = (o.name || '').slice(0, 60);
+  if (!ga.nameEdited || !$('gaName').value.trim()) { ga.nameEdited = false; $('gaName').value = ''; }
+  const er = $('gaEncRow');
+  if (o.enc && ga.fileBuf) {
+    er.style.display = '';
+    const sel = $('gaEncSel');
+    if ([...sel.options].some(x => x.value === o.enc)) sel.value = o.enc;
+    const garbled = ccGarbled(text);
+    $('gaEncNote').textContent = garbled ? '⚠ 文字化けしているようです。文字コードを選んでください' : `自動判定: ${o.enc === 'utf-8' ? 'UTF-8' : o.enc === 'shift_jis' ? 'Shift_JIS' : o.enc === 'euc-jp' ? 'EUC-JP' : o.enc}`;
+    $('gaEncNote').className = garbled ? 'ga-warn-sm' : 'text-muted';
+  } else er.style.display = 'none';
+  ccSwitchTab('paste');
+  ccDetect();
+  return true;
+}
+async function ccImportFile(file) {
+  if (!file) return;
+  const ext = ((file.name.match(/\.([^.]+)$/) || [])[1] || '').toLowerCase();
+  if (ext !== 'txt' && ext !== 'docx') {
+    ccMsg('このファイルは取り込めません。.txt または .docx を選んでください。（.doc はWordで『名前を付けて保存』から .docx にしてください）', 'err');
+    return;
+  }
+  if (file.size > CC_LIMITS.fileBytes) { ccMsg('長すぎるため取り込めません（上限 5MB）', 'err'); return; }
+  ccMsg(`読み込み中…（${file.name}）`);
   try {
-    const { templates } = await isadmcpApi('/templates');
-    if (!templates || !templates.length) { selectEl.innerHTML = '<option value="">（テンプレートなし）</option>'; return; }
-    selectEl.innerHTML = templates.map(t => `<option value="${escHtml(String(t.id))}">${escHtml(t.name || ('#' + t.id))}</option>`).join('');
+    const buf = await file.arrayBuffer();
+    const base = file.name.replace(/\.[^.]+$/, '');
+    let ok;
+    if (ext === 'docx') {
+      const r = await ccDocxToText(buf);
+      ok = ccSetManuscript(r.text, { sourceType: 'docx', sourceFilename: file.name, name: base, docxLinks: r.links });
+    } else {
+      const r = ccDecodeText(buf);
+      ok = ccSetManuscript(r.text, { sourceType: 'txt', sourceFilename: file.name, name: base, enc: r.enc, fileBuf: buf });
+    }
+    if (ok) ccMsg(`「${file.name}」を取り込みました。`, 'ok');
   } catch (e) {
-    selectEl.innerHTML = '<option value="">読み込み失敗</option>';
-    toast('テンプレ取得失敗: ' + e.message, 4000);
+    ccMsg('ファイルを読み込めませんでした。別のファイルでお試しください。（' + (e && e.message ? e.message : e) + '）', 'err');
   }
 }
-
-async function isadmcpConvertOne(originalUrl, templateId, label) {
-  const body = { originalUrl, templateId };
-  if (label) body.label = label;
-  const data = await isadmcpApi('/links', { method: 'POST', body: JSON.stringify(body) });
-  return data.trackingUrl || (data.link && data.link.trackingUrl) || '';
+function ccHandleDropFiles(files) {
+  if (!files || !files.length) return;
+  if (files.length > 1) toast('1つずつ取り込んでください。最初の1件を取り込みました');
+  ccImportFile(files[0]).then(() => { if (files.length > 1) { const m = $('gaImportMsg'); m.textContent += '（複数のファイルが選ばれたため、最初の1件だけ取り込みました）'; } });
 }
-
-// 単体URL変換（クリック計測ビュー／配信機を使わない広告計測）
-async function isadmcpConvertSingle() {
-  const url = $('isadmcpUrl').value.trim();
-  const tpl = $('isadmcpTemplate').value;
-  const label = $('isadmcpLabel').value.trim();
-  const st = $('isadmcpConvertStatus');
-  st.className = 'measure-status'; st.textContent = '';
-  if (!url) { st.className = 'measure-status err'; st.textContent = '元URLを入力してください'; return; }
-  if (!tpl) { st.className = 'measure-status err'; st.textContent = 'テンプレートを選択してください'; return; }
-  st.textContent = '変換中…';
+async function ccImportGdoc() {
+  const url = $('gaGdocUrl').value.trim();
+  if (!/^https:\/\/docs\.google\.com\/document\//.test(url)) { ccMsg('GoogleドキュメントのURLを貼り付けてください', 'err'); return; }
+  const btn = $('gaGdocBtn');
+  btn.disabled = true; btn.textContent = '取得中…';
+  ccMsg('Googleドキュメントを取得しています…');
   try {
-    const tracking = await isadmcpConvertOne(url, tpl, label);
-    $('isadmcpResult').value = tracking;
-    st.className = 'measure-status ok'; st.textContent = '変換しました';
+    const res = await ccApi('/import/gdoc', { method: 'POST', body: JSON.stringify({ url, format: 'docx' }), timeout: 20000 });
+    const ct = res.headers.get('Content-Type') || '';
+    let text, title = null, links = [];
+    if (ct.includes('json')) {
+      const d = await res.json();
+      text = d.text || ''; title = d.title || null;
+    } else {
+      const buf = await res.arrayBuffer();
+      title = res.headers.get('X-CC-Doc-Title');
+      if (title) { try { title = decodeURIComponent(title); } catch (e) {} }
+      try {
+        const r = await ccDocxToText(buf);
+        text = r.text; links = r.links;
+      } catch (e) {
+        const r2 = await ccApi('/import/gdoc', { method: 'POST', body: JSON.stringify({ url, format: 'txt' }), timeout: 20000 });
+        const d = await r2.json();
+        text = d.text || ''; title = title || d.title || null;
+      }
+    }
+    if (ccSetManuscript(text, { sourceType: 'gdoc', sourceRef: url, name: title || '', docxLinks: links })) {
+      ccMsg(`Googleドキュメント${title ? '「' + title + '」' : ''}を取り込みました。`, 'ok');
+    }
   } catch (e) {
-    st.className = 'measure-status err'; st.textContent = '変換失敗: ' + e.message;
+    if (e.cancelled) { ccMsg(''); }
+    else if (e.code === 'GDOC_NOT_PUBLIC') {
+      const m = $('gaImportMsg');
+      m.className = 'ga-msg warn';
+      m.innerHTML = 'このドキュメントは取得できませんでした。共有設定が『リンクを知っている全員が閲覧可』になっていない可能性があります。<br>' +
+        '代わりの手順: ①Googleドキュメントで [ファイル] → [ダウンロード] → [テキスト(.txt)] または [Word(.docx)] を選ぶ　②[ファイル]タブでそのファイルを選ぶ ' +
+        '<button type="button" class="btn-outline btn-sm" id="gaGoFileTab">ファイルタブへ移動</button>';
+      $('gaGoFileTab').addEventListener('click', () => ccSwitchTab('file'));
+    } else if (e.code === 'GDOC_NOT_FOUND' || e.code === 'INVALID_URL') ccMsg('ドキュメントが見つかりませんでした。URLを確認してください。', 'err');
+    else if (e.network || (e.status && e.status >= 500)) ccMsg('取得サービスに接続できませんでした。時間をおくか、ファイルで取り込んでください。', 'err');
+    else ccMsg('取り込めませんでした: ' + e.message, 'err');
+  } finally {
+    btn.disabled = false; btn.textContent = '取り込む';
   }
 }
 
-async function isadmcpLoadStats() {
-  const st = $('isadmcpStatsStatus');
-  const wrap = $('isadmcpStatsTable');
-  st.className = 'measure-status'; st.textContent = '取得中…'; wrap.innerHTML = '';
-  const from = $('isadmcpFrom').value, to = $('isadmcpTo').value;
-  const qs = [];
-  if (from) qs.push('from=' + encodeURIComponent(from));
-  if (to) qs.push('to=' + encodeURIComponent(to));
+// ---------- URL 検出・判定 ----------
+function ccTrimUrlTail(u) {
+  let s = u;
+  for (;;) {
+    const before = s;
+    s = s.replace(/[.,;:!?'"]+$/, '');
+    if (s.endsWith(')')) {
+      const o = (s.match(/\(/g) || []).length, c = (s.match(/\)/g) || []).length;
+      if (c > o) s = s.slice(0, -1);
+    }
+    if (s.endsWith(']') && !s.endsWith('$]')) {
+      const o = (s.match(/\[/g) || []).length, c = (s.match(/\]/g) || []).length;
+      if (c > o) s = s.slice(0, -1);
+    }
+    if (s === before) return s;
+  }
+}
+function ccDetectUrls(text) {
+  const out = [];
+  CC_URL_RE.lastIndex = 0;
+  let m;
+  while ((m = CC_URL_RE.exec(text))) {
+    const start = m.index;
+    let raw = m[0];
+    let wrapped = false;
+    if (text.slice(Math.max(0, start - 7), start) === '$$:URL_') {
+      const k = raw.indexOf(':$$');
+      if (k >= 0) raw = raw.slice(0, k);
+      wrapped = true;
+    }
+    raw = ccTrimUrlTail(raw);
+    if (/^https?:\/\/$/.test(raw) || raw.length < 10) continue;
+    out.push({ start, end: start + raw.length, url: raw, wrapped });
+  }
+  return out;
+}
+function ccHostMatches(host, d) { d = String(d).toLowerCase(); return host === d || host.endsWith('.' + d); }
+function ccIsBlockedHost(h) {
+  h = String(h).toLowerCase().replace(/^\[|\]$/g, '').replace(/\.$/, '');
+  if (!h || h === 'localhost' || h.endsWith('.localhost') || h.endsWith('.local') || h.endsWith('.internal')) return true;
+  if (/^[0-9.]+$/.test(h)) {
+    const p = h.split('.').map(Number);
+    if (p.length !== 4 || p.some(x => isNaN(x) || x > 255)) return true;
+    return p[0] === 10 || p[0] === 127 || p[0] === 0 || (p[0] === 169 && p[1] === 254) || (p[0] === 172 && p[1] >= 16 && p[1] <= 31) || (p[0] === 192 && p[1] === 168) || (p[0] === 100 && p[1] >= 64 && p[1] <= 127) || p[0] >= 224;
+  }
+  if (h.includes(':')) return h === '::1' || h === '::' || /^f[cd]/.test(h) || /^fe[89ab]/.test(h) || h.startsWith('::ffff:');
+  if (/^0x[0-9a-f]+$/i.test(h)) return true;
+  return false;
+}
+function ccCheckUrl(s) {
+  if (s.length > 2048) return 'URLが長すぎます（2,048文字まで）';
+  let u;
+  try { u = new URL(s); } catch (e) { return 'URLの形式が正しくありません'; }
+  if (u.protocol !== 'http:' && u.protocol !== 'https:') return 'http または https のURLのみ使えます';
+  if (u.username || u.password) return 'ユーザー情報を含むURLは使えません';
+  if (ccIsBlockedHost(u.hostname)) return 'このアドレスは使えません';
+  return '';
+}
+function ccMatchAsp(url) {
+  let u;
+  try { u = new URL(url); } catch (e) { return null; }
+  const host = u.hostname.toLowerCase();
+  for (const d of CC_ASP_DOMAINS) {
+    if (d.includes('/')) { if ((host + u.pathname.toLowerCase()).startsWith(d)) return d; }
+    else if (ccHostMatches(host, d)) return d;
+  }
+  return null;
+}
+function ccMatchExclude(url) {
+  let host = '';
+  try { host = new URL(url).hostname.toLowerCase(); } catch (e) {}
+  for (const r of ga.excludeRules) {
+    if (r.kind === 'domain' && host && ccHostMatches(host, String(r.pattern || '').replace(/^\*\./, ''))) return r;
+    if (r.kind === 'prefix' && url.startsWith(r.pattern)) return r;
+    if (r.kind === 'regex') { try { if (new RegExp(r.pattern).test(url)) return r; } catch (e) {} }
+  }
+  return null;
+}
+function ccClassify(url, wrapped) {
+  if (wrapped || CC_MERGE_RE.test(url)) return { kind: 'merge', msg: 'ネームタグを含むため対象外' };
+  const bad = ccCheckUrl(url);
+  if (bad) return { kind: 'invalid', msg: 'URL不正: ' + bad };
+  let host = '';
+  try { host = new URL(url).hostname.toLowerCase(); } catch (e) {}
+  if (CC_TRACKING_HOSTS.includes(host)) return { kind: 'self', msg: '計測URLのため対象外' };
+  const rule = ccMatchExclude(url);
+  if (rule) return { kind: 'excluded', msg: '除外ルール一致' + (rule.note ? `（${rule.note}）` : '') };
+  return { kind: 'ok', msg: '' };
+}
+function ccManuscriptName() {
+  const v = $('gaName').value.trim();
+  if (v) return v;
+  if (ga.nameAuto) return ga.nameAuto;
+  const first = $('gaText').value.split('\n').map(l => l.replace(/https?:\/\/\S+/g, '').trim()).find(Boolean) || '';
+  return first.slice(0, 20) || '原稿';
+}
+function ccDefaultLabel(pos) { return `${ccManuscriptName()}_${pos}`; }
+function ccLabelOf(l) { return (l.label || '').trim() || ccDefaultLabel(l.pos); }
+
+function ccDetect() {
+  const text = $('gaText').value;
+  const found = ccDetectUrls(text);
+  ga.truncated = Math.max(0, found.length - CC_LIMITS.urls);
+  const nth = new Map(), firstPos = new Map();
+  ga.links = found.slice(0, CC_LIMITS.urls).map((f, i) => {
+    const pos = i + 1;
+    const k = nth.get(f.url) || 0;
+    nth.set(f.url, k + 1);
+    const key = f.url + '\n' + k;
+    const cls = ccClassify(f.url, f.wrapped);
+    const dupOf = firstPos.has(f.url) ? firstPos.get(f.url) : null;
+    if (dupOf == null) firstPos.set(f.url, pos);
+    const word = ga.docxLinks.find(d => d.url === f.url && d.display && d.display !== f.url);
+    const e = ga.edits.get(key) || {};
+    const locked = cls.kind === 'invalid' || cls.kind === 'merge' || cls.kind === 'self';
+    const track = locked ? false : (e.track != null ? e.track : cls.kind === 'ok');
+    return {
+      pos, key, start: f.start, end: f.end, url: f.url, cls, locked, dupOf,
+      asp: cls.kind === 'invalid' || cls.kind === 'merge' ? null : ccMatchAsp(f.url),
+      wordDisplay: word ? word.display : null,
+      track, lp: locked && cls.kind !== 'self' ? false : (e.lp != null ? e.lp : track),
+      lpUrl: e.lpUrl || '', label: e.label || '', err: false,
+    };
+  });
+  if (!ga.issuing && $('gaBarErr')) $('gaBarErr').textContent = '';
+  ccRenderUrls();
+  ccUpdateBar();
+  ccMarkStale();
+  ccUpdateCampDefault();
+}
+function ccScheduleDetect() {
+  clearTimeout(ga.detectTimer);
+  ga.detectTimer = setTimeout(ccDetect, 300);
+}
+function ccEdit(l, patch) {
+  const e = { ...(ga.edits.get(l.key) || {}), ...patch };
+  ga.edits.set(l.key, e);
+  Object.assign(l, patch);
+}
+function ccRenderUrls() {
+  const box = $('gaUrlList');
+  const sum = $('gaUrlSummary');
+  const text = $('gaText').value;
+  if (!text.trim()) {
+    box.innerHTML = '<div class="empty-state" style="color:#666">原稿を貼り付けるか、ファイルを選んでください。</div>';
+    sum.textContent = '';
+    return;
+  }
+  if (!ga.links.length) {
+    box.innerHTML = '<div class="empty-state" style="color:#666">原稿にURLが見つかりませんでした。URLを含む原稿を取り込んでください。<br><span class="text-muted">http:// または https:// から始まるURLが対象です。</span></div>';
+    sum.textContent = '0本検出';
+    return;
+  }
+  const tracked = ga.links.filter(l => l.track);
+  sum.textContent = `${ga.links.length}本検出 / 計測する ${tracked.length}本 / しない ${ga.links.length - tracked.length}本`;
+  const labelCount = new Map();
+  tracked.forEach(l => { const k = ccLabelOf(l); labelCount.set(k, (labelCount.get(k) || 0) + 1); });
+  const rows = ga.links.map((l, i) => {
+    const badges = [];
+    if (l.cls.kind === 'ok') badges.push(['ok', '✓ 検出']);
+    else if (l.cls.kind === 'excluded') badges.push(['warn', '⚠ ' + l.cls.msg]);
+    else badges.push(['err', '✕ ' + l.cls.msg]);
+    if (l.dupOf) badges.push(['gray', `同じURL（#${l.dupOf}と同一）`]);
+    if (l.asp && l.lp) badges.push(['warn', 'ASPのURL: 直接LPのURLを入れると撮影します']);
+    const dupLabel = l.track && labelCount.get(ccLabelOf(l)) > 1;
+    return `<tr data-i="${i}" class="${l.err ? 'ga-row-err' : ''}">
+      <td><input type="checkbox" class="ga-track" aria-label="#${l.pos} を計測する" ${l.track ? 'checked' : ''} ${l.locked ? 'disabled' : ''}></td>
+      <td>${l.pos}</td>
+      <td><input type="text" class="ga-label" maxlength="60" aria-label="#${l.pos} のラベル" value="${escHtml(l.label)}" placeholder="${escHtml(ccDefaultLabel(l.pos))}" ${l.track ? '' : 'disabled'}>${dupLabel ? '<div class="ga-warn-sm">同じラベルがあります</div>' : ''}</td>
+      <td><input type="text" class="ga-url" aria-label="#${l.pos} の遷移先URL" value="${escHtml(l.url)}" title="${escHtml(l.url)}">
+        ${l.wordDisplay ? `<div class="ga-sub">Wordのリンク: 表示「${escHtml(l.wordDisplay)}」</div>` : ''}
+        ${l.asp && l.lp ? `<input type="text" class="ga-lpurl mt-2" aria-label="#${l.pos} の直接LPのURL" placeholder="LPのURL（直接・任意）https://…" value="${escHtml(l.lpUrl)}">` : ''}</td>
+      <td><input type="checkbox" class="ga-lp" aria-label="#${l.pos} のLPを取得する" ${l.lp ? 'checked' : ''} ${l.cls.kind === 'invalid' || l.cls.kind === 'merge' ? 'disabled' : ''}></td>
+      <td>${badges.map(([c, t]) => `<span class="badge badge-${c}" style="margin:1px 2px 1px 0">${escHtml(t)}</span>`).join('')}</td>
+    </tr>`;
+  }).join('');
+  box.innerHTML = (ga.truncated ? `<div class="ga-banner warn">URLが多すぎるため、先頭の${CC_LIMITS.urls}本だけを対象にしています（${ga.truncated}本は対象外）。</div>` : '') +
+    `<div class="ga-table-wrap"><table class="ga-table"><thead><tr><th>計測</th><th>#</th><th>ラベル</th><th>遷移先URL</th><th>LP</th><th>状態</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+function ccOnUrlListEvent(e) {
+  const tr = e.target.closest('tr[data-i]');
+  if (!tr) return;
+  const l = ga.links[+tr.dataset.i];
+  if (!l) return;
+  const t = e.target;
+  if (t.classList.contains('ga-track') && e.type === 'change') {
+    const ed = ga.edits.get(l.key) || {};
+    ccEdit(l, { track: t.checked });
+    if (ed.lp == null) l.lp = t.checked && !l.locked; // LPを個別に変えていなければ「計測」に連動
+    l.err = false;
+    ccRenderUrls(); ccUpdateBar(); ccMarkStale();
+  } else if (t.classList.contains('ga-lp') && e.type === 'change') {
+    ccEdit(l, { lp: t.checked });
+    ccRenderUrls(); ccMarkStale();
+  } else if (t.classList.contains('ga-label') && e.type === 'input') {
+    ccEdit(l, { label: t.value });
+    ccMarkStale();
+  } else if (t.classList.contains('ga-label') && e.type === 'change') {
+    ccRenderUrls();
+  } else if (t.classList.contains('ga-lpurl') && e.type === 'input') {
+    ccEdit(l, { lpUrl: t.value.trim() });
+    ccMarkStale();
+  } else if (t.classList.contains('ga-url') && e.type === 'change') {
+    const v = t.value.trim();
+    if (!v || v === l.url) { t.value = l.url; return; }
+    const ta = $('gaText');
+    const text = ta.value;
+    if (text.slice(l.start, l.end) !== l.url) { ccDetect(); return; }
+    ta.value = text.slice(0, l.start) + v + text.slice(l.end);
+    ccDetect();
+  }
+}
+
+// ---------- 媒体選択（代理店区分） ----------
+function ccAgencyMedia() {
+  return mediaList.filter(m => m.deliverySystem === 'agency').sort((a, b) => (a.sortOrder || 99) - (b.sortOrder || 99));
+}
+function ccMediaLabel(m) { return m.mediaCompany ? `${m.name}（${m.mediaCompany}）` : m.name; }
+function ccSetSelected(ids) {
+  const all = ccAgencyMedia();
+  ga.selected = all.filter(m => ids.includes(m.id)).map(m => m.id);
+  ccRenderMedia(); ccRenderMediaTable(); ccUpdateBar(); ccMarkStale();
+}
+function ccRenderMedia() {
+  const all = ccAgencyMedia();
+  ga.selected = ga.selected.filter(id => all.some(m => m.id === id));
+  const box = $('gaMediaList');
+  if (!all.length) {
+    box.innerHTML = '<div class="empty-state" style="color:#666">代理店区分の媒体がありません。<br><button type="button" class="btn-outline btn-sm mt-2" data-ga="go-admin">管理画面で媒体を追加</button></div>';
+  } else {
+    const q = ($('gaMediaSearch').value || '').trim().toLowerCase();
+    const shown = all.filter(m => !q || (m.name || '').toLowerCase().includes(q) || (m.mediaCompany || '').toLowerCase().includes(q));
+    const groups = new Map();
+    shown.forEach(m => { const c = (m.mediaCompany || '').trim(); if (!groups.has(c)) groups.set(c, []); groups.get(c).push(m); });
+    const keys = [...groups.keys()].sort((a, b) => (a === '') - (b === ''));
+    box.innerHTML = shown.length ? keys.map(c => {
+      const ms = groups.get(c);
+      const head = c ? `<button type="button" class="ga-mgroup-h" data-company="${escHtml(c)}">${escHtml(c)} <span class="text-muted">（${ms.length}件・クリックでまとめて選択／解除）</span></button>`
+                     : `<div class="ga-mgroup-h" style="cursor:default">媒体社未設定 <span class="text-muted">（${ms.length}件）</span></div>`;
+      return head + ms.map(m => `<label class="ga-mitem"><input type="checkbox" class="ga-mchk" value="${escHtml(m.id)}" ${ga.selected.includes(m.id) ? 'checked' : ''}>
+        <span>${escHtml(m.name)}${m.mediaCompany ? ` <span class="text-muted">（${escHtml(m.mediaCompany)}）</span>` : ' <span class="badge badge-gray">媒体社未設定</span>'}</span></label>`).join('');
+    }).join('') : '<div class="empty-state" style="color:#666">条件に合う媒体がありません。</div>';
+  }
+  const chips = $('gaChips');
+  const sel = ga.selected.map(id => all.find(m => m.id === id)).filter(Boolean);
+  chips.innerHTML = sel.length
+    ? `<span class="text-muted" style="color:#444">${sel.length}件選択中</span>` + sel.map(m => `<span class="ga-chip">${escHtml(ccMediaLabel(m))}<button type="button" data-unsel="${escHtml(m.id)}" aria-label="${escHtml(m.name)} の選択を外す">×</button></span>`).join('') + ' <button type="button" class="btn-outline btn-sm" data-ga="clear-media">クリア</button>'
+    : '<span class="text-muted" style="color:#666">媒体を選んでください（複数可）</span>';
+  ccRenderSets();
+}
+function ccRenderSets() {
+  const sel = $('gaSetSel');
+  const sets = ccLs(CC_MEDIA_SETS_KEY, []);
+  sel.innerHTML = '<option value="">セットから選ぶ…</option>' + sets.map((s, i) => `<option value="${i}">${escHtml(s.name)}（${s.ids.length}件）</option>`).join('');
+  $('gaSetDelBtn').disabled = !sets.length;
+  $('gaLastMediaBtn').disabled = !ccLs(CC_LAST_MEDIA_KEY, []).length;
+}
+function ccRenderMediaTable() {
+  const box = $('gaMediaTable');
+  const all = ccAgencyMedia();
+  const sel = ga.selected.map(id => all.find(m => m.id === id)).filter(Boolean);
+  if (!sel.length) { box.innerHTML = '<div class="text-muted" style="padding:8px">媒体を選ぶと、ここで媒体ごとに入力できます。</div>'; return; }
+  const common = ccCampCommon();
+  box.innerHTML = `<table class="ga-table ga-mtable"><thead><tr><th>媒体</th><th>媒体社</th><th>出稿日</th><th>時刻</th><th>配信数</th><th>出稿費(円)</th><th>税</th></tr></thead><tbody>` +
+    sel.map(m => {
+      const v = ga.mediaInputs[m.id] || {};
+      const id = escHtml(m.id);
+      return `<tr data-mid="${id}"><td>${escHtml(m.name)}<div class="ga-sub" data-preview="${id}">${escHtml(common + '_' + m.name)}</div></td><td>${escHtml(m.mediaCompany || '—')}</td>
+        <td><input type="date" data-f="date" value="${escHtml(v.date || '')}" aria-label="${escHtml(m.name)} の出稿日（空欄=共通）"></td>
+        <td><input type="time" data-f="time" value="${escHtml(v.time || '')}" aria-label="${escHtml(m.name)} の時刻"></td>
+        <td><input type="text" inputmode="numeric" data-f="count" value="${escHtml(v.count || '')}" placeholder="任意" aria-label="${escHtml(m.name)} の配信数"></td>
+        <td><input type="text" inputmode="numeric" data-f="cost" value="${escHtml(v.cost || '')}" placeholder="任意" aria-label="${escHtml(m.name)} の出稿費"></td>
+        <td><select data-f="tax" aria-label="${escHtml(m.name)} の税区分"><option value="excl" ${v.tax !== 'incl' ? 'selected' : ''}>税抜</option><option value="incl" ${v.tax === 'incl' ? 'selected' : ''}>税込</option></select></td></tr>`;
+    }).join('') + '</tbody></table>';
+}
+function ccParseIntInput(s) {
+  if (s == null) return null;
+  const t = String(s).replace(/[０-９]/g, c => String.fromCharCode(c.charCodeAt(0) - 0xFEE0)).replace(/[,，\s円]/g, '');
+  if (!t) return null;
+  if (!/^\d{1,12}$/.test(t)) return NaN;
+  const n = parseInt(t, 10);
+  return n === 0 ? null : n;
+}
+
+// ---------- 出稿情報 ----------
+function ccCampDefault() {
+  const d = ($('gaDate').value || ccJstToday()).replace(/-/g, '');
+  return [d, $('gaAdv').value.trim(), ccManuscriptName()].filter(Boolean).join('_');
+}
+function ccCampCommon() { return $('gaCampName').value.trim() || ccCampDefault(); }
+function ccUpdateCampDefault() {
+  const inp = $('gaCampName');
+  if (!ga.campNameEdited) inp.value = ccCampDefault();
+  document.querySelectorAll('[data-preview]').forEach(d => {
+    const m = mediaList.find(x => x.id === d.dataset.preview);
+    if (m) d.textContent = ccCampCommon() + '_' + m.name;
+  });
+  if (!$('gaAdv').value.trim()) $('gaAdvNote').style.display = ''; else $('gaAdvNote').style.display = 'none';
+}
+function ccRenderAdvList() {
+  const names = [...new Set([...ccLs(CC_ADVERTISERS_KEY, []), ...ga.advertisersRemote])].slice(0, 100);
+  $('gaAdvList').innerHTML = names.map(n => `<option value="${escHtml(n)}"></option>`).join('');
+}
+
+// ---------- 発行 ----------
+function ccTrackedCount() {
+  const t = ga.links.filter(l => l.track);
+  return $('gaGroupSame').checked ? new Set(t.map(l => l.url)).size : t.length;
+}
+function ccBlockReason() {
+  if (!$('gaText').value.trim()) return '原稿を取り込んでください';
+  if (!ga.links.some(l => l.track)) return '計測するURLを1本以上選んでください';
+  if (!ga.selected.length) return '媒体を1つ以上選んでください';
+  if (ga.selected.length > CC_LIMITS.media) return `媒体は${CC_LIMITS.media}件までです`;
+  if (ccTrackedCount() * ga.selected.length > CC_LIMITS.product) return `発行本数が上限（${CC_LIMITS.product.toLocaleString()}本）を超えています`;
+  return '';
+}
+function ccUpdateBar() {
+  const btn = $('gaIssueBtn');
+  if (!btn) return;
+  const M = ga.selected.length, T = ccTrackedCount();
+  $('gaBarText').textContent = `${M}媒体 × ${T}リンク = ${(M * T).toLocaleString()}本の計測URLを発行します`;
+  const reason = ga.issuing ? '' : ccBlockReason();
+  $('gaBarReason').textContent = reason;
+  btn.disabled = ga.issuing || !!reason;
+  btn.textContent = ga.issuing ? `発行中… ${(M * T).toLocaleString()}本` : (ga.result ? '再発行して原稿を変換（差分のみ）' : '一括発行して原稿を変換');
+}
+function ccStateSig() {
+  return JSON.stringify({
+    t: $('gaText').value, n: ccManuscriptName(), a: $('gaAdv').value.trim(), d: $('gaDate').value, c: ccCampCommon(), g: $('gaGroupSame').checked,
+    l: ga.links.map(l => [l.pos, l.url, l.track, ccLabelOf(l), l.lp, l.lpUrl]), m: ga.selected, mi: ga.selected.map(id => ga.mediaInputs[id] || {}),
+  });
+}
+function ccMarkStale() {
+  if (!ga.result) return;
+  const n = $('gaStaleNote');
+  if (n) n.style.display = ccStateSig() !== ga.resultSig ? '' : 'none';
+}
+function ccBuildRequest() {
+  const errors = [];
+  const date = $('gaDate').value || ccJstToday();
+  const all = ccAgencyMedia();
+  const prevCamp = id => (ga.result && ga.result.campaigns || []).find(c => String(c.mediaId) === String(id));
+  const media = ga.selected.map(id => all.find(m => m.id === id)).filter(Boolean).map(m => {
+    const v = ga.mediaInputs[m.id] || {};
+    const count = ccParseIntInput(v.count), cost = ccParseIntInput(v.cost);
+    if (Number.isNaN(count)) errors.push(`「${m.name}」の配信数は半角の整数で入力してください`);
+    if (Number.isNaN(cost)) errors.push(`「${m.name}」の出稿費は整数（円）で入力してください`);
+    const d = v.date || '';
+    const startAt = (d || v.time) ? `${d || date}T${v.time || '00:00'}:00+09:00` : null;
+    const pc = prevCamp(m.id);
+    return {
+      mediaId: m.id, mediaName: m.name, mediaCompany: m.mediaCompany || null, mediaCategory: 'agency',
+      deliveryCount: Number.isNaN(count) ? null : count, costYen: Number.isNaN(cost) ? null : cost, costTax: v.tax === 'incl' ? 'incl' : 'excl',
+      startAt, campaignName: (ccCampCommon() + '_' + m.name).slice(0, 200), campaignId: pc ? pc.campaignId : null,
+    };
+  });
+  const links = ga.links.map(l => {
+    const o = { position: l.pos, url: l.url, track: !!l.track, lp: !!l.lp };
+    if (l.track) o.label = ccLabelOf(l).slice(0, 120);
+    if (l.lp && l.asp && l.lpUrl) {
+      const bad = ccCheckUrl(l.lpUrl);
+      if (bad) { errors.push(`#${l.pos} の直接LPのURL: ${bad}`); l.err = true; }
+      else o.lpUrl = l.lpUrl;
+    }
+    return o;
+  });
+  const text = $('gaText').value;
+  return {
+    errors,
+    req: {
+      manuscript: { name: ccManuscriptName(), advertiserName: $('gaAdv').value.trim() || null, sourceType: ga.sourceType, sourceFilename: ga.sourceFilename, sourceRef: ga.sourceRef, text },
+      campaignDefaults: { nameTemplate: '{date}_{advertiser}_{manuscript}_{media}', startAt: `${date}T00:00:00+09:00`, deliveryCount: null, costYen: null, costTax: 'excl', memo: '' },
+      media, links,
+      options: { captureLp: true, groupSameUrl: $('gaGroupSame').checked, forceNew: false },
+    }
+  };
+}
+async function ccIssue() {
+  const errEl = $('gaBarErr');
+  errEl.textContent = '';
+  const reason = ccBlockReason();
+  if (reason) { errEl.textContent = reason; return; }
+  const { errors, req } = ccBuildRequest();
+  if (errors.length) { errEl.textContent = errors.join(' / '); ccRenderUrls(); return; }
+  const sig = JSON.stringify(req);
+  if (sig !== ga.requestSig || !ga.requestId) { ga.requestId = ccUuid(); ga.requestSig = sig; }
+  req.requestId = ga.requestId;
+  const snapLinks = ga.links.map(l => ({ pos: l.pos, start: l.start, end: l.end, url: l.url, track: l.track }));
+  ga.issuing = true; ccUpdateBar();
   try {
-    const data = await isadmcpApi('/stats' + (qs.length ? ('?' + qs.join('&')) : ''));
-    const items = data.items || [];
-    if (!items.length) { st.textContent = 'データがありません'; return; }
-    const rows = items.map(it => `<tr><td>${escHtml(String(it.id || ''))}</td><td>${escHtml(it.label || '')}</td><td>${escHtml(it.trackingUrl || '')}</td><td>${escHtml(String(it.clicks != null ? it.clicks : ''))}</td><td>${escHtml(String(it.uniqueClicks != null ? it.uniqueClicks : ''))}</td><td>${escHtml(it.lastClickedAt || it.lastClick || '')}</td></tr>`).join('');
-    wrap.innerHTML = `<table><thead><tr><th>ID</th><th>ラベル</th><th>トラッキングURL</th><th>クリック</th><th>ユニーク</th><th>最終クリック</th></tr></thead><tbody>${rows}</tbody></table>`;
-    st.className = 'measure-status ok'; st.textContent = items.length + ' 件';
+    const res = await ccApi('/issue', { method: 'POST', body: JSON.stringify(req), timeout: 60000 });
+    const data = await res.json();
+    ga.result = data; ga.resultReq = req; ga.resultLinks = snapLinks; ga.resultSig = ccStateSig(); ga.activeIdx = 0;
+    ga.resultTexts = ccBuildConverted(data, req, snapLinks);
+    ccLsSet(CC_LAST_MEDIA_KEY, ga.selected.slice());
+    const adv = req.manuscript.advertiserName;
+    if (adv) ccLsSet(CC_ADVERTISERS_KEY, [adv, ...ccLs(CC_ADVERTISERS_KEY, []).filter(x => x !== adv)].slice(0, 50));
+    ccRenderAdvList(); ccRenderSets();
+    ccRenderResult();
+    const n = data.campaigns.reduce((s, c) => s + c.links.length, 0);
+    toast(`${n}本を発行しました`);
+    $('gaResultCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    ccSaveTexts();
+    ccStartLpPoll();
   } catch (e) {
-    st.className = 'measure-status err'; st.textContent = '取得失敗: ' + e.message;
+    if (e.cancelled) { errEl.textContent = 'パスワードが入力されなかったため、発行していません。'; }
+    else {
+      const f = e.details && e.details.field;
+      const m = f && /^links\[(\d+)\]/.exec(f);
+      if (m && ga.links[+m[1]]) {
+        const l = ga.links[+m[1]];
+        l.err = true; ccRenderUrls();
+        const tr = document.querySelector(`#gaUrlList tr[data-i="${+m[1]}"]`);
+        if (tr) tr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        errEl.textContent = `発行できませんでした（#${l.pos}: ${e.message}）。修正が必要なURLがあります（1件）。入力内容はそのまま残っています。`;
+      } else {
+        errEl.innerHTML = `発行できませんでした（${escHtml(e.message)}）。入力内容はそのまま残っています。 <button type="button" class="btn-outline btn-sm" data-ga="retry">もう一度発行</button>`;
+      }
+      if (e.network) ccUpdateConn('offline');
+    }
+  } finally {
+    ga.issuing = false; ccUpdateBar();
   }
 }
-
-async function isadmcpSyncSheet() {
-  const st = $('isadmcpStatsStatus');
-  st.className = 'measure-status'; st.textContent = '同期中…';
-  const from = $('isadmcpFrom').value, to = $('isadmcpTo').value;
-  const body = {};
-  if (from) body.from = from;
-  if (to) body.to = to;
+function ccBuildConverted(data, req, snapLinks) {
+  const text = req.manuscript.text;
+  const sorted = snapLinks.slice().sort((a, b) => a.start - b.start);
+  return data.campaigns.map(c => {
+    const byPos = new Map((c.links || []).map(l => [l.position, l]));
+    const pieces = [];
+    let last = 0, replaced = 0;
+    for (const l of sorted) {
+      const hit = byPos.get(l.pos);
+      if (!hit || !hit.trackingUrl) continue;
+      pieces.push({ t: text.slice(last, l.start) });
+      pieces.push({ t: hit.trackingUrl, mark: true, from: l.url });
+      last = l.end; replaced++;
+    }
+    pieces.push({ t: text.slice(last) });
+    const rm = req.media.find(m => String(m.mediaId) === String(c.mediaId)) || {};
+    return {
+      campaign: c, mediaName: c.mediaName || rm.mediaName || '（媒体なし）', mediaCompany: rm.mediaCompany || '',
+      name: c.name || rm.campaignName || '', plain: pieces.map(p => p.t).join(''), pieces,
+      replaced, notReplaced: snapLinks.length - replaced,
+    };
+  });
+}
+async function ccSaveTexts() {
+  if (!ga.result) return;
   try {
-    const r = await isadmcpApi('/sheets/sync', { method: 'POST', body: JSON.stringify(body) });
-    st.className = 'measure-status ok';
-    st.textContent = `同期完了: ${r.updatedRows != null ? r.updatedRows : '?'}件更新`;
-    if (r.spreadsheetUrl) st.innerHTML += ` <a href="${escHtml(r.spreadsheetUrl)}" target="_blank" rel="noopener">シートを開く</a>`;
+    await ccApi(`/issue/${encodeURIComponent(ga.result.batchId)}/texts`, {
+      method: 'PUT', body: JSON.stringify({ texts: ga.resultTexts.map(t => ({ campaignId: t.campaign.campaignId, convertedText: t.plain })) })
+    });
   } catch (e) {
-    st.className = 'measure-status err'; st.textContent = '同期失敗: ' + e.message;
+    if (!e.cancelled) toast('変換後の原稿を結果管理に保存できませんでした（コピー・ダウンロードは使えます）: ' + e.message, 6000);
   }
 }
-
-// 配配メール本文のURLを一括でトラッキングURLに変換
-async function hmTrackApply() {
-  const tpl = $('hmTrackTemplate').value;
-  const st = $('hmTrackStatus');
-  st.className = 'measure-status'; st.textContent = '';
-  if (!tpl) { st.className = 'measure-status err'; st.textContent = 'テンプレートを選択してください'; return; }
-  // 長いURLから置換（短いURLが他URLの部分文字列になるケースを回避）
-  const urls = scanBareUrls(el.bodyText.value).sort((a, b) => b.length - a.length);
-  if (!urls.length) { st.className = 'measure-status err'; st.textContent = '本文に変換対象のURLが見つかりません'; return; }
-  let text = el.bodyText.value;
-  let done = 0, failed = 0;
-  st.textContent = `0/${urls.length} 変換中…`;
-  for (const url of urls) {
-    try {
-      const tracking = await isadmcpConvertOne(url, tpl);
-      if (tracking) {
-        const escaped = url.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        text = text.replace(new RegExp(escaped, 'g'), () => tracking);
-      } else { failed++; }
-    } catch (e) { failed++; }
-    done++;
-    st.textContent = `${done}/${urls.length} 変換中…`;
+function ccRenderResult() {
+  const body = $('gaResultBody');
+  const r = ga.result;
+  const show = !!r;
+  $('gaCopyTableBtn').style.display = show ? '' : 'none';
+  $('gaCsvBtn').style.display = show ? '' : 'none';
+  const link = $('gaResultLink');
+  link.style.display = show ? '' : 'none';
+  if (!r) { $('gaResultSummary').textContent = ''; body.innerHTML = '<div class="text-muted">発行すると、ここに媒体ごとの原稿が表示されます。</div>'; return; }
+  link.href = ccResultsUrl(r.batchId);
+  const total = r.campaigns.reduce((s, c) => s + c.links.length, 0);
+  const reused = r.campaigns.reduce((s, c) => s + c.links.filter(l => l.reused).length, 0);
+  $('gaResultSummary').textContent = `発行済み ${total}本 / ${r.campaigns.length}媒体` + (reused ? `（うち既存の再利用 ${reused}本）` : '');
+  const idx = Math.min(ga.activeIdx, ga.resultTexts.length - 1);
+  const cur = ga.resultTexts[idx];
+  const tabs = ga.resultTexts.map((t, i) => `<button type="button" class="admin-tab ${i === idx ? 'active' : ''}" role="tab" aria-selected="${i === idx}" data-ridx="${i}">✓ ${escHtml(t.mediaName)}</button>`).join('');
+  const warnings = (r.warnings || []).map(w => `<div class="ga-banner warn">${escHtml(typeof w === 'string' ? w : (w.message || JSON.stringify(w)))}</div>`).join('');
+  const out = cur.pieces.map(p => p.mark ? `<mark title="元URL: ${escHtml(p.from)}">${escHtml(p.t)}</mark>` : escHtml(p.t)).join('');
+  const mapRows = ccMapRows().map(row => `<tr>${row.map(c => `<td>${escHtml(c)}</td>`).join('')}</tr>`).join('');
+  body.innerHTML = `${warnings}
+    <div id="gaStaleNote" class="ga-banner warn" style="display:none">原稿・URL・出稿先が発行後に変更されました。画面下の「再発行して原稿を変換（差分のみ）」を押すと反映します（同じ遷移先は既存の計測URLを再利用します）。</div>
+    <div class="ga-rtabs" role="tablist" aria-label="媒体">${tabs}</div>
+    <div style="font-size:13px;margin-bottom:6px"><b>${escHtml(cur.mediaName)}</b>${cur.mediaCompany ? `（${escHtml(cur.mediaCompany)}）` : ''}　<span class="text-muted">出稿名: ${escHtml(cur.name)}</span></div>
+    <div class="ga-out" id="gaOut" tabindex="0" aria-label="変換後の原稿">${out}</div>
+    <div class="ga-actions">
+      <button type="button" class="btn-primary btn-sm" data-ga="copy-one">コピー</button>
+      <button type="button" class="btn-outline btn-sm" data-ga="dl-one">.txtダウンロード</button>
+      <select id="gaDlEnc" aria-label="ダウンロードの文字コード"><option value="utf-8">UTF-8</option><option value="shift_jis">Shift_JIS</option></select>
+      <span class="text-muted" style="color:#444">置換 ${cur.replaced}本 / 未置換 ${cur.notReplaced}本（計測しない・除外）</span>
+      <span class="text-muted" style="color:#444"><mark style="background:#e0e7ff;text-decoration:underline">■</mark> 置換済み</span>
+      <span id="gaCopyLive" class="sr-only" aria-live="polite" style="position:absolute;left:-9999px"></span>
+    </div>
+    <div class="ga-actions">
+      <button type="button" class="btn-outline btn-sm" data-ga="dl-all">全媒体を1つの.txtにまとめてダウンロード</button>
+      <button type="button" class="btn-outline btn-sm" data-ga="copy-all">全媒体を1つにまとめてコピー（見出し付き）</button>
+      <button type="button" class="btn-secondary btn-sm" data-ga="new">新しい入稿を始める</button>
+    </div>
+    <details class="mt-2"><summary style="cursor:pointer;font-size:13px;font-weight:600">計測URL対応表（${ccMapRows().length}行）</summary>
+      <div class="ga-table-wrap mt-2" style="max-height:320px;overflow:auto"><table class="ga-table"><thead><tr><th>媒体</th><th>媒体社</th><th>位置</th><th>ラベル</th><th>元URL</th><th>計測URL</th></tr></thead><tbody>${mapRows}</tbody></table></div>
+    </details>`;
+  ccMarkStale();
+}
+function ccMapRows() {
+  const rows = [];
+  ga.resultTexts.forEach(t => (t.campaign.links || []).forEach(l => rows.push([t.mediaName, t.mediaCompany, String(l.position), l.label || '', l.url || '', l.trackingUrl || ''])));
+  return rows;
+}
+async function ccCopyText(text, btn) {
+  try {
+    await navigator.clipboard.writeText(text);
+    if (btn) { const o = btn.textContent; btn.textContent = 'コピーしました ✓'; setTimeout(() => { btn.textContent = o; }, 2000); }
+    const live = $('gaCopyLive'); if (live) live.textContent = 'コピーしました';
+    return true;
+  } catch (e) {
+    const out = $('gaOut');
+    if (out) { const rg = document.createRange(); rg.selectNodeContents(out); const s = getSelection(); s.removeAllRanges(); s.addRange(rg); }
+    toast('コピーできませんでした。Ctrl+C でコピーしてください');
+    return false;
   }
-  el.bodyText.value = text;
-  updateBmLinks();
-  st.className = failed ? 'measure-status err' : 'measure-status ok';
-  st.textContent = `完了: ${done - failed}/${urls.length} 件変換` + (failed ? `（${failed}件失敗）` : '');
+}
+let ccSjisMap = null;
+function ccEncodeSjis(s) {
+  if (!ccSjisMap) {
+    ccSjisMap = new Map();
+    const dec = new TextDecoder('shift_jis');
+    for (let b = 0xA1; b <= 0xDF; b++) ccSjisMap.set(dec.decode(new Uint8Array([b])), [b]);
+    const leads = [];
+    for (let b = 0x81; b <= 0x9F; b++) leads.push(b);
+    for (let b = 0xE0; b <= 0xFC; b++) leads.push(b);
+    for (const l of leads) for (let t = 0x40; t <= 0xFC; t++) {
+      if (t === 0x7F) continue;
+      const ch = dec.decode(new Uint8Array([l, t]));
+      if (ch.length === 1 && ch !== '�' && !ccSjisMap.has(ch)) ccSjisMap.set(ch, [l, t]);
+    }
+  }
+  const out = [];
+  let bad = 0;
+  for (const ch of s.replace(/\r?\n/g, '\r\n')) {
+    const c = ch.codePointAt(0);
+    if (c < 0x80) out.push(c);
+    else { const b = ccSjisMap.get(ch); if (b) out.push(...b); else { out.push(0x3F); bad++; } }
+  }
+  return { bytes: new Uint8Array(out), bad };
+}
+function ccDownload(text, filename, enc) {
+  let blob;
+  if (enc === 'shift_jis') {
+    const r = ccEncodeSjis(text);
+    if (r.bad) toast(`Shift_JIS で表せない文字が ${r.bad} 文字あったため「?」に置き換えました`, 5000);
+    blob = new Blob([r.bytes], { type: 'text/plain;charset=shift_jis' });
+  } else blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+function ccAllText() {
+  return ga.resultTexts.map(t => `■■■ ${t.mediaName}${t.mediaCompany ? '（' + t.mediaCompany + '）' : ''} ／ 出稿名: ${t.name} ■■■\n\n${t.plain}`).join('\n\n\n');
+}
+function ccCsv(rows) {
+  const q = v => { const s = String(v == null ? '' : v); return /[",\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
+  return rows.map(r => r.map(q).join(',')).join('\r\n');
+}
+function ccOnResultClick(e) {
+  const tab = e.target.closest('[data-ridx]');
+  if (tab) { ga.activeIdx = +tab.dataset.ridx; ccRenderResult(); const t = document.querySelector(`[data-ridx="${ga.activeIdx}"]`); if (t) t.focus(); return; }
+  const b = e.target.closest('[data-ga]');
+  if (!b || !ga.result) return;
+  const cur = ga.resultTexts[Math.min(ga.activeIdx, ga.resultTexts.length - 1)];
+  const enc = ($('gaDlEnc') || {}).value || 'utf-8';
+  switch (b.dataset.ga) {
+    case 'copy-one': ccCopyText(cur.plain, b); break;
+    case 'dl-one': ccDownload(cur.plain, ccSanitizeFilename(cur.name) + '.txt', enc); break;
+    case 'dl-all': ccDownload(ccAllText(), ccSanitizeFilename(ccCampCommon() + '_全媒体') + '.txt', enc); break;
+    case 'copy-all': ccCopyText(ccAllText(), b); break;
+    case 'new': ccResetAll(); break;
+  }
+}
+function ccResetAll() {
+  if (!confirm('入力内容と結果を消して、新しい入稿を始めますか？（発行済みの計測URLは結果管理に残ります）')) return;
+  ccStopLpPoll();
+  Object.assign(ga, { sourceType: 'paste', sourceFilename: null, sourceRef: null, fileBuf: null, nameAuto: '', nameEdited: false, docxLinks: [], links: [], edits: new Map(),
+    selected: [], mediaInputs: {}, campNameEdited: false, requestId: null, requestSig: '', result: null, resultReq: null, resultLinks: [], resultTexts: [], resultSig: '', lpItems: null });
+  $('gaText').value = ''; $('gaName').value = ''; $('gaAdv').value = ''; $('gaDate').value = ccJstToday(); $('gaGroupSame').checked = false; $('gaGdocUrl').value = '';
+  $('gaEncRow').style.display = 'none'; $('gaBarErr').textContent = ''; ccMsg('');
+  $('gaLpCard').style.display = 'none';
+  ccDetect(); ccRenderMedia(); ccRenderMediaTable(); ccRenderResult(); ccUpdateBar();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ---------- LP取得状況（GA-2） ----------
+function ccStopLpPoll() { clearTimeout(ga.lpTimer); ga.lpTimer = null; }
+function ccStartLpPoll() {
+  ccStopLpPoll();
+  ga.lpItems = null; ga.lpError = ''; ga.lpStartedAt = Date.now();
+  $('gaLpCard').style.display = '';
+  ccRenderLp();
+  ccPollLp();
+}
+async function ccPollLp() {
+  if (!ga.result) return;
+  try {
+    const res = await ccApi('/lp/captures?batchId=' + encodeURIComponent(ga.result.batchId));
+    const d = await res.json();
+    ga.lpItems = d.items || []; ga.lpError = '';
+  } catch (e) {
+    ga.lpError = e.cancelled ? 'パスワードが必要です。' : ('LPの状態を取得できませんでした（' + e.message + '）');
+  }
+  ccRenderLp();
+  const pending = ccLpPending();
+  if (pending && Date.now() - ga.lpStartedAt < 5 * 60 * 1000) ga.lpTimer = setTimeout(ccPollLp, 10000);
+  else ga.lpTimer = null;
+}
+function ccLpTerminal(it) {
+  const c = it.capture;
+  if (!c) return false;
+  if (['failed', 'blocked', 'skipped_cap'].includes(c.status)) return true;
+  if (c.status !== 'done') return false;
+  if (it.aiDisabled) return true;
+  return !!(it.haiku && it.haiku.status !== 'queued');
+}
+function ccLpPending() {
+  if (!ga.result) return false;
+  const targets = (ga.result.lp || []).filter(x => x.status === 'queued' || x.status === 'reused');
+  if (!targets.length) return false;
+  if (!ga.lpItems) return true;
+  return targets.some(t => { const it = ccFindLpItem(t); return !it || !ccLpTerminal(it); });
+}
+function ccNormU(u) { try { const x = new URL(u); return (x.protocol + '//' + x.hostname.toLowerCase() + (x.port ? ':' + x.port : '') + x.pathname + x.search); } catch (e) { return String(u || ''); } }
+function ccFindLpItem(t) {
+  const items = ga.lpItems || [];
+  const want = [t.lpUrl, t.url].filter(Boolean).map(ccNormU);
+  return items.find(it => (t.captureId && it.capture && it.capture.captureId === t.captureId)) ||
+         items.find(it => want.includes(ccNormU(it.url)) || (it.capture && want.includes(ccNormU(it.capture.url))));
+}
+function ccVal(v) {
+  if (v == null) return '';
+  if (typeof v !== 'object') return String(v);
+  if (Array.isArray(v)) return v.map(ccVal).filter(Boolean).join('、');
+  return [v.label, v.amount_text, v.text].filter(Boolean).join(' ') || '';
+}
+function ccRenderLp() {
+  const box = $('gaLpList');
+  if (!ga.result) { box.innerHTML = ''; return; }
+  const list = ga.result.lp || [];
+  if (!list.length) { box.innerHTML = '<div class="text-muted">LPの取得対象はありません。</div>'; $('gaLpSummary').textContent = ''; return; }
+  let done = 0, running = 0, failed = 0;
+  const cards = list.map((t, i) => {
+    let badge, detail = '';
+    if (t.status && t.status.startsWith('skipped')) {
+      badge = ['gray', '— 撮影しません'];
+      detail = `<div class="ga-sub">${escHtml(t.reason || (t.status === 'skipped_asp' ? 'ASPドメインのため撮影しません（直接LPのURLを指定すると撮影します）' : t.status === 'skipped_excluded' ? '除外URLルールに一致したため撮影しません' : '差し込みタグを含むため撮影しません'))}</div>`;
+    } else {
+      const it = ccFindLpItem(t);
+      const c = it && it.capture;
+      if (!c || c.status === 'queued') { badge = ['gray', '… 待機中']; running++; detail = '<div class="ga-sub">ステップ: … 撮影待ち → 撮影 → AI解析</div>'; }
+      else if (c.status === 'running') { badge = ['info', '⟳ 撮影中…（通常1分以内）']; running++; }
+      else if (['failed', 'blocked', 'skipped_cap'].includes(c.status)) {
+        failed++;
+        badge = ['err', '✕ 取得できませんでした'];
+        const reason = CC_CAPTURE_ERR[c.errorCode] || (c.httpStatus >= 400 ? `ページがエラーを返しました（${c.httpStatus}）。URLを確認してください` : (c.errorDetail || '原因不明のエラー'));
+        detail = `<div class="ga-sub">理由: ${escHtml(reason)}</div><div class="ga-sub">再撮影・画像の手動登録は <a href="${escHtml(ccResultsUrl(ga.result.batchId))}" target="_blank" rel="noopener">結果管理画面</a> から行えます。</div>`;
+      } else {
+        const h = it.haiku;
+        const shot = `撮影 ${escHtml(ccFmtJst(c.capturedAt))}`;
+        if (it.aiDisabled) { done++; badge = ['ok', `✓ 取得済み ${ccFmtJst(c.capturedAt)}`]; detail = '<div class="ga-sub">この広告主はAI解析をオフにしています。</div>'; }
+        else if (!h || h.status === 'queued') { running++; badge = ['info', '⟳ AI解析中…']; detail = `<div class="ga-sub">✓ ${shot}</div>`; }
+        else if (h.status === 'done') {
+          done++;
+          badge = ['ok', `✓ 取得済み ${ccFmtJst(c.capturedAt)}`];
+          const prices = (h.prices || []).slice(0, 2).map(ccVal).filter(Boolean).join(' / ');
+          const cta = h.cta ? (Array.isArray(h.cta.labels) ? `「${h.cta.labels.slice(0, 2).join('」「')}」${h.cta.count != null ? ' ×' + h.cta.count : ''}` : ccVal(h.cta)) : '';
+          const catchCopy = (h.catchCopies || [])[0] || '';
+          const mis = h.mismatches || [];
+          const sev = { high: '✕ 高', medium: '⚠ 中', low: 'ⓘ 低' };
+          const misHtml = mis.length
+            ? `<div><span class="badge badge-${h.mismatchHigh ? 'err' : 'warn'}">⚠ 原稿との齟齬 ${mis.length}件${h.mismatchHigh ? `（高 ${h.mismatchHigh}）` : ''}</span></div><ul class="ga-lp-mis">` +
+              mis.slice(0, 2).map(x => `<li>${escHtml(sev[x.severity] || '')} ${escHtml(x.field || '')}: 原稿「${escHtml(x.manuscript_value || '')}」/ LP「${escHtml(x.lp_value == null ? '見つからない' : x.lp_value)}」</li>`).join('') + '</ul>' +
+              (mis.length > 2 ? `<div class="ga-sub">ほか ${mis.length - 2}件は <a href="${escHtml(ccResultsUrl(ga.result.batchId))}" target="_blank" rel="noopener">詳細を結果管理で見る ↗</a></div>` : '')
+            : (h.manuscriptChecked === false ? '<div class="ga-sub">原稿との照合はしていません（広告主の設定）。</div>' : '<div class="ga-sub">原稿との明らかな齟齬は見つかりませんでした（参考）。</div>');
+          detail = `<div>${h.productName ? `商品名: ${escHtml(h.productName)}　` : ''}${prices ? `価格: ${escHtml(prices)}` : ''}</div>` +
+            `${catchCopy ? `<div>主な訴求: 「${escHtml(catchCopy)}」</div>` : ''}${cta ? `<div>CTA: ${escHtml(cta)}</div>` : ''}` +
+            `<div class="ga-sub">AI解析(Haiku)の参考情報です。法的判断ではありません。</div>${misHtml}`;
+        } else {
+          done++;
+          badge = ['warn', `✓ 取得済み ${ccFmtJst(c.capturedAt)}`];
+          const why = h.status === 'skipped_budget' ? '今月のAI利用上限に達したため、解析を停止しています（撮影・計測は動いています）。'
+            : h.status === 'skipped_policy' ? 'この広告主はAI解析をオフにしています。'
+            : `AI解析はできませんでした${h.errorDetail ? '（' + h.errorDetail + '）' : ''}。`;
+          detail = `<div class="ga-sub">${escHtml(why)}</div>`;
+        }
+        if (it.stale) detail += '<div><span class="badge badge-warn">⚠ URL変更後未取得</span></div>';
+      }
+    }
+    return `<div class="ga-lp-card"><div><b>#${i + 1}</b> <span class="ga-lp-url">${escHtml(t.lpUrl || t.url)}</span> <span class="badge badge-${badge[0]}">${escHtml(badge[1])}</span></div>${t.lpUrl ? `<div class="ga-sub">（計測URLの遷移先: ${escHtml(t.url)}）</div>` : ''}${detail}</div>`;
+  }).join('');
+  const targets = list.filter(t => !(t.status || '').startsWith('skipped')).length;
+  $('gaLpSummary').textContent = `取得対象 ${targets}件　完了 ${done} / 処理中 ${running} / 失敗 ${failed}`;
+  box.innerHTML = (ga.lpError ? `<div class="ga-banner err">${escHtml(ga.lpError)} <button type="button" class="btn-outline btn-sm" id="gaLpRetry">再読み込み</button></div>` : '') + cards +
+    (!ga.lpTimer && ccLpPending() && ga.lpItems && Date.now() - ga.lpStartedAt >= 5 * 60 * 1000 ? '<div class="ga-sub">自動更新を停止しました（5分経過）。「最新の状態に更新」で確認できます。</div>' : '');
+  const rb = $('gaLpRetry'); if (rb) rb.addEventListener('click', () => { ccStopLpPoll(); ccPollLp(); });
+}
+
+// ---------- 画面の初期化 ----------
+async function ccLoadRemoteHints() {
+  if (!ccGetToken() || ga.hintsLoading) return;
+  ga.hintsLoading = true;
+  setTimeout(() => { ga.hintsLoading = false; }, 3000);
+  ga.hintsLoaded = true;
+  try {
+    const r = await ccApi('/exclude-url-rules');
+    const d = await r.json();
+    ga.excludeRules = d.items || [];
+    ccDetect();
+  } catch (e) {}
+  try {
+    const r = await ccApi('/advertisers');
+    const d = await r.json();
+    ga.advertisersRemote = (d.items || []).map(x => x.name).filter(Boolean);
+    ccRenderAdvList();
+  } catch (e) {}
+}
+function ccOpenView() {
+  showView('measure');
+  $('gaBar').classList.add('show');
+  if (!$('gaDate').value) $('gaDate').value = ccJstToday();
+  ccUpdateConn();
+  ccRenderMedia(); ccRenderMediaTable(); ccRenderAdvList(); ccUpdateCampDefault(); ccUpdateBar();
+  ccLoadRemoteHints();
+}
+function ccInitView() {
+  $('ccResultsLink').href = ccResultsUrl();
+  $('measureBtn').addEventListener('click', ccOpenView);
+  $('backFromMeasureBtn').addEventListener('click', () => { showView('main'); });
+  $('gaConnBtn').addEventListener('click', async () => { try { await ccEnsureToken(true); ccLoadRemoteHints(); } catch (e) {} ccUpdateConn(); });
+  document.querySelectorAll('[data-gatab]').forEach(b => b.addEventListener('click', () => ccSwitchTab(b.dataset.gatab)));
+  const ta = $('gaText');
+  ta.addEventListener('input', () => { ccScheduleDetect(); });
+  ['dragenter', 'dragover'].forEach(ev => ta.addEventListener(ev, e => { if (e.dataTransfer && [...e.dataTransfer.types].includes('Files')) { e.preventDefault(); ta.classList.add('dragover'); } }));
+  ['dragleave', 'drop'].forEach(ev => ta.addEventListener(ev, () => ta.classList.remove('dragover')));
+  ta.addEventListener('drop', e => { if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length) { e.preventDefault(); ccHandleDropFiles(e.dataTransfer.files); } });
+  const drop = $('gaDrop');
+  ['dragenter', 'dragover'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('dragover'); }));
+  ['dragleave', 'drop'].forEach(ev => drop.addEventListener(ev, () => drop.classList.remove('dragover')));
+  drop.addEventListener('drop', e => { e.preventDefault(); ccHandleDropFiles(e.dataTransfer.files); });
+  $('gaFileBtn').addEventListener('click', () => $('gaFileInput').click());
+  $('gaFileInput').addEventListener('change', e => { ccHandleDropFiles(e.target.files); e.target.value = ''; });
+  $('gaEncSel').addEventListener('change', () => {
+    if (!ga.fileBuf) return;
+    const r = ccDecodeText(ga.fileBuf, $('gaEncSel').value);
+    $('gaText').value = r.text;
+    const garbled = ccGarbled(r.text);
+    $('gaEncNote').textContent = garbled ? '⚠ 文字化けしているようです。文字コードを選んでください' : '選択した文字コードで読み直しました';
+    $('gaEncNote').className = garbled ? 'ga-warn-sm' : 'text-muted';
+    ccDetect();
+  });
+  $('gaGdocBtn').addEventListener('click', ccImportGdoc);
+  $('gaGdocUrl').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); ccImportGdoc(); } });
+  $('gaName').addEventListener('input', () => { ga.nameEdited = !!$('gaName').value.trim(); ccRenderUrls(); ccUpdateCampDefault(); ccMarkStale(); });
+  const ul = $('gaUrlList');
+  ['change', 'input'].forEach(ev => ul.addEventListener(ev, ccOnUrlListEvent));
+  document.querySelectorAll('[data-gabulk]').forEach(b => b.addEventListener('click', () => {
+    const mode = b.dataset.gabulk;
+    ga.links.forEach(l => {
+      if (mode === 'reset') { ga.edits.delete(l.key); return; }
+      if (l.locked) return;
+      const ed = ga.edits.get(l.key) || {};
+      ga.edits.set(l.key, { ...ed, track: mode === 'all', lp: ed.lp != null ? ed.lp : undefined });
+    });
+    ccDetect();
+  }));
+  $('gaGroupSame').addEventListener('change', () => { ccUpdateBar(); ccMarkStale(); });
+  $('gaAdv').addEventListener('input', () => { ccUpdateCampDefault(); ccMarkStale(); });
+  $('gaDate').addEventListener('change', () => { ccUpdateCampDefault(); ccMarkStale(); });
+  $('gaCampName').addEventListener('input', () => {
+    ga.campNameEdited = !!$('gaCampName').value.trim();
+    document.querySelectorAll('[data-preview]').forEach(d => { const m = mediaList.find(x => x.id === d.dataset.preview); if (m) d.textContent = ccCampCommon() + '_' + m.name; });
+    ccMarkStale();
+  });
+  $('gaCampName').addEventListener('blur', () => { if (!$('gaCampName').value.trim()) { ga.campNameEdited = false; ccUpdateCampDefault(); } });
+  $('gaMediaSearch').addEventListener('input', ccRenderMedia);
+  $('gaMediaList').addEventListener('change', e => {
+    const c = e.target.closest('.ga-mchk');
+    if (!c) return;
+    const ids = ga.selected.filter(x => x !== c.value);
+    if (c.checked) ids.push(c.value);
+    ccSetSelected(ids);
+  });
+  $('gaMediaList').addEventListener('click', e => {
+    const h = e.target.closest('[data-company]');
+    if (h) {
+      const ms = ccAgencyMedia().filter(m => (m.mediaCompany || '').trim() === h.dataset.company).map(m => m.id);
+      const allOn = ms.every(id => ga.selected.includes(id));
+      ccSetSelected(allOn ? ga.selected.filter(id => !ms.includes(id)) : [...ga.selected, ...ms.filter(id => !ga.selected.includes(id))]);
+      return;
+    }
+    if (e.target.closest('[data-ga="go-admin"]')) { $('adminBtn').click(); setTimeout(() => { currentAdminTab = 'agency'; renderAdminList(); }, 0); }
+  });
+  $('gaChips').addEventListener('click', e => {
+    const u = e.target.closest('[data-unsel]');
+    if (u) { ccSetSelected(ga.selected.filter(id => id !== u.dataset.unsel)); return; }
+    if (e.target.closest('[data-ga="clear-media"]')) ccSetSelected([]);
+  });
+  $('gaLastMediaBtn').addEventListener('click', () => {
+    const ids = ccLs(CC_LAST_MEDIA_KEY, []);
+    const avail = ccAgencyMedia().filter(m => ids.includes(m.id)).length;
+    if (!avail) { toast('前回の媒体が見つかりません'); return; }
+    ccSetSelected(ids);
+    toast(`前回と同じ媒体を${avail}件選びました`);
+  });
+  $('gaSetSel').addEventListener('change', () => {
+    const v = $('gaSetSel').value;
+    if (v === '') return;
+    const s = ccLs(CC_MEDIA_SETS_KEY, [])[+v];
+    if (s) { ccSetSelected(s.ids); toast(`セット「${s.name}」を呼び出しました`); }
+    $('gaSetSel').value = v;
+  });
+  $('gaSetDelBtn').addEventListener('click', () => {
+    const v = $('gaSetSel').value;
+    const sets = ccLs(CC_MEDIA_SETS_KEY, []);
+    if (v === '' || !sets[+v]) { toast('削除するセットを選んでください'); return; }
+    const [rm] = sets.splice(+v, 1);
+    ccLsSet(CC_MEDIA_SETS_KEY, sets); ccRenderSets();
+    toast(`セット「${rm.name}」を削除しました`);
+  });
+  $('gaSetSaveBtn').addEventListener('click', () => {
+    const name = $('gaSetName').value.trim();
+    if (!ga.selected.length) { toast('媒体を選んでから保存してください'); return; }
+    if (!name) { toast('セット名を入力してください'); $('gaSetName').focus(); return; }
+    let sets = ccLs(CC_MEDIA_SETS_KEY, []).filter(s => s.name !== name);
+    if (sets.length >= CC_LIMITS.sets) { toast(`セットは${CC_LIMITS.sets}件までです。不要なセットを削除してください`); return; }
+    sets.push({ name, ids: ga.selected.slice() });
+    ccLsSet(CC_MEDIA_SETS_KEY, sets); $('gaSetName').value = ''; ccRenderSets();
+    toast(`セット「${name}」を保存しました（このブラウザのみ）`);
+  });
+  $('gaMediaTable').addEventListener('input', e => {
+    const f = e.target.dataset.f;
+    const tr = e.target.closest('[data-mid]');
+    if (!f || !tr) return;
+    const id = tr.dataset.mid;
+    ga.mediaInputs[id] = { ...(ga.mediaInputs[id] || {}), [f]: e.target.value };
+    ccMarkStale();
+  });
+  $('gaMediaTable').addEventListener('change', e => {
+    const f = e.target.dataset.f;
+    const tr = e.target.closest('[data-mid]');
+    if (!f || !tr) return;
+    ga.mediaInputs[tr.dataset.mid] = { ...(ga.mediaInputs[tr.dataset.mid] || {}), [f]: e.target.value };
+    if (f === 'count' || f === 'cost') {
+      const n = ccParseIntInput(e.target.value);
+      if (Number.isNaN(n)) toast('半角の整数で入力してください（カンマ・全角数字は自動で直します）');
+      else { e.target.value = n == null ? '' : String(n); ga.mediaInputs[tr.dataset.mid][f] = e.target.value; }
+    }
+    ccMarkStale();
+  });
+  $('gaIssueBtn').addEventListener('click', ccIssue);
+  $('gaBarErr').addEventListener('click', e => { if (e.target.closest('[data-ga="retry"]')) ccIssue(); });
+  $('gaResultBody').addEventListener('click', ccOnResultClick);
+  $('gaCopyTableBtn').addEventListener('click', e => {
+    const rows = [['媒体', '媒体社', '位置', 'ラベル', '元URL', '計測URL'], ...ccMapRows()];
+    ccCopyText(rows.map(r => r.map(c => String(c).replace(/[\t\r\n]/g, ' ')).join('\t')).join('\n'), e.target);
+  });
+  $('gaCsvBtn').addEventListener('click', () => {
+    const rows = [['媒体', '媒体社', '位置', 'ラベル', '元URL', '計測URL'], ...ccMapRows()];
+    downloadFile('﻿' + ccCsv(rows), ccSanitizeFilename(ccCampCommon() + '_計測URL') + '.csv', 'text/csv');
+  });
+  $('gaLpRefreshBtn').addEventListener('click', () => { ccStopLpPoll(); ga.lpStartedAt = Date.now(); ccPollLp(); });
+  // 配配メール（メイン画面）からの導線
+  $('hmTrackBtn').addEventListener('click', () => {
+    const panel = $('hmTrackPanel');
+    const show = panel.style.display === 'none' || !panel.style.display;
+    panel.style.display = show ? 'block' : 'none';
+    if (show) panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  });
+  $('hmTrackCloseBtn').addEventListener('click', () => { $('hmTrackPanel').style.display = 'none'; });
+  $('hmTrackOpenBtn').addEventListener('click', ccOpenView);
+  $('hmTrackApplyBtn').addEventListener('click', () => {
+    const body = el.bodyText.value;
+    if (!body.trim()) { toast('本文が空です'); return; }
+    const cur = $('gaText').value;
+    if (cur.trim() && cur !== body && !confirm('代理店入稿画面の原稿を、この本文で置き換えますか？')) return;
+    ccSetManuscript(body, { sourceType: 'paste', name: (el.subjectInput.value || '').trim() });
+    ccOpenView();
+    ccMsg('メイン画面の本文を取り込みました。', 'ok');
+  });
+  window.addEventListener('beforeunload', ccStopLpPoll);
 }
 
 function copyBmLinkHref(e, a) {
@@ -2190,51 +3809,24 @@ async function init() {
     if (JSON.stringify(mediaList) !== before && openEditId === null) { renderAdminList(); renderSelect(); }
   });
 
-  // 媒体管理タブ（配配メール / MM / クリックメーラー）
-  document.querySelectorAll('.admin-tab').forEach(t => {
+  // 媒体管理タブ（配配メール / MM / クリックメーラー / 代理店）
+  document.querySelectorAll('.admin-tab[data-tab]').forEach(t => {
     t.addEventListener('click', () => {
       currentAdminTab = t.dataset.tab;
       renderAdminList();
     });
   });
+  $('gbSearch').addEventListener('input', e => { gbSearchText = e.target.value; renderAdminList(); });
+  $('gbOnlyNoCompany').addEventListener('change', e => { gbOnlyNoCompany = e.target.checked; renderAdminList(); });
+  $('gbCopyArea').addEventListener('click', e => { if (e.target.closest('#gbCopyCmBtn')) gbCopyClickmailerToAgency(); });
+  gbRenderCompanyList();
   el.backToMainBtn.addEventListener('click', () => showView('main'));
   el.compareBtn.addEventListener('click', () => showView('compare'));
   el.backFromCompareBtn.addEventListener('click', () => showView('main'));
   el.runCompareBtn.addEventListener('click', runCompare);
 
-  // クリック計測ビュー
-  $('measureBtn').addEventListener('click', () => {
-    showView('measure');
-    updateIsadmcpTokenStatus();
-    loadIsadmcpTemplates($('isadmcpTemplate'));
-  });
-  $('backFromMeasureBtn').addEventListener('click', () => showView('main'));
-  $('isadmcpMockChk').addEventListener('change', (e) => {
-    try { localStorage.setItem(ISADMCP_MOCK_KEY, e.target.checked ? 'on' : 'off'); } catch (_) {}
-    updateIsadmcpTokenStatus();
-    loadIsadmcpTemplates($('isadmcpTemplate'));
-  });
-  $('isadmcpSetTokenBtn').addEventListener('click', setIsadmcpToken);
-  $('isadmcpClearTokenBtn').addEventListener('click', clearIsadmcpToken);
-  $('isadmcpReloadTplBtn').addEventListener('click', () => loadIsadmcpTemplates($('isadmcpTemplate')));
-  $('isadmcpConvertBtn').addEventListener('click', isadmcpConvertSingle);
-  $('isadmcpCopyBtn').addEventListener('click', () => {
-    const v = $('isadmcpResult').value;
-    if (!v) { toast('変換結果がありません'); return; }
-    navigator.clipboard.writeText(v).then(() => toast('コピーしました')).catch(() => toast('コピーに失敗しました'));
-  });
-  $('isadmcpStatsBtn').addEventListener('click', isadmcpLoadStats);
-  $('isadmcpSheetBtn').addEventListener('click', isadmcpSyncSheet);
-
-  // 配配メール本文のクリック計測変換
-  $('hmTrackBtn').addEventListener('click', () => {
-    const panel = $('hmTrackPanel');
-    const show = panel.style.display === 'none' || !panel.style.display;
-    panel.style.display = show ? 'block' : 'none';
-    if (show) { loadIsadmcpTemplates($('hmTrackTemplate')); panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
-  });
-  $('hmTrackCloseBtn').addEventListener('click', () => { $('hmTrackPanel').style.display = 'none'; });
-  $('hmTrackApplyBtn').addEventListener('click', hmTrackApply);
+  // 代理店入稿ビュー（GA）と配配メールからの導線
+  ccInitView();
 
   // Media select
   el.mediaSelect.addEventListener('change', handleMediaChange);
@@ -2297,6 +3889,7 @@ window.usePreset = usePreset;
 window.deletePreset = deletePreset;
 window.copyBmLinkHref = copyBmLinkHref;
 window.insertDateTagTo = insertDateTagTo;
+window.gbToggleCat = gbToggleCat;
 
 document.addEventListener('DOMContentLoaded', init);
 </script>
