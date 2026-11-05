@@ -3270,6 +3270,21 @@ async function ccIssue() {
   errEl.textContent = '';
   const reason = ccBlockReason();
   if (reason) { errEl.textContent = reason; return; }
+  // 【修正】未ログインのまま発行すると除外URLルールが未取得で、配信停止URL等まで計測URLに変換されていた。
+  // 発行前に必ずルールを読み、計測対象が変わったら発行せずに確認してもらう
+  if (!ga.rulesLoaded) {
+    const before = ga.links.map(l => l.track ? 1 : 0).join('');
+    try { await ccEnsureToken(); } catch (e) {
+      errEl.textContent = e.cancelled ? 'パスワードが入力されなかったため、発行していません。' : '接続できませんでした。もう一度お試しください。';
+      return;
+    }
+    if (!(await ccLoadExcludeRules())) { errEl.textContent = '除外URLルールを取得できなかったため、発行していません。もう一度お試しください。'; return; }
+    if (ga.links.map(l => l.track ? 1 : 0).join('') !== before) {
+      errEl.textContent = '除外URLルール（配信停止URLなど）を反映し、「計測しない」URLを更新しました。②の一覧を確認してから、もう一度発行してください。';
+      $('gaUrlList').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    }
+  }
   const { errors, req } = ccBuildRequest();
   if (errors.length) { errEl.textContent = errors.join(' / '); ccRenderUrls(); return; }
   const sig = JSON.stringify(req);
@@ -3590,17 +3605,31 @@ function ccRenderLp() {
 }
 
 // ---------- 画面の初期化 ----------
+// 除外URLルール（配信停止URL等）をサーバから読み、URL一覧の「計測する/しない」を判定し直す
+let ccRulesPromise = null;
+function ccLoadExcludeRules() {
+  if (ga.rulesLoaded) return Promise.resolve(true);
+  if (!ccRulesPromise) {
+    ccRulesPromise = (async () => {
+      try {
+        const r = await ccApi('/exclude-url-rules');
+        const d = await r.json();
+        ga.excludeRules = d.items || [];
+        ga.rulesLoaded = true;
+        ccDetect();
+        return true;
+      } catch (e) { return false; }
+      finally { ccRulesPromise = null; }
+    })();
+  }
+  return ccRulesPromise;
+}
 async function ccLoadRemoteHints() {
   if (!ccGetToken() || ga.hintsLoading) return;
   ga.hintsLoading = true;
   setTimeout(() => { ga.hintsLoading = false; }, 3000);
   ga.hintsLoaded = true;
-  try {
-    const r = await ccApi('/exclude-url-rules');
-    const d = await r.json();
-    ga.excludeRules = d.items || [];
-    ccDetect();
-  } catch (e) {}
+  await ccLoadExcludeRules();
   try {
     const r = await ccApi('/advertisers');
     const d = await r.json();
