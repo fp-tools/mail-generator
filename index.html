@@ -341,6 +341,7 @@ a.btn-nav{text-decoration:none;display:inline-block;border-radius:7px}
 .gm-bar-extra{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 #measureView.gm-dragging .ga-main{outline:3px dashed #4949FF;outline-offset:-6px;background:#f8f8ff}
 #measureView.gm-on [data-preview]{display:none}
+.gm-locked{opacity:.6}
 @media (max-width:640px){
   .app-header{padding:10px 12px}
   .ga-bar-in{flex-direction:column;align-items:stretch}
@@ -1503,12 +1504,14 @@ function renderAdminList() {
     .sort((a,b) => (a.sortOrder||99)-(b.sortOrder||99));
   if (isAgency) {
     const noCo = sorted.filter(m => !(m.mediaCompany || '').trim());
+    const noCoExt = noCo.filter(m => gbAgencyKind(m) === 'external').length;
     $('gbNoCompanyCount').textContent = `（${noCo.length}）`;
     const copyBtns = GB_COPY_SOURCES.map(ds => [ds, gbPendingCopies(mediaList, ds).length]).filter(([, n]) => n)
       .map(([ds, n]) => `<button type="button" class="btn-outline btn-sm" data-copyds="${ds}" ${ds === 'clickmailer' ? 'id="gbCopyCmBtn"' : ''}>${escHtml(MEDIA_CATEGORIES[ds].label)}の媒体 ${n}件を代理店（自社広告）にコピー</button>`);
     $('gbCopyArea').innerHTML =
       (copyBtns.length ? copyBtns.join(' ') + ' <span class="text-muted">コピー済みの媒体は重複しません。コピーした媒体は他媒体入稿の結果から元の配信機で原稿作成できます</span>' : '') +
-      (noCo.length ? `<div class="measure-hint mt-2">ⓘ 媒体社名が未入力の代理店媒体が ${noCo.length}件あります。媒体社名を入力してください。</div>` : '');
+      // 媒体社名が必須なのは他媒体だけ（自社広告は空欄でよい）
+      (noCoExt ? `<div class="measure-hint mt-2">ⓘ 媒体社名が未入力の他媒体が ${noCoExt}件あります。媒体社名を入力してください。</div>` : '');
     const kc = k => sorted.filter(m => gbAgencyKind(m) === k).length;
     $('gbKindTabs').innerHTML = [['all', 'すべて', sorted.length], ['own', '自社広告', kc('own')], ['external', '他媒体', kc('external')]]
       .map(([k, l, n]) => `<button type="button" class="admin-tab ${gbAgencyKindTab === k ? 'active' : ''}" role="tab" aria-selected="${gbAgencyKindTab === k}" data-kindtab="${k}">${l}<span class="gb-count">${n}</span></button>`).join('');
@@ -3384,6 +3387,7 @@ function ccUpdateBar() {
   const btn = $('gaIssueBtn');
   if (!btn) return;
   if (gm.active) { gmUpdateBar(); return; }
+  if ($('gaCard3').inert) { $('gaCard3').inert = false; $('gaCard3').classList.remove('gm-locked'); }
   btn.style.display = '';
   const M = ga.selected.length, T = ccTrackedCount();
   $('gaBarText').textContent = `${M}媒体 × ${T}リンク = ${(M * T).toLocaleString()}本の計測URLを発行します`;
@@ -3667,6 +3671,7 @@ function ccResetAll() {
   $('gaText').value = ''; $('gaName').value = ''; $('gaAdv').value = ''; $('gaDate').value = ccJstToday(); $('gaGroupSame').checked = false; $('gaGdocUrl').value = '';
   $('gaEncRow').style.display = 'none'; $('gaBarErr').textContent = ''; ccMsg('');
   $('gaLpCard').style.display = 'none';
+  gmUpdateGdocBtn();
   ccDetect(); ccRenderMedia(); ccRenderMediaTable(); ccRenderResult(); ccUpdateBar();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -4141,8 +4146,9 @@ async function gmIssue(mode) {
     return;
   }
   gm.running = true; gm.stopReq = false; gm.stopKind = ''; gm.banner = '';
-  targets.forEach(it => { it.status = 'queued'; it.note = ''; it.error = ''; });
-  gm.prog = { total: targets.reduce((s, it) => s + gmMediaIds(it).length, 0), done: 0, items: targets.length, itemsDone: 0, lastSpoken: 0 };
+  // 発行内容は開始時点で確定する（発行中に③の媒体・日付などを変えても、待機中の原稿の発行先が変わらないように）
+  targets.forEach(it => { it.status = 'queued'; it.note = ''; it.error = ''; it.plan = gmBuildRequest(it); });
+  gm.prog = { total: targets.reduce((s, it) => s + it.plan.req.media.length, 0), done: 0, items: targets.length, itemsDone: 0, lastSpoken: 0 };
   gmRender();
   const queue = targets.slice();
   const worker = async () => { while (queue.length && !gm.stopReq) await gmIssueOne(queue.shift()); };
@@ -4150,14 +4156,14 @@ async function gmIssue(mode) {
     await Promise.all(Array.from({ length: Math.min(CC_MULTI_CONCURRENCY, queue.length) }, worker));
   } finally {
     queue.forEach(it => { if (it.status === 'queued') { it.status = 'idle'; it.note = gm.stopKind === 'user' ? '中断のため未実施' : (it.note || '上限のため未実施'); } });
-    targets.forEach(it => { if (it.status === 'queued' || it.status === 'issuing') it.status = 'idle'; });
+    targets.forEach(it => { if (it.status === 'queued' || it.status === 'issuing') it.status = 'idle'; it.plan = null; });
     gm.running = false;
   }
   const done = targets.filter(it => it.status === 'done');
   const okN = done.reduce((s, it) => s + it.req.media.length, 0);
   if (gm.stopKind === 'user') gm.banner = `中断しました。完了した${okN}出稿は保存されています。［残りを発行］で続きを発行できます。`;
   if (done.length) {
-    const ids = new Set(); done.forEach(it => gmMediaIds(it).forEach(id => ids.add(id)));
+    const ids = new Set(); done.forEach(it => it.req.media.forEach(m => ids.add(m.mediaId)));
     ccLsSet(CC_LAST_MEDIA_KEY, ga.selected.length ? ga.selected.slice() : [...ids]);
     const advs = [...new Set(done.map(it => it.adv.trim()).filter(Boolean))];
     if (advs.length) ccLsSet(CC_ADVERTISERS_KEY, [...advs, ...ccLs(CC_ADVERTISERS_KEY, []).filter(x => !advs.includes(x))].slice(0, 50));
@@ -4171,7 +4177,8 @@ async function gmIssue(mode) {
   if (h) { h.scrollIntoView({ behavior: 'smooth', block: 'start' }); try { h.focus({ preventScroll: true }); } catch (e) {} }
 }
 async function gmIssueOne(it) {
-  const { errors, req } = gmBuildRequest(it);
+  const { errors, req } = it.plan || gmBuildRequest(it);
+  it.plan = null;
   if (errors.length) { it.status = 'error'; it.error = errors.join(' / '); gmScheduleRender(); return; }
   const sig = JSON.stringify(req);
   if (sig !== it.requestSig || !it.requestId) { it.requestId = ccUuid(); it.requestSig = sig; }
@@ -4487,6 +4494,10 @@ function gmUpdateBar() {
   const prog = $('gmProg');
   $('gmStopBtn').style.display = gm.running ? '' : 'none';
   prog.style.display = gm.running ? '' : 'none';
+  // 発行中は③（出稿先）と②の一括操作を読み取り専用にする（設計 4.4 入力ロック）
+  $('gaCard3').inert = gm.running;
+  $('gaCard3').classList.toggle('gm-locked', gm.running);
+  ['gmDelAll', 'gmAdvApply', 'gmPasteAddBtn'].forEach(id => { const b = $(id); if (b) b.disabled = gm.running; });
   btn.style.display = gm.running ? 'none' : '';
   if (gm.running) {
     const p = gm.prog;
@@ -4526,10 +4537,11 @@ function gmUpdateBar() {
   btn.disabled = !K || items.some(it => it.load === 'loading');
   btn.textContent = K ? `${K}出稿を発行` : '発行';
   const failed = items.filter(it => it.status === 'error' && gmIssuable(it));
-  const rest = items.filter(it => it.status === 'idle' && it.note && gmIssuable(it));
+  // 「残りを発行」は gmIssue('rest') と同じ対象（エラー以外の未発行）を数える。中断・上限停止の後だけ表示
+  const rest = items.filter(it => it.status === 'idle' && gmIssuable(it));
   const fb = $('gmFailBtn'), rb = $('gmRestBtn');
   fb.style.display = failed.length ? '' : 'none';
-  rb.style.display = rest.length ? '' : 'none';
+  rb.style.display = rest.some(it => it.note) ? '' : 'none';
   fb.textContent = `失敗分のみ再試行（${failed.reduce((s, it) => s + gmMediaIds(it).length, 0)}出稿）`;
   rb.textContent = `残りを発行（${rest.reduce((s, it) => s + gmMediaIds(it).length, 0)}出稿）`;
 }
@@ -4637,6 +4649,7 @@ function gmShowUndo(msg, restore) {
   $('gmUndoBtn').addEventListener('click', () => { if (gm.undo) gm.undo(); clearTimeout(gm.undoTimer); hide(); });
 }
 function gmDelete(ids) {
+  if (gm.running) { toast('発行中は削除できません。中断するか、完了してから削除してください'); return; }
   const del = gm.items.map((it, i) => ({ it, i })).filter(x => ids.includes(x.it.id));
   if (!del.length) return;
   if (del.some(x => x.it.status === 'done') && !confirm('発行済みの原稿を含みます。リストから外しますか？（発行済みの計測URLは無効になりません。リストから外すだけです）')) return;
@@ -4654,6 +4667,7 @@ function gmDelete(ids) {
   if (!gm.items.length) { const b = $('gaFileBtn'); if (b && b.offsetParent) b.focus(); }
 }
 function gmApplyAdv() {
+  if (gm.running) return;
   const v = $('gmAdvAll').value.trim();
   if (!v) { toast('広告主を入力してください'); $('gmAdvAll').focus(); return; }
   const scope = (document.querySelector('input[name="gmAdvScope"]:checked') || {}).value || 'empty';
@@ -5060,6 +5074,16 @@ function ccInitView() {
     const body = el.bodyText.value;
     if (!body.trim()) { toast('本文が空です'); return; }
     const cur = $('gaText').value;
+    if (gm.active) {
+      // 原稿リスト表示中は、貼り付け欄に入れるだけでなくリストに追加する（「取り込みました」と出て実際はリストに無い、を防ぐ）
+      if (gm.running) { toast('発行中です。完了してから送ってください'); return; }
+      if (!gmRoom()) { toast(`原稿リストが上限（${CC_MULTI_MAX}件）です。不要な原稿を削除してください`, 4000); return; }
+      if (cur.trim() && cur !== body && !confirm('他媒体入稿画面の貼り付け欄の内容を、この本文で置き換えますか？')) return;
+      ccSetManuscript(body, { sourceType: 'paste', name: (el.subjectInput.value || '').trim() });
+      ccOpenView();
+      gmAddPaste();
+      return;
+    }
     if (cur.trim() && cur !== body && !confirm('他媒体入稿画面の原稿を、この本文で置き換えますか？')) return;
     ccSetManuscript(body, { sourceType: 'paste', name: (el.subjectInput.value || '').trim() });
     ccOpenView();
