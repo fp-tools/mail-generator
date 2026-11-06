@@ -1110,6 +1110,7 @@ function ccNavigate(name) {
   if (location.hash !== h) location.hash = h; // 同じ画面なら履歴を積まない（hashchange は routeShown で無視される）
 }
 window.addEventListener('hashchange', () => {
+  if (routeShown === null) return; // 初期化（媒体の読み込み・権限の確認）が終わるまでは何もしない。最初の画面は init の最後で表示
   const name = routeFromHash() || 'main'; // 不明な hash は既定の画面
   if (name !== routeShown) enterRoute(name);
 });
