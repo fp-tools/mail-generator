@@ -1088,6 +1088,32 @@ function loadPresets() {
 }
 function savePresets(list) { localStorage.setItem(PRESET_KEY, JSON.stringify(list)); }
 
+// ========== 画面ごとのURL（#/画面名） ==========
+// メニュー等 → ccNavigate → 画面を表示して location.hash を更新（履歴に積む）。
+// ブラウザの戻る・進む・URLの直接入力 → hashchange → 同じ処理。再読み込み・直接開いたときは init の最後で表示
+const VIEW_ROUTES = { main: '原稿作成', measure: '他媒体入稿', admin: '管理画面', compare: '比較' };
+const VIEW_ENTER = {}; // 画面に入るときの処理（未登録は showView のみ）。init で登録
+let routeShown = null;
+let adminKeepTab = false; // 次に管理画面に入るとき、タブを配信機に合わせ直さない（ccOpenSourceSetting）
+function routeFromHash() {
+  const m = /^#\/([A-Za-z0-9_-]+)\/?$/.exec(location.hash || '');
+  return m && VIEW_ROUTES[m[1]] ? m[1] : null;
+}
+function enterRoute(name) {
+  routeShown = name;
+  document.title = `${VIEW_ROUTES[name]} - メールジェネレータ`;
+  (VIEW_ENTER[name] || (() => showView(name)))();
+}
+function ccNavigate(name) {
+  enterRoute(name);
+  const h = '#/' + name;
+  if (location.hash !== h) location.hash = h; // 同じ画面なら履歴を積まない（hashchange は routeShown で無視される）
+}
+window.addEventListener('hashchange', () => {
+  const name = routeFromHash() || 'main'; // 不明な hash は既定の画面
+  if (name !== routeShown) enterRoute(name);
+});
+
 // ========== UI Utilities ==========
 function showView(name) {
   el.mainView.classList.toggle('active', name === 'main');
@@ -5159,7 +5185,7 @@ function ccOpenInDelivery(mediaId, plain, req, campaign) {
   const dateStr = ccReqDate(req, mediaId);
   const time = ccReqTime(req, mediaId);
   const ms = (req && req.manuscript) || {};
-  showView('main');
+  ccNavigate('main');
   const radio = document.querySelector(`input[name="deliverySystem"][value="${ds}"]`);
   if (radio && !radio.checked) { radio.checked = true; radio.dispatchEvent(new Event('change')); }
   renderSelect();
@@ -5195,12 +5221,12 @@ function ccOpenInDelivery(mediaId, plain, req, campaign) {
 }
 // 媒体管理（代理店タブ）で、その自社広告の媒体の編集を開く（「配信に使う配信機の媒体」の設定用）
 function ccOpenSourceSetting(agencyId) {
-  showView('admin');
   currentAdminTab = 'agency'; gbAgencyKindTab = 'all'; gbSearchText = ''; gbOnlyNoCompany = false;
   if ($('gbSearch')) $('gbSearch').value = '';
   if ($('gbOnlyNoCompany')) $('gbOnlyNoCompany').checked = false;
   openEditId = agencyId;
-  renderAdminList();
+  adminKeepTab = true;
+  ccNavigate('admin');
   setTimeout(() => {
     const f = $(`edit-src-${agencyId}`);
     if (f) { f.scrollIntoView({ behavior: 'smooth', block: 'center' }); f.focus(); }
@@ -5248,7 +5274,8 @@ async function ccLoadRemoteHints() {
   } catch (e) { /* 古いサーバ（ジャンルの API が無い）では既定の一覧を使う */ }
   ccSingleAutoFill();
 }
-function ccOpenView() {
+function ccOpenView() { ccNavigate('measure'); }
+function ccEnterMeasure() {
   showView('measure');
   $('gaBar').classList.add('show');
   if (!$('gaDate').value) $('gaDate').value = ccJstToday();
@@ -5263,7 +5290,7 @@ function ccOpenView() {
 function ccInitView() {
   $('ccResultsLink').href = ccResultsUrl();
   $('measureBtn').addEventListener('click', ccOpenView);
-  $('backFromMeasureBtn').addEventListener('click', () => { showView('main'); });
+  $('backFromMeasureBtn').addEventListener('click', () => ccNavigate('main'));
   $('gaConnBtn').addEventListener('click', async () => { try { await ccEnsureToken(true); ccLoadRemoteHints(); } catch (e) {} ccUpdateConn(); });
   document.querySelectorAll('[data-gatab]').forEach(b => b.addEventListener('click', () => ccSwitchTab(b.dataset.gatab)));
   const ta = $('gaText');
@@ -5497,16 +5524,19 @@ async function init() {
   renderSelect();
   renderPresets();
 
-  // View switching
-  el.adminBtn.addEventListener('click', async () => {
+  // View switching（画面ごとのURL: VIEW_ENTER に入るときの処理を登録し、ボタンは ccNavigate）
+  VIEW_ENTER.measure = ccEnterMeasure;
+  VIEW_ENTER.admin = async () => {
     showView('admin');
-    currentAdminTab = currentDeliverySystem;
+    if (!adminKeepTab) currentAdminTab = currentDeliverySystem; // 「設定を開く」から来たときはタブ・編集中の媒体を保つ
+    adminKeepTab = false;
     renderAdminList();
     // 他の人が編集した最新の媒体データを取り込んでから表示し直す
     const before = JSON.stringify(mediaList);
     mediaList = await loadMedia();
     if (JSON.stringify(mediaList) !== before && openEditId === null) { renderAdminList(); renderSelect(); }
-  });
+  };
+  el.adminBtn.addEventListener('click', () => ccNavigate('admin'));
 
   // 媒体管理タブ（配配メール / MM / クリックメーラー / 代理店）
   document.querySelectorAll('.admin-tab[data-tab]').forEach(t => {
@@ -5520,9 +5550,9 @@ async function init() {
   $('gbKindTabs').addEventListener('click', e => { const b = e.target.closest('[data-kindtab]'); if (b) { gbAgencyKindTab = b.dataset.kindtab; renderAdminList(); } });
   $('gbCopyArea').addEventListener('click', e => { const b = e.target.closest('[data-copyds]'); if (b) gbCopyClickmailerToAgency(b.dataset.copyds); });
   gbRenderCompanyList();
-  el.backToMainBtn.addEventListener('click', () => showView('main'));
-  el.compareBtn.addEventListener('click', () => showView('compare'));
-  el.backFromCompareBtn.addEventListener('click', () => showView('main'));
+  el.backToMainBtn.addEventListener('click', () => ccNavigate('main'));
+  el.compareBtn.addEventListener('click', () => ccNavigate('compare'));
+  el.backFromCompareBtn.addEventListener('click', () => ccNavigate('main'));
   el.runCompareBtn.addEventListener('click', runCompare);
 
   // 他媒体入稿ビュー（GA）と配配メールからの導線
@@ -5578,6 +5608,9 @@ async function init() {
   el.importFile.addEventListener('change', e => { importData(e.target.files[0]); e.target.value = ''; });
 
   // Bookmarklet drag links — hrefs are updated dynamically via updateBmLinks()
+
+  // 直接開いた・再読み込みしたときは URL の画面で開く（hash なし・不明な hash は既定のメイン画面）
+  enterRoute(routeFromHash() || 'main');
 }
 
 // Expose globals for inline onclick handlers
