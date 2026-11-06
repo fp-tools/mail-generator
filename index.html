@@ -337,6 +337,14 @@ a.btn-nav{text-decoration:none;display:inline-block;border-radius:7px}
 .gm-bulk{background:#f5f5ff;border:1px solid #d0d0ff;border-radius:8px;padding:6px 10px;margin-bottom:8px;display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:13px}
 .gm-undo{background:#333;color:#fff;border-radius:8px;padding:6px 10px;margin-bottom:8px;font-size:13px}
 .gm-undo .btn-outline{background:#fff}
+/* 発行結果の「次にやること」と、メイン画面の「他媒体入稿から」帯 */
+.cc-next{border:2px solid #4949FF;background:#f5f5ff;border-radius:10px;padding:12px 14px;margin-bottom:12px;font-size:13px;line-height:1.7}
+.cc-next-h{font-weight:700;font-size:14px;color:#3535cc;margin-bottom:4px}
+.cc-next-btns{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;margin:6px 0 10px}
+.cc-tomain-big{font-size:14px !important;padding:8px 14px !important}
+.cc-fromga{border:2px solid #4949FF;background:#f5f5ff;border-radius:10px;padding:12px 14px;margin-bottom:16px;font-size:13px;line-height:1.7}
+.cc-fromga ul{margin:4px 0 6px 18px;padding:0}
+.cc-fromga-warn{background:#fef3c7;color:#92400e;border-radius:6px;padding:6px 10px;margin:6px 0}
 .gm-linkbtn{background:none;border:none;color:#3535cc;text-decoration:underline;cursor:pointer;padding:0 2px;font-size:inherit}
 .gm-ov{margin-top:10px;font-size:13px}
 .gm-ov-box{border:1px solid #e5e7f5;border-radius:8px;padding:8px 10px;margin-top:6px;background:#fff}
@@ -372,6 +380,8 @@ a.btn-nav{text-decoration:none;display:inline-block;border-radius:7px}
 <!-- ========== MAIN VIEW ========== -->
 <div id="mainView" class="view active">
 <main>
+  <!-- 他媒体入稿の発行結果から開いたときの帯（ccOpenInDelivery） -->
+  <div id="ccFromGa" class="cc-fromga" role="region" aria-label="他媒体入稿から引き継いだ内容" style="display:none"></div>
 
   <!-- 配信機選択 -->
   <div class="card">
@@ -3753,7 +3763,11 @@ function ccRenderResult() {
   const warnings = (r.warnings || []).map(w => `<div class="ga-banner warn">${escHtml(typeof w === 'string' ? w : (w.message || JSON.stringify(w)))}</div>`).join('');
   const out = cur.pieces.map(p => p.mark ? `<mark title="元URL: ${escHtml(p.from)}">${escHtml(p.t)}</mark>` : escHtml(p.t)).join('');
   const mapRows = ccMapRows().map(row => `<tr>${row.map(c => `<td>${escHtml(c)}</td>`).join('')}</tr>`).join('');
-  body.innerHTML = `${warnings}
+  // 他媒体: 媒体ごとの「コピー」「.txt」（既存の copy-one / dl-one を data-ti 指定で使う）
+  const extBtns = ga.resultTexts.map((t, i) => ({ t, i })).filter(x => !ccToMainSource(x.t.campaign.mediaId))
+    .map(x => `<span style="white-space:nowrap">${escHtml(x.t.mediaName)}: <button type="button" class="btn-outline btn-sm" data-ga="copy-one" data-ti="${x.i}">コピー</button> <button type="button" class="btn-outline btn-sm" data-ga="dl-one" data-ti="${x.i}">.txt</button></span>`).join('');
+  const next = ccNextStepsHtml(ga.resultTexts, i => `data-ga="to-main" data-ti="${i}"`, extBtns ? `<div class="cc-next-btns">${extBtns}</div>` : '');
+  body.innerHTML = `${warnings}${next}
     <div id="gaStaleNote" class="ga-banner warn" style="display:none">原稿・URL・出稿先が発行後に変更されました。画面下の「再発行して原稿を変換（差分のみ）」を押すと反映します（同じ遷移先は既存の計測URLを再利用します）。</div>
     <div class="ga-rtabs" role="tablist" aria-label="媒体">${tabs}</div>
     <div style="font-size:13px;margin-bottom:6px"><b>${escHtml(cur.mediaName)}</b>${cur.mediaCompany ? `（${escHtml(cur.mediaCompany)}）` : ''}　<span class="text-muted">出稿名: ${escHtml(cur.name)}</span></div>
@@ -3844,14 +3858,16 @@ function ccOnResultClick(e) {
   if (tab) { ga.activeIdx = +tab.dataset.ridx; ccRenderResult(); const t = document.querySelector(`[data-ridx="${ga.activeIdx}"]`); if (t) t.focus(); return; }
   const b = e.target.closest('[data-ga]');
   if (!b || !ga.result) return;
-  const cur = ga.resultTexts[Math.min(ga.activeIdx, ga.resultTexts.length - 1)];
+  // data-ti があればその媒体（「次にやること」のボタン）、なければ表示中のタブ
+  const cur = ga.resultTexts[b.dataset.ti != null ? +b.dataset.ti : Math.min(ga.activeIdx, ga.resultTexts.length - 1)];
+  if (!cur) return;
   const enc = ($('gaDlEnc') || {}).value || 'utf-8';
   switch (b.dataset.ga) {
     case 'copy-one': ccCopyText(cur.plain, b); break;
     case 'dl-one': ccDownload(cur.plain, ccSanitizeFilename(cur.name) + '.txt', enc); break;
     case 'dl-all': ccDownload(ccAllText(), ccSanitizeFilename(ccCampCommon() + '_全媒体') + '.txt', enc); break;
     case 'copy-all': ccCopyText(ccAllText(), b); break;
-    case 'to-main': ccOpenInDelivery(cur.campaign.mediaId, cur.plain, ccReqDate(ga.resultReq, cur.campaign.mediaId), ga.resultReq.manuscript.name); break;
+    case 'to-main': ccOpenInDelivery(cur.campaign.mediaId, cur.plain, ga.resultReq, cur.campaign); break;
     case 'new': ccResetAll(); break;
   }
 }
@@ -4806,7 +4822,7 @@ function gmRenderResult() {
   const batches = [...new Set(done.map(it => it.result.batchId))];
   const banner = (gm.banner ? `<div class="ga-banner err" role="alert">✕ ${escHtml(gm.banner)}</div>` : '') +
     (gm.kvWarn ? '<div class="ga-banner warn">無料プランの1日の書込上限（KV 1,000回/日）に達した可能性があります。計測URLは正常に動きますが、リダイレクトの高速化用データを一部書き込めませんでした（翌日に自動で解消）。</div>' : '');
-  $('gmResultBody').innerHTML = banner + (nDone ? `<div class="ga-actions" style="margin-top:0">
+  $('gmResultBody').innerHTML = banner + gmNextStepsHtml(done) + (nDone ? `<div class="ga-actions" style="margin-top:0">
       <button type="button" class="btn-primary btn-sm" data-gmr="zip-all">全件ZIPでダウンロード（.txt ${nDone}本）</button>
       <button type="button" class="btn-outline btn-sm" data-gmr="copy-urls">発行URL一覧を全件コピー</button>
       <button type="button" class="btn-outline btn-sm" data-gmr="csv">発行URL一覧CSV</button>
@@ -4817,6 +4833,19 @@ function gmRenderResult() {
     gmPreviewHtml() +
     (blocked.length ? `<div class="ga-banner warn mt-2">発行されていない原稿（要確認）${blocked.length}件: ${blocked.map(it => `<button type="button" class="gm-linkbtn" data-gmr="fix" data-id="${it.id}">${escHtml(gmName(it))}</button>`).join('、')}　<span class="ga-sub">（クリックで②の該当行を開きます）</span></div>` : '') +
     `<div class="ga-actions"><button type="button" class="btn-secondary btn-sm" data-gmr="new" ${gm.running ? 'disabled' : ''}>新しい入稿を始める</button></div>`;
+}
+// 複数原稿の「次にやること」（原稿×媒体が多いので、ボタンは表の各セルに置き、ここでは案内と未設定の媒体だけ）
+function gmNextStepsHtml(done) {
+  if (!done.length) return '';
+  const ids = [...new Set(done.flatMap(it => it.resultTexts.map(t => String(t.campaign.mediaId))))];
+  const own = ids.map(id => ccToMainSource(id)).filter(Boolean);
+  const nExt = ids.length - own.length;
+  const noSrc = own.filter(r => !r.src);
+  return `<div class="cc-next" role="region" aria-label="次にやること"><div class="cc-next-h">次にやること</div>` +
+    (own.length ? `<div>自社広告の媒体（${own.length}件）は、下の表の各セルの <b>「○○で原稿作成」</b> から、そのまま配信機で原稿を作れます（計測URL変換済みの本文・媒体のヘッダー/フッター・出稿日を反映）。</div>` : '') +
+    (noSrc.length ? `<div class="ga-sub">配信機の媒体が未設定のため作成できない媒体: ${noSrc.map(r => `${escHtml(r.agency.name)} <button type="button" class="gm-linkbtn" data-setsrc="${escHtml(r.agency.id)}">設定を開く</button>`).join('、')}</div>` : '') +
+    (nExt ? `<div>他媒体（${nExt}件）は、変換後の原稿を媒体社に渡してください（表の「コピー」、または「全件ZIPでダウンロード」）。</div>` : '') +
+    `</div>`;
 }
 function gmRenderCommonNote() {
   const n = gm.items.filter(it => it.override && it.status !== 'done').length;
@@ -5043,7 +5072,7 @@ function gmOnResultClick(e) {
     case 'zip-one': gmDownloadZip([it], ccZipName(gmName(it)) + '.zip'); break;
     case 'copy-urls': gmCopyUrls(b); break;
     case 'csv': gmDownloadCsv(); break;
-    case 'to-main': { const t = it.resultTexts[+b.dataset.idx]; ccOpenInDelivery(t.campaign.mediaId, t.plain, ccReqDate(it.req, t.campaign.mediaId)); break; }
+    case 'to-main': { const t = it.resultTexts[+b.dataset.idx]; ccOpenInDelivery(t.campaign.mediaId, t.plain, it.req, t.campaign); break; }
     case 'retry-one': if (it) gmIssue([it]); break;
     case 'fix': gm.open.add(it.id); gm.filter = 'all'; gmRender(); { const tr = document.querySelector(`#gmList tr[data-id="${it.id}"]`); if (tr) tr.scrollIntoView({ behavior: 'smooth', block: 'center' }); } break;
     case 'new':
@@ -5059,12 +5088,32 @@ function ccToMainSource(mediaId) {
   if (!m || gbAgencyKind(m) !== 'own') return null;
   return { agency: m, src: gbSourceMedia(m) };
 }
-function ccToMainBtnHtml(mediaId, attrs) {
+function ccDsLabel(src) { return ((DELIVERY_SYSTEMS[src.deliverySystem || 'MM'] || {}).label || '').replace(/（MM）$/, ''); }
+// 自社広告の「配信機で原稿作成」ボタン。big=「次にやること」用の大きいボタン。
+// 配信機の媒体が紐付いていない媒体は押せない状態にし、その場から設定を開けるようにする
+function ccToMainBtnHtml(mediaId, attrs, big) {
   const r = ccToMainSource(mediaId);
   if (!r) return '';
-  if (!r.src) return `<button type="button" class="btn-outline btn-sm" ${attrs} title="媒体管理で「配信に使う配信機の媒体」を設定すると使えます">配信機で原稿作成</button>`;
-  const label = (DELIVERY_SYSTEMS[r.src.deliverySystem || 'MM'] || {}).label || '';
-  return `<button type="button" class="btn-outline btn-sm" ${attrs}>${escHtml(label.replace(/（MM）$/, ''))}で原稿作成</button>`;
+  const size = big ? 'btn-sm cc-tomain-big' : 'btn-sm';
+  if (!r.src) {
+    const tip = '媒体管理で「配信に使う配信機の媒体」を設定すると使えます';
+    return `<span style="white-space:nowrap"><button type="button" class="btn-outline ${size}" disabled title="${tip}">${big ? `「${escHtml(r.agency.name)}」は配信機で原稿作成できません` : '配信機で原稿作成'}</button>` +
+      (big ? ` <span class="ga-sub" style="display:inline">${tip}</span>` : '') +
+      ` <button type="button" class="gm-linkbtn" data-setsrc="${escHtml(r.agency.id)}" aria-label="「${escHtml(r.agency.name)}」の配信機の媒体を設定する">設定を開く</button></span>`;
+  }
+  return `<button type="button" class="${big ? 'btn-primary' : 'btn-outline'} ${size}" ${attrs}>${big ? `${escHtml(ccDsLabel(r.src))}「${escHtml(r.src.name)}」で原稿作成 →` : `${escHtml(ccDsLabel(r.src))}で原稿作成`}</button>`;
+}
+// 発行結果の「次にやること」: 自社広告は配信機で原稿作成、他媒体は原稿を媒体社に渡す
+// texts: [{ campaign, mediaName }]、btnAttrs(i): 自社広告ボタンの属性、extHtml: 他媒体の案内に続ける操作
+function ccNextStepsHtml(texts, btnAttrs, extHtml) {
+  const own = texts.map((t, i) => ({ t, i })).filter(x => ccToMainSource(x.t.campaign.mediaId));
+  const ext = texts.filter(t => !ccToMainSource(t.campaign.mediaId));
+  if (!own.length && !ext.length) return '';
+  return `<div class="cc-next" role="region" aria-label="次にやること"><div class="cc-next-h">次にやること</div>` +
+    (own.length ? `<div>自社広告の媒体（${own.length}件）は、このまま配信機で原稿を作れます。<span class="ga-sub" style="display:inline">計測URL変換済みの本文・媒体のヘッダー/フッター・出稿日を反映した状態で開きます。</span></div>` +
+      `<div class="cc-next-btns">${own.map(x => ccToMainBtnHtml(x.t.campaign.mediaId, btnAttrs(x.i), true)).join('')}</div>` : '') +
+    (ext.length ? `<div>他媒体（${ext.length}件: ${ext.map(t => escHtml(t.mediaName)).join('、')}）は、変換後の原稿を媒体社に渡してください（コピー／ダウンロード）。</div>${extHtml || ''}` : '') +
+    `</div>`;
 }
 // 発行時の出稿日（媒体ごとの指定 → 原稿の出稿日）。YYYY-MM-DD
 function ccReqDate(req, mediaId) {
@@ -5073,14 +5122,43 @@ function ccReqDate(req, mediaId) {
   const s = (m && m.startAt) || (req.campaignDefaults && req.campaignDefaults.startAt) || '';
   return /^\d{4}-\d{2}-\d{2}/.test(s) ? s.slice(0, 10) : '';
 }
-// メイン画面へ: 配信機ラジオ → 媒体（ヘッダー/フッター）→ 日付入力＆置換 → 本文＝変換後原稿
-function ccOpenInDelivery(mediaId, plain, dateStr) {
+// 媒体ごとに指定した配信時刻（HH:MM）。未指定（00:00）は ''
+function ccReqTime(req, mediaId) {
+  const m = req && (req.media || []).find(x => String(x.mediaId) === String(mediaId));
+  const t = m && m.startAt && /T(\d{2}:\d{2})/.exec(m.startAt);
+  return t && t[1] !== '00:00' ? t[1] : '';
+}
+// メイン画面の「他媒体入稿から」帯。本文を書き換えても消さない（計測URLが消えたら警告する）
+let ccFromGa = null;
+function ccRenderFromGa() {
+  const box = $('ccFromGa');
+  if (!box) return;
+  if (!ccFromGa) { box.style.display = 'none'; box.innerHTML = ''; return; }
+  const f = ccFromGa;
+  const body = el.bodyText.value;
+  const lost = f.urls.filter(u => !body.includes(u)).length;
+  box.style.display = '';
+  box.innerHTML = `<div style="display:flex;gap:8px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap">
+      <div><b>他媒体入稿から：</b>${f.company ? escHtml(f.company) + ' ' : ''}『${escHtml(f.agencyName)}』の原稿（計測URL変換済み ${f.urls.length}本${f.date ? '・出稿日 ' + escHtml(f.date) : ''}）<br>
+      → ${escHtml(f.dsLabel)}「${escHtml(f.srcName)}」${f.manuscript ? `　<span class="text-muted">原稿名: ${escHtml(f.manuscript)}</span>` : ''}</div>
+      <span style="white-space:nowrap"><button type="button" class="btn-outline btn-sm" data-fromga="back">他媒体入稿に戻る</button> <button type="button" class="btn-outline btn-sm" data-fromga="close" aria-label="この帯を閉じる">×</button></span>
+    </div>` +
+    (lost ? `<div class="cc-fromga-warn" role="alert">⚠ 本文から計測URLが ${lost}本 消えています。クリックが計測されません。URLを元に戻すか、「他媒体入稿に戻る」から原稿作成をやり直してください。</div>` : '') +
+    `<ul><li>反映済み: 本文（計測URL変換済み）／配信機／媒体（ヘッダー・フッター・差出人・セグメント）${f.date ? '／出稿日（ヘッダーの日付も置換）' : ''}${f.adv ? '／広告主' : ''}</li>` +
+    f.notes.map(n => `<li>${n}</li>`).join('') + `</ul>`;
+}
+// メイン画面へ: 配信機ラジオ → 媒体（ヘッダー/フッター）→ 日付入力＆置換 → 本文＝変換後原稿 → 帯
+// req: 発行リクエスト（出稿日・時刻・広告主・原稿名）、campaign: 発行結果（計測URL）
+function ccOpenInDelivery(mediaId, plain, req, campaign) {
   const r = ccToMainSource(mediaId);
   if (!r) return;
-  if (!r.src) { toast('この自社広告の媒体には配信機の媒体が紐付いていません。媒体管理の「代理店」タブで「配信に使う配信機の媒体」を選んでください', 6000); return; }
+  if (!r.src) { toast('この自社広告の媒体には配信機の媒体が紐付いていません。「設定を開く」から「配信に使う配信機の媒体」を選んでください', 6000); return; }
   const ds = r.src.deliverySystem || 'MM';
   const cur = el.bodyText.value;
   if (cur.trim() && cur !== plain && !confirm('メイン画面の本文に入力中の内容があります。この変換後の原稿で置き換えますか？')) return;
+  const dateStr = ccReqDate(req, mediaId);
+  const time = ccReqTime(req, mediaId);
+  const ms = (req && req.manuscript) || {};
   showView('main');
   const radio = document.querySelector(`input[name="deliverySystem"][value="${ds}"]`);
   if (radio && !radio.checked) { radio.checked = true; radio.dispatchEvent(new Event('change')); }
@@ -5093,12 +5171,42 @@ function ccOpenInDelivery(mediaId, plain, dateStr) {
     syncInputToPicker();
     replaceDate();
   }
+  if (ms.advertiserName) el.advertiserInput.value = ms.advertiserName;
   handleBodyChange();
   updateBmLinks();
+  // 引き継げないもの・確認が要るもの
+  const notes = [];
+  const subj = el.subjectInput.value.trim();
+  notes.push(subj ? `件名は、メイン画面に入っていた「${escHtml(subj)}」のままです。この原稿の件名か確認してください（他媒体入稿の原稿には件名の欄がありません）`
+                  : '<b>件名は手で入力してください</b>（他媒体入稿の原稿には件名の欄がありません）');
+  const defTime = r.src.deliveryTime || '10:00';
+  if (time && time !== defTime) notes.push(`<b>配信時刻 ${escHtml(time)} は反映していません</b>。配信予約は媒体の既定（${escHtml(defTime)}）になるので、配信機で時刻を直してください`);
+  else if (ds !== 'clickmailer') notes.push(`配信時刻は媒体の既定（${escHtml(defTime)}）です`);
+  if (!dateStr) notes.push('出稿日は手で入力してください');
+  if (ds === 'clickmailer') notes.push('クリックメーラーには自動入力のブックマークレットがありません。本文・件名をコピーして貼り付け、配信日時は配信機で設定してください');
+  ccFromGa = {
+    agencyName: r.agency.name, company: r.agency.mediaCompany || '', srcName: r.src.name, dsLabel: DELIVERY_SYSTEMS[ds].label,
+    date: dateStr ? `${+dateStr.slice(5, 7)}/${+dateStr.slice(8, 10)}` : '', adv: ms.advertiserName || '', manuscript: ms.name || '',
+    urls: [...new Set(((campaign && campaign.links) || []).map(l => l.trackingUrl).filter(Boolean))], notes,
+  };
+  ccRenderFromGa();
   toast(`${DELIVERY_SYSTEMS[ds].label}「${r.src.name}」で原稿作成を開きました（本文は計測URLに変換済み）`, 4500);
-  el.bodyText.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
-
+// 媒体管理（代理店タブ）で、その自社広告の媒体の編集を開く（「配信に使う配信機の媒体」の設定用）
+function ccOpenSourceSetting(agencyId) {
+  showView('admin');
+  currentAdminTab = 'agency'; gbAgencyKindTab = 'all'; gbSearchText = ''; gbOnlyNoCompany = false;
+  if ($('gbSearch')) $('gbSearch').value = '';
+  if ($('gbOnlyNoCompany')) $('gbOnlyNoCompany').checked = false;
+  openEditId = agencyId;
+  renderAdminList();
+  setTimeout(() => {
+    const f = $(`edit-src-${agencyId}`);
+    if (f) { f.scrollIntoView({ behavior: 'smooth', block: 'center' }); f.focus(); }
+  }, 0);
+  toast('「配信に使う配信機の媒体」を選んで保存し、上の「他媒体入稿」から結果に戻ってください', 6000);
+}
 // ---------- 画面の初期化 ----------
 // 除外URLルール（配信停止URL等）をサーバから読み、URL一覧の「計測する/しない」を判定し直す
 let ccRulesPromise = null;
@@ -5149,6 +5257,7 @@ function ccOpenView() {
   if (!$('gaGenre').options.length) { ccRenderGenreSelect(); ccRenderBulkGenre(); }
   gmUpdateGdocBtn();
   if (gm.active) gmRender();
+  else if (ga.result) ccRenderResult();
   ccLoadRemoteHints();
 }
 function ccInitView() {
@@ -5214,6 +5323,18 @@ function ccInitView() {
   });
   $('gaCampName').addEventListener('blur', () => { if (!$('gaCampName').value.trim()) { ga.campNameEdited = false; ccUpdateCampDefault(); } });
   $('gaMediaSearch').addEventListener('input', ccRenderMedia);
+  // 「設定を開く」（自社広告の配信機の媒体）: 結果欄・原稿リストの表のどちらからでも
+  document.addEventListener('click', e => { const b = e.target.closest('[data-setsrc]'); if (b) ccOpenSourceSetting(b.dataset.setsrc); });
+  // メイン画面の「他媒体入稿から」帯
+  $('ccFromGa').addEventListener('click', e => {
+    const b = e.target.closest('[data-fromga]');
+    if (!b) return;
+    if (b.dataset.fromga === 'close') { ccFromGa = null; ccRenderFromGa(); return; }
+    ccOpenView();
+    const card = gm.active ? $('gmResultCard') : $('gaResultCard');
+    if (card) setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'start' }), 0);
+  });
+  el.bodyText.addEventListener('input', () => { if (ccFromGa) ccRenderFromGa(); });
   $('gaKindRadios').addEventListener('change', e => {
     const r = e.target.closest('input[name="gaKind"]');
     if (!r) return;
