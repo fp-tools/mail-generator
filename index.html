@@ -286,7 +286,6 @@ a.btn-nav{text-decoration:none;display:inline-block;border-radius:7px}
 .ga-sub{font-size:12px;color:#666;margin-top:3px}
 .ga-media-tools{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:8px}
 .ga-media-tools input[type=text]{flex:1;min-width:180px}
-.ga-media-tools select{width:auto;max-width:200px}
 .ga-mlist{max-height:320px;overflow-y:auto;border:1.5px solid #e5e7eb;border-radius:8px}
 .ga-mgroup-h{display:block;width:100%;text-align:left;background:#f5f5f7;color:#333;border-radius:0;padding:6px 10px;font-size:12px;border-bottom:1px solid #eee}
 .ga-mgroup-h:hover{background:#eaeaff}
@@ -764,15 +763,9 @@ a.btn-nav{text-decoration:none;display:inline-block;border-radius:7px}
       <div class="ga-media-tools">
         <input type="text" id="gaMediaSearch" placeholder="検索: 媒体名・媒体社名" aria-label="媒体を検索">
         <button class="btn-outline btn-sm" type="button" id="gaLastMediaBtn">前回と同じ媒体</button>
-        <select id="gaSetSel" aria-label="媒体セット"><option value="">セットから選ぶ…</option></select>
-        <button class="btn-outline btn-sm" type="button" id="gaSetDelBtn">セットを削除</button>
       </div>
       <div class="ga-chips" id="gaChips"></div>
       <div id="gaMediaList" class="ga-mlist"></div>
-      <div class="ga-media-tools mt-2">
-        <input type="text" id="gaSetName" maxlength="30" placeholder="セット名（例: 金融系いつもの5媒体）" aria-label="セット名">
-        <button class="btn-outline btn-sm" type="button" id="gaSetSaveBtn">今の選択をセットとして保存</button>
-      </div>
       <details id="gaMediaDetails" class="mt-2">
         <summary style="cursor:pointer;font-size:13px;font-weight:600;color:#444">媒体ごとの出稿日・配信数・出稿費を入力する（任意）</summary>
         <div class="ga-table-wrap mt-2"><div id="gaMediaTable"></div></div>
@@ -2557,12 +2550,11 @@ const CC_ORIGIN = CC_API_BASE.replace(/\/v1\/?$/, '');
 const CC_TOKEN_KEY = 'cc_issue_token';            // sessionStorage（発行トークン）
 const CC_ISSUE_PW_KEY = 'cc_issue_pw_v1';         // localStorage（「このブラウザに記憶する」を選んだ場合のみ）
 const CC_LAST_MEDIA_KEY = 'cc_last_media_v1';     // 前回と同じ媒体
-const CC_MEDIA_SETS_KEY = 'cc_media_sets_v1';     // 媒体セット（個人。最大10件）
 const CC_ADVERTISERS_KEY = 'cc_advertisers_v1';   // 広告主の入力候補
 // 付録C U-06: ASPドメインのURLは自動撮影しない（README の初期値と同じ。サーバ側の設定が正）
 const CC_ASP_DOMAINS = ['px.a8.net', 'ck.jp.ap.valuecommerce.com', 'h.accesstrade.net', 't.afi-b.com', 'af.moshimo.com', 't.felmat.net', 'click.j-a-net.jp', 'www.rentracks.jp', 'www.infotop.jp/click.php'];
 const CC_TRACKING_HOSTS = ['t.click-isadmcp.com', 'cc-redirect.soga-naoya.workers.dev'];
-const CC_LIMITS = { fileBytes: 5 * 1024 * 1024, textChars: 200000, urls: 200, media: 50, product: 1500, sets: 10 };
+const CC_LIMITS = { fileBytes: 5 * 1024 * 1024, textChars: 200000, urls: 200, media: 50, product: 1500 };
 const CC_MERGE_RE = /<<:[^>]*:>>|\[\$[^\]]*\$\]|\$\$:URL_[^$]*:\$\$|##__[^#\s]*__##/;
 // URL本体: ASCII の URL 文字と差し込みタグだけを許す（全角文字・全角括弧・「」で止まる）
 const CC_URL_RE = /https?:\/\/(?:<<:[^>\n]*?:>>|\[\$[^\]\n]*?\$\]|##__[A-Za-z0-9_]*__##|[A-Za-z0-9\-._~:/?#[\]@!$&'()*+,;=%])+/g;
@@ -2611,6 +2603,8 @@ function ccUuid() {
 }
 function ccLs(key, fallback) { try { const v = JSON.parse(localStorage.getItem(key) || 'null'); return v == null ? fallback : v; } catch (e) { return fallback; } }
 function ccLsSet(key, v) { try { localStorage.setItem(key, JSON.stringify(v)); } catch (e) {} }
+// 廃止した「媒体セット」の保存データを消す（あれば）
+try { localStorage.removeItem('cc_media_sets_v1'); } catch (e) {}
 async function ccFetchTimeout(url, opts, ms) {
   const ac = new AbortController();
   const t = setTimeout(() => ac.abort(), ms || 30000);
@@ -3340,13 +3334,9 @@ function ccRenderMedia() {
   chips.innerHTML = sel.length
     ? `<span class="text-muted" style="color:#444">${sel.length}件選択中</span>` + sel.map(m => `<span class="ga-chip">${escHtml(ccMediaLabel(m))}<button type="button" data-unsel="${escHtml(m.id)}" aria-label="${escHtml(m.name)} の選択を外す">×</button></span>`).join('') + ' <button type="button" class="btn-outline btn-sm" data-ga="clear-media">クリア</button>'
     : '<span class="text-muted" style="color:#666">媒体を選んでください（複数可）</span>';
-  ccRenderSets();
+  ccRenderLastMediaBtn();
 }
-function ccRenderSets() {
-  const sel = $('gaSetSel');
-  const sets = ccLs(CC_MEDIA_SETS_KEY, []);
-  sel.innerHTML = '<option value="">セットから選ぶ…</option>' + sets.map((s, i) => `<option value="${i}">${escHtml(s.name)}（${s.ids.length}件）</option>`).join('');
-  $('gaSetDelBtn').disabled = !sets.length;
+function ccRenderLastMediaBtn() {
   $('gaLastMediaBtn').disabled = !ccLs(CC_LAST_MEDIA_KEY, []).length;
 }
 function ccRenderMediaTable() {
@@ -3658,7 +3648,7 @@ async function ccIssue() {
     const adv = req.manuscript.advertiserName;
     if (adv) ccLsSet(CC_ADVERTISERS_KEY, [adv, ...ccLs(CC_ADVERTISERS_KEY, []).filter(x => x !== adv)].slice(0, 50));
     if (adv) ga.projByAdv.delete(ccNorm(adv)); // 前回の案件・ジャンルが変わったので読み直す
-    ccRenderAdvList(); ccRenderSets();
+    ccRenderAdvList(); ccRenderLastMediaBtn();
     ccRenderResult();
     const n = data.campaigns.reduce((s, c) => s + c.links.length, 0);
     toast(`${n}本を発行しました`);
@@ -4351,7 +4341,7 @@ async function gmIssue(mode) {
     const advs = [...new Set(done.map(it => it.adv.trim()).filter(Boolean))];
     if (advs.length) ccLsSet(CC_ADVERTISERS_KEY, [...advs, ...ccLs(CC_ADVERTISERS_KEY, []).filter(x => !advs.includes(x))].slice(0, 50));
     advs.forEach(a => ga.projByAdv.delete(ccNorm(a))); // 前回の案件・ジャンルが変わったので読み直す
-    ccRenderAdvList(); ccRenderSets();
+    ccRenderAdvList(); ccRenderLastMediaBtn();
     if (!gm.preview) { const f = done[0]; gm.preview = { id: f.id, idx: 0 }; }
   }
   const failed = targets.filter(it => it.status === 'error').length;
@@ -5233,31 +5223,6 @@ function ccInitView() {
     if (!avail) { toast('前回の媒体が見つかりません'); return; }
     ccSetSelected(ids);
     toast(`前回と同じ媒体を${avail}件選びました`);
-  });
-  $('gaSetSel').addEventListener('change', () => {
-    const v = $('gaSetSel').value;
-    if (v === '') return;
-    const s = ccLs(CC_MEDIA_SETS_KEY, [])[+v];
-    if (s) { ccSetSelected(s.ids); toast(`セット「${s.name}」を呼び出しました`); }
-    $('gaSetSel').value = v;
-  });
-  $('gaSetDelBtn').addEventListener('click', () => {
-    const v = $('gaSetSel').value;
-    const sets = ccLs(CC_MEDIA_SETS_KEY, []);
-    if (v === '' || !sets[+v]) { toast('削除するセットを選んでください'); return; }
-    const [rm] = sets.splice(+v, 1);
-    ccLsSet(CC_MEDIA_SETS_KEY, sets); ccRenderSets();
-    toast(`セット「${rm.name}」を削除しました`);
-  });
-  $('gaSetSaveBtn').addEventListener('click', () => {
-    const name = $('gaSetName').value.trim();
-    if (!ga.selected.length) { toast('媒体を選んでから保存してください'); return; }
-    if (!name) { toast('セット名を入力してください'); $('gaSetName').focus(); return; }
-    let sets = ccLs(CC_MEDIA_SETS_KEY, []).filter(s => s.name !== name);
-    if (sets.length >= CC_LIMITS.sets) { toast(`セットは${CC_LIMITS.sets}件までです。不要なセットを削除してください`); return; }
-    sets.push({ name, ids: ga.selected.slice() });
-    ccLsSet(CC_MEDIA_SETS_KEY, sets); $('gaSetName').value = ''; ccRenderSets();
-    toast(`セット「${name}」を保存しました（このブラウザのみ）`);
   });
   $('gaMediaTable').addEventListener('input', e => {
     const f = e.target.dataset.f;
