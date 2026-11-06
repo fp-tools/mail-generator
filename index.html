@@ -286,6 +286,8 @@ a.btn-nav{text-decoration:none;display:inline-block;border-radius:7px}
 .ga-sub{font-size:12px;color:#666;margin-top:3px}
 .ga-media-tools{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:8px}
 .ga-media-tools input[type=text]{flex:1;min-width:180px}
+.ga-kind-radios{display:flex;flex-wrap:wrap;gap:4px 8px;margin:0 0 6px -8px}
+.ga-kind-radios input[type=radio]{width:auto;margin:0}
 .ga-mlist{max-height:320px;overflow-y:auto;border:1.5px solid #e5e7eb;border-radius:8px}
 .ga-mgroup-h{display:block;width:100%;text-align:left;background:#f5f5f7;color:#333;border-radius:0;padding:6px 10px;font-size:12px;border-bottom:1px solid #eee}
 .ga-mgroup-h:hover{background:#eaeaff}
@@ -760,6 +762,11 @@ a.btn-nav{text-decoration:none;display:inline-block;border-radius:7px}
       </div>
       <hr>
       <label>媒体（代理店区分）</label>
+      <div class="ga-kind-radios" id="gaKindRadios" role="radiogroup" aria-label="代理店の区分で絞り込む">
+        <label class="ga-inline-chk"><input type="radio" name="gaKind" value="all"> すべて <span class="gb-count" data-kindcount="all"></span></label>
+        <label class="ga-inline-chk"><input type="radio" name="gaKind" value="own"> 自社広告 <span class="gb-count" data-kindcount="own"></span></label>
+        <label class="ga-inline-chk"><input type="radio" name="gaKind" value="external"> 他媒体 <span class="gb-count" data-kindcount="external"></span></label>
+      </div>
       <div class="ga-media-tools">
         <input type="text" id="gaMediaSearch" placeholder="検索: 媒体名・媒体社名" aria-label="媒体を検索">
         <button class="btn-outline btn-sm" type="button" id="gaLastMediaBtn">前回と同じ媒体</button>
@@ -2550,6 +2557,7 @@ const CC_ORIGIN = CC_API_BASE.replace(/\/v1\/?$/, '');
 const CC_TOKEN_KEY = 'cc_issue_token';            // sessionStorage（発行トークン）
 const CC_ISSUE_PW_KEY = 'cc_issue_pw_v1';         // localStorage（「このブラウザに記憶する」を選んだ場合のみ）
 const CC_LAST_MEDIA_KEY = 'cc_last_media_v1';     // 前回と同じ媒体
+const CC_MEDIA_KIND_KEY = 'cc_media_kind_v1';     // 媒体一覧の区分の絞り込み（all / own / external）
 const CC_ADVERTISERS_KEY = 'cc_advertisers_v1';   // 広告主の入力候補
 // 付録C U-06: ASPドメインのURLは自動撮影しない（README の初期値と同じ。サーバ側の設定が正）
 const CC_ASP_DOMAINS = ['px.a8.net', 'ck.jp.ap.valuecommerce.com', 'h.accesstrade.net', 't.afi-b.com', 'af.moshimo.com', 't.felmat.net', 'click.j-a-net.jp', 'www.rentracks.jp', 'www.infotop.jp/click.php'];
@@ -3303,17 +3311,35 @@ function ccSetSelected(ids) {
   ccRenderMedia(); ccRenderMediaTable(); ccUpdateBar(); ccMarkStale();
   if (gm.active) gmScheduleRender();
 }
+function ccKindFilter() {
+  const k = ccLs(CC_MEDIA_KIND_KEY, 'all');
+  return AGENCY_KINDS[k] ? k : 'all';
+}
+// 区分ラジオ: 選択状態と件数（件数は検索に関係なく区分ごとの全件）
+function ccRenderKindRadios(all) {
+  const kf = ccKindFilter();
+  document.querySelectorAll('#gaKindRadios input[name="gaKind"]').forEach(r => { r.checked = r.value === kf; });
+  document.querySelectorAll('#gaKindRadios [data-kindcount]').forEach(s => {
+    const k = s.dataset.kindcount;
+    s.textContent = `(${k === 'all' ? all.length : all.filter(m => gbAgencyKind(m) === k).length})`;
+  });
+}
 function ccRenderMedia() {
   const all = ccAgencyMedia();
   ga.selected = ga.selected.filter(id => all.some(m => m.id === id));
+  ccRenderKindRadios(all);
   const box = $('gaMediaList');
   if (!all.length) {
     box.innerHTML = '<div class="empty-state" style="color:#666">代理店区分の媒体がありません。<br><button type="button" class="btn-outline btn-sm mt-2" data-ga="go-admin">管理画面で媒体を追加</button></div>';
   } else {
+    // 区分の絞り込みは見せ方だけ（隠れた媒体の選択は外さない。チップは全件表示）
+    const kf = ccKindFilter();
+    const inFilter = all.filter(m => kf === 'all' || gbAgencyKind(m) === kf);
     const q = ($('gaMediaSearch').value || '').trim().toLowerCase();
-    const shown = all.filter(m => !q || (m.name || '').toLowerCase().includes(q) || (m.mediaCompany || '').toLowerCase().includes(q));
+    const shown = inFilter.filter(m => !q || (m.name || '').toLowerCase().includes(q) || (m.mediaCompany || '').toLowerCase().includes(q));
     // 自社広告 / 他媒体 のグループ → その中を媒体社ごとにまとめる
-    box.innerHTML = shown.length ? Object.keys(AGENCY_KINDS).map(kind => {
+    box.innerHTML = !inFilter.length ? '<div class="empty-state" style="color:#666">この区分の媒体はありません（媒体管理で追加できます）</div>'
+      : shown.length ? Object.keys(AGENCY_KINDS).map(kind => {
       const inKind = shown.filter(m => gbAgencyKind(m) === kind);
       if (!inKind.length) return '';
       const groups = new Map();
@@ -5188,6 +5214,12 @@ function ccInitView() {
   });
   $('gaCampName').addEventListener('blur', () => { if (!$('gaCampName').value.trim()) { ga.campNameEdited = false; ccUpdateCampDefault(); } });
   $('gaMediaSearch').addEventListener('input', ccRenderMedia);
+  $('gaKindRadios').addEventListener('change', e => {
+    const r = e.target.closest('input[name="gaKind"]');
+    if (!r) return;
+    ccLsSet(CC_MEDIA_KIND_KEY, r.value);
+    ccRenderMedia();
+  });
   $('gaMediaList').addEventListener('change', e => {
     const c = e.target.closest('.ga-mchk');
     if (!c) return;
