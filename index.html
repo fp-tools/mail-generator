@@ -324,6 +324,13 @@ a.btn-nav{text-decoration:none;display:inline-block;border-radius:7px}
 .gm-fname{overflow-wrap:anywhere;max-width:260px}
 .gm-detail > td{background:#fafafe !important;padding:10px 12px 14px 28px}
 .gm-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px}
+/* 案件・ジャンル（cc-compare.md 3.4） */
+.gm-prev{display:inline-block;font-size:10px;font-weight:700;background:#e0e7ff;color:#3535cc;border-radius:8px;padding:0 6px;margin-left:4px;vertical-align:middle}
+.gm-genre-pick{display:flex;gap:4px;align-items:center}
+.gm-genre-pick input{max-width:110px}
+.gm-table select.gm-genre{min-width:120px;max-width:170px;padding:4px 6px;font-size:13px}
+.gm-table input.gm-proj{min-width:130px}
+.gm-tools input.gm-short{min-width:140px;flex:0 1 180px}
 .gm-tools input[type=text]{width:auto;min-width:200px;flex:0 1 260px}
 .gm-filter.on{background:#4949FF;color:#fff;border-color:#4949FF}
 .gm-bulk{background:#f5f5ff;border:1px solid #d0d0ff;border-radius:8px;padding:6px 10px;margin-bottom:8px;display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:13px}
@@ -681,8 +688,12 @@ a.btn-nav{text-decoration:none;display:inline-block;border-radius:7px}
       <div id="gmLockNote" class="ga-banner info" style="display:none">🔒 発行中は編集できません</div>
       <div id="gmTools">
         <div class="gm-tools">
-          <label for="gmAdvAll" style="margin:0;font-size:13px">広告主を一括入力</label>
-          <input type="text" id="gmAdvAll" maxlength="100" list="gaAdvList" autocomplete="off" placeholder="広告主名">
+          <span style="font-size:13px">広告主・案件・ジャンルを一括入力</span>
+          <label for="gmAdvAll" class="sr-only" style="position:absolute;left:-9999px">広告主</label>
+          <input type="text" id="gmAdvAll" class="gm-short" maxlength="100" list="gaAdvList" autocomplete="off" placeholder="広告主名">
+          <label for="gmProjAll" class="sr-only" style="position:absolute;left:-9999px">案件</label>
+          <input type="text" id="gmProjAll" class="gm-short" maxlength="60" list="gmProjAllList" autocomplete="off" placeholder="案件名"><datalist id="gmProjAllList"></datalist>
+          <span class="gm-genre-pick"><input type="search" id="gmGenreAllQ" placeholder="絞り込み 例: FX" aria-label="一括入力のジャンルを文字で絞り込む" aria-controls="gmGenreAll"><select id="gmGenreAll" aria-label="一括入力するジャンル"></select></span>
           <span id="gmAdvScopeBox"><label class="ga-inline-chk" style="margin-left:0 !important"><input type="radio" name="gmAdvScope" value="empty" checked> 未入力の原稿だけ</label><label class="ga-inline-chk"><input type="radio" name="gmAdvScope" value="all"> すべての原稿</label></span>
           <button class="btn-outline btn-sm" type="button" id="gmAdvApply">適用</button>
         </div>
@@ -693,6 +704,7 @@ a.btn-nav{text-decoration:none;display:inline-block;border-radius:7px}
           <button class="btn-outline btn-sm" type="button" id="gmBulkClear">選択を解除</button></div>
       </div>
       <div id="gmList"></div>
+      <div id="gmProjLists" hidden></div>
       <span id="gmLive" style="position:absolute;left:-9999px" aria-live="polite"></span>
     </div>
   </div>
@@ -725,6 +737,19 @@ a.btn-nav{text-decoration:none;display:inline-block;border-radius:7px}
         <div style="max-width:190px">
           <label for="gaDate">出稿日</label>
           <input type="date" id="gaDate">
+        </div>
+      </div>
+      <div class="ga-row" id="gaProjRow">
+        <div id="gaProjBox">
+          <label for="gaProj">案件（商品・サービス名）<span id="gaProjMark" class="gm-prev" style="display:none" title="前回の入力から自動で入れました">前回</span></label>
+          <input type="text" id="gaProj" maxlength="60" list="gaProjList" autocomplete="off" placeholder="例: 美容液モニター（選ぶか、新しい名前を入力）">
+          <datalist id="gaProjList"></datalist>
+          <div id="gaProjNote" class="ga-sub" aria-live="polite"></div>
+        </div>
+        <div id="gaGenreBox">
+          <label for="gaGenre">ジャンル<span id="gaGenreMark" class="gm-prev" style="display:none" title="前回の入力から自動で入れました">前回</span></label>
+          <div class="gm-genre-pick"><input type="search" id="gaGenreQ" placeholder="絞り込み 例: FX" aria-label="ジャンルを文字で絞り込む" aria-controls="gaGenre"><select id="gaGenre"></select></div>
+          <div class="ga-sub">案件・ジャンルは比較（同じ案件の前回比・ジャンル×媒体）に使います。未入力でも発行でき、後から結果管理で入れられます。</div>
         </div>
       </div>
       <div class="ga-row" id="gaCampRow">
@@ -2557,6 +2582,7 @@ const ga = {
   docxLinks: [], links: [], edits: new Map(), truncated: 0,
   selected: [], mediaInputs: {}, campNameEdited: false,
   excludeRules: [], advertisersRemote: [],
+  genres: null, projByAdv: new Map(), projAuto: false, projManual: false, genreAuto: false, genreManual: false, advTimer: null,
   issuing: false, requestId: null, requestSig: '',
   result: null, resultReq: null, resultLinks: [], resultTexts: [], resultSig: '', activeIdx: 0,
   lpItems: null, lpTimer: null, lpStartedAt: 0, lpError: '',
@@ -3370,6 +3396,154 @@ function ccRenderAdvList() {
   $('gaAdvList').innerHTML = names.map(n => `<option value="${escHtml(n)}"></option>`).join('');
 }
 
+// ---------- 案件・ジャンル（docs/cc-compare.md 3.4。サーバの GET /v1/genres が正。取れない間はこの既定値） ----------
+const CC_GENRES_DEFAULT = {
+  groups: [['invest', '投資'], ['business', 'ビジネス・副業'], ['marketing', 'マーケティング'], ['growth', '自己成長・学習'], ['beautyhealth', '美容・健康'], ['life', '恋愛・暮らし'], ['entertainment', 'エンタメ・占い'], ['other', 'その他']].map(([code, name]) => ({ code, name })),
+  items: [['fx', 'FX', 'invest'], ['stock', '株式投資', 'invest'], ['binary', 'バイナリーオプション', 'invest'], ['realestate', '不動産投資', 'invest'], ['crypto', '仮想通貨', 'invest'],
+    ['netbiz', 'ネットビジネス', 'business'], ['snsside', 'SNS副業', 'business'], ['resale', 'せどり・転売', 'business'], ['affiliate', 'アフィリエイト', 'business'], ['ai', 'AI', 'business'], ['startup', '起業', 'business'],
+    ['marketing', 'マーケティング', 'marketing'], ['webmarketing', 'WEBマーケティング', 'marketing'], ['snsmarketing', 'SNSマーケティング', 'marketing'],
+    ['selfdev', '自己啓発', 'growth'], ['communication', 'コミュニケーション', 'growth'], ['license', '資格', 'growth'], ['language', '語学', 'growth'],
+    ['beauty', '美容', 'beautyhealth'], ['diet', 'ダイエット', 'beautyhealth'], ['health', '健康', 'beautyhealth'], ['sports', 'スポーツ', 'beautyhealth'],
+    ['love', '恋愛', 'life'], ['parenting', '育児', 'life'], ['pet', 'ペット', 'life'], ['lifeissue', '生活の悩み', 'life'],
+    ['fortune', '占い', 'entertainment'], ['spiritual', 'スピリチュアル', 'entertainment'], ['entertainment', 'エンタメ', 'entertainment'], ['adult', 'アダルト', 'entertainment'],
+    ['other', 'その他', 'other']].map(([code, name, groupCode]) => ({ code, name, groupCode, active: true })),
+};
+/** 広告主・案件名の照合（サーバの normName と同じ: NFKC・空白除去・小文字） */
+function ccNorm(s) { return String(s || '').normalize('NFKC').replace(/\s+/g, '').toLowerCase(); }
+/** 絞り込み用（さらにカタカナをひらがなにそろえる） */
+function ccKey(s) { return ccNorm(s).replace(/[\u30a1-\u30f6]/g, c => String.fromCharCode(c.charCodeAt(0) - 0x60)); }
+function ccGenres() { return ga.genres || CC_GENRES_DEFAULT; }
+function ccGenreName(code) { const g = ccGenres().items.find(x => x.code === code); return g ? g.name : (code || ''); }
+/** 文字での絞り込み: 表示名と code の両方で照合し、合うジャンルの code を返す */
+function ccGenreFilter(q) {
+  const t = ccKey(q);
+  return ccGenres().items.filter(it => it.active !== false && (!t || ccKey(it.name).includes(t) || it.code.includes(t))).map(it => it.code);
+}
+/** 大分類で区切った選択肢（optgroup）。visible を渡すとその code だけ（選択中の値は残す） */
+function ccGenreOptionsHtml(value, visible, emptyLabel) {
+  const vis = visible ? new Set(visible) : null;
+  const g = ccGenres();
+  return `<option value="">${escHtml(emptyLabel || '未入力')}</option>` + g.groups.map(gr => {
+    const its = g.items.filter(it => it.groupCode === gr.code && (it.code === value || (it.active !== false && (!vis || vis.has(it.code)))));
+    return its.length ? `<optgroup label="${escHtml(gr.name)}">${its.map(it => `<option value="${escHtml(it.code)}"${it.code === value ? ' selected' : ''}>${escHtml(it.name)}</option>`).join('')}</optgroup>` : '';
+  }).join('');
+}
+/** 絞り込み欄つきの選択を描き直す。1件以上合えば最初のものを選ぶ（戻り値: 選んだ値が変わったか） */
+function ccApplyGenreFilter(sel, q, emptyLabel) {
+  const before = sel.value;
+  const vis = q.trim() ? ccGenreFilter(q) : null;
+  sel.innerHTML = ccGenreOptionsHtml(before, vis, emptyLabel);
+  sel.value = before;
+  if (vis && vis.length && !vis.includes(sel.value)) sel.value = vis[0];
+  return sel.value !== before;
+}
+function ccProjInfo(adv) { const e = ga.projByAdv.get(ccNorm(adv)); return e && e.loaded ? e : null; }
+/** 広告主の案件一覧（最後に使った順）と前回の案件・ジャンル。発行トークンが無ければ読まない */
+function ccLoadProjects(adv) {
+  const key = ccNorm(adv);
+  if (!key || !ccGetToken()) return Promise.resolve(null);
+  const cur = ga.projByAdv.get(key);
+  if (cur) return cur.loaded ? Promise.resolve(cur) : cur.loading;
+  const e = { loaded: false, items: [], merged: [], advertiserId: null, lastProjectId: null, lastGenreCode: null, loading: null };
+  e.loading = (async () => {
+    try {
+      const r = await ccApi('/projects?advertiserName=' + encodeURIComponent(String(adv).trim()));
+      const d = await r.json();
+      e.items = d.items || []; e.merged = d.merged || [];
+      if (d.advertiser) { e.advertiserId = d.advertiser.advertiserId; e.lastProjectId = d.advertiser.lastProjectId; e.lastGenreCode = d.advertiser.lastGenreCode; }
+    } catch (x) { /* 読めなければ候補なし */ }
+    e.loaded = true; e.loading = null;
+    ccOnProjectsLoaded();
+    return e;
+  })();
+  ga.projByAdv.set(key, e);
+  return e.loading;
+}
+function ccOnProjectsLoaded() {
+  ccSingleAutoFill();
+  if (gm.active) gmScheduleRender();
+}
+/** 打った案件名と既存の案件の照合（同じ＝正規化後に一致／統合済みの名前／似ている＝一方が他方を含む） */
+function ccSimilarProject(name, info) {
+  const out = { same: null, merged: null, similar: null };
+  const n = ccNorm(name);
+  if (!n || !info) return out;
+  out.same = info.items.find(x => ccNorm(x.name) === n) || null;
+  if (out.same) return out;
+  const m = (info.merged || []).find(x => ccNorm(x.name) === n);
+  if (m) { out.merged = { name: m.name, target: info.items.find(x => x.projectId === m.mergedInto) || null }; return out; }
+  out.similar = info.items.find(x => { const k = ccNorm(x.name); return k && (k.includes(n) || n.includes(k)); }) || null;
+  return out;
+}
+/**
+ * 前回の値の自動入力（cc-compare.md 3.4）。t = { msName, proj, genre, projAuto, genreAuto, projManual, genreManual } を書き換える。
+ * 案件: (1) 原稿名にその広告主の案件名が含まれればその案件 (2) それ以外は広告主の前回の案件。
+ * ジャンル: 既存の案件ならその案件の前回のジャンル、新しい案件（または案件なし）なら広告主の前回のジャンル。
+ * 担当者が触った欄（manual）と、入力済みの欄は変えない
+ */
+function ccAutoFill(t, info) {
+  if (!info) return false;
+  let changed = false;
+  if (!t.proj.trim() && !t.projManual) {
+    const ms = ccNorm(t.msName);
+    const hit = info.items.filter(x => ccNorm(x.name) && ms.includes(ccNorm(x.name))).sort((a, b) => ccNorm(b.name).length - ccNorm(a.name).length)[0];
+    const p = hit || info.items.find(x => x.projectId === info.lastProjectId);
+    if (p) { t.proj = p.name; t.projAuto = true; changed = true; }
+  }
+  if (!t.genre && !t.genreManual) {
+    const s = ccSimilarProject(t.proj, info);
+    const p = s.same || (s.merged && s.merged.target);
+    const g = (p && p.genreCode) || info.lastGenreCode;
+    if (g && ccGenres().items.some(x => x.code === g)) { t.genre = g; t.genreAuto = true; changed = true; }
+  }
+  return changed;
+}
+/** 案件名の下に出す説明（似た案件・統合済み・新しい案件） */
+function ccProjHintHtml(name, info, act) {
+  if (!name.trim() || !info) return '';
+  const s = ccSimilarProject(name, info);
+  if (s.same) return '';
+  if (s.merged) return `統合済みの名前です。「${escHtml(s.merged.target ? s.merged.target.name : '統合先')}」として保存されます`;
+  if (s.similar) return `似た案件があります: <b>${escHtml(s.similar.name)}</b> <button type="button" class="btn-outline btn-sm" ${act} data-name="${escHtml(s.similar.name)}">こちらを使う</button>`;
+  return '新しい案件として登録します';
+}
+
+// ---------- ③ 1原稿のときの案件・ジャンル ----------
+function ccSingleAutoFill() {
+  const adv = $('gaAdv').value.trim();
+  const info = adv ? ccProjInfo(adv) : null;
+  if (adv && !info) { ccLoadProjects(adv); ccRenderProjUi(); return; }
+  const t = { msName: ccManuscriptName(), proj: $('gaProj').value, genre: $('gaGenre').value, projAuto: ga.projAuto, genreAuto: ga.genreAuto, projManual: ga.projManual, genreManual: ga.genreManual };
+  if (ccAutoFill(t, info)) {
+    $('gaProj').value = t.proj; ga.projAuto = t.projAuto;
+    if (t.genre !== $('gaGenre').value) { $('gaGenre').innerHTML = ccGenreOptionsHtml(t.genre); $('gaGenre').value = t.genre; }
+    ga.genreAuto = t.genreAuto;
+    ccMarkStale();
+  }
+  ccRenderProjUi();
+}
+function ccRenderProjUi() {
+  const adv = $('gaAdv').value.trim();
+  const info = adv ? ccProjInfo(adv) : null;
+  $('gaProjList').innerHTML = (info ? info.items : []).map(x => `<option value="${escHtml(x.name)}"></option>`).join('');
+  $('gaProjMark').style.display = ga.projAuto && $('gaProj').value.trim() ? '' : 'none';
+  $('gaGenreMark').style.display = ga.genreAuto && $('gaGenre').value ? '' : 'none';
+  const hint = ccProjHintHtml($('gaProj').value, info, 'data-ga="use-proj"');
+  const miss = [!$('gaProj').value.trim() ? '案件' : '', !$('gaGenre').value ? 'ジャンル' : ''].filter(Boolean);
+  $('gaProjNote').innerHTML = hint + (miss.length ? `${hint ? '<br>' : ''}<span class="ga-warn-sm">⚠ ${miss.join('・')}が未入力です（発行はできます）</span>` : '');
+}
+function ccRenderGenreSelect() {
+  const sel = $('gaGenre');
+  if (ccApplyGenreFilter(sel, $('gaGenreQ').value)) { ga.genreManual = true; ga.genreAuto = false; ccMarkStale(); }
+  ccRenderProjUi();
+}
+function ccRenderBulkGenre() { ccApplyGenreFilter($('gmGenreAll'), $('gmGenreAllQ').value, 'ジャンル'); }
+function ccClearSingleProj() {
+  $('gaProj').value = ''; $('gaGenreQ').value = ''; $('gaGenre').innerHTML = ccGenreOptionsHtml(''); $('gaGenre').value = '';
+  Object.assign(ga, { projAuto: false, projManual: false, genreAuto: false, genreManual: false });
+  ccRenderProjUi();
+}
+
 // ---------- 発行 ----------
 function ccTrackedCount() {
   const t = ga.links.filter(l => l.track);
@@ -3398,7 +3572,7 @@ function ccUpdateBar() {
 }
 function ccStateSig() {
   return JSON.stringify({
-    t: $('gaText').value, n: ccManuscriptName(), a: $('gaAdv').value.trim(), d: $('gaDate').value, c: ccCampCommon(), g: $('gaGroupSame').checked,
+    t: $('gaText').value, n: ccManuscriptName(), a: $('gaAdv').value.trim(), p: $('gaProj').value.trim(), gn: $('gaGenre').value, d: $('gaDate').value, c: ccCampCommon(), g: $('gaGroupSame').checked,
     l: ga.links.map(l => [l.pos, l.url, l.track, ccLabelOf(l), l.lp, l.lpUrl]), m: ga.selected, mi: ga.selected.map(id => ga.mediaInputs[id] || {}),
   });
 }
@@ -3440,7 +3614,8 @@ function ccBuildRequest() {
   return {
     errors,
     req: {
-      manuscript: { name: ccManuscriptName(), advertiserName: $('gaAdv').value.trim() || null, sourceType: ga.sourceType, sourceFilename: ga.sourceFilename, sourceRef: ga.sourceRef, text },
+      // 【追加】案件・ジャンル（未入力は null。古いサーバは無視する）
+      manuscript: { name: ccManuscriptName(), advertiserName: $('gaAdv').value.trim() || null, projectName: $('gaProj').value.trim() || null, genreCode: $('gaGenre').value || null, sourceType: ga.sourceType, sourceFilename: ga.sourceFilename, sourceRef: ga.sourceRef, text },
       campaignDefaults: { nameTemplate: '{date}_{advertiser}_{manuscript}_{media}', startAt: `${date}T00:00:00+09:00`, deliveryCount: null, costYen: null, costTax: 'excl', memo: '' },
       media, links,
       options: { captureLp: true, groupSameUrl: $('gaGroupSame').checked, forceNew: false },
@@ -3482,6 +3657,7 @@ async function ccIssue() {
     ccLsSet(CC_LAST_MEDIA_KEY, ga.selected.slice());
     const adv = req.manuscript.advertiserName;
     if (adv) ccLsSet(CC_ADVERTISERS_KEY, [adv, ...ccLs(CC_ADVERTISERS_KEY, []).filter(x => x !== adv)].slice(0, 50));
+    if (adv) ga.projByAdv.delete(ccNorm(adv)); // 前回の案件・ジャンルが変わったので読み直す
     ccRenderAdvList(); ccRenderSets();
     ccRenderResult();
     const n = data.campaigns.reduce((s, c) => s + c.links.length, 0);
@@ -3669,6 +3845,7 @@ function ccResetAll() {
   Object.assign(ga, { sourceType: 'paste', sourceFilename: null, sourceRef: null, fileBuf: null, nameAuto: '', nameEdited: false, docxLinks: [], links: [], edits: new Map(),
     selected: [], mediaInputs: {}, campNameEdited: false, requestId: null, requestSig: '', result: null, resultReq: null, resultLinks: [], resultTexts: [], resultSig: '', lpItems: null });
   $('gaText').value = ''; $('gaName').value = ''; $('gaAdv').value = ''; $('gaDate').value = ccJstToday(); $('gaGroupSame').checked = false; $('gaGdocUrl').value = '';
+  ccClearSingleProj();
   $('gaEncRow').style.display = 'none'; $('gaBarErr').textContent = ''; ccMsg('');
   $('gaLpCard').style.display = 'none';
   gmUpdateGdocBtn();
@@ -3807,6 +3984,7 @@ function gmNewItem(o) {
     id: 'm' + (++gm.seq), fileName: o.fileName || '', sourceType: o.sourceType || 'paste', sourceFilename: o.sourceFilename || null, sourceRef: o.sourceRef || null,
     text: o.text || '', enc: o.enc || null, fileBuf: o.fileBuf || null, docxLinks: o.docxLinks || [],
     name: o.nameEdited || '', nameAuto: String(o.name || '').slice(0, 60), adv: o.adv || '', edits: o.edits || new Map(),
+    proj: o.proj || '', projAuto: !!o.projAuto, projManual: !!o.projManual, genre: o.genre || '', genreAuto: !!o.genreAuto, genreManual: !!o.genreManual,
     links: [], truncated: 0, override: null,
     load: o.load || 'ok', loadErr: o.loadErr || '', gdocNotPublic: false,
     status: 'idle', note: '', error: '',
@@ -3856,6 +4034,8 @@ function gmChecks(it) {
   const asp = it.links.filter(l => l.track && l.lp && l.asp && !l.lpUrl).length;
   if (asp) warn.push(`ASP: 直接LP URL未入力 ${asp}件（LPは撮影しません）`);
   if (!it.adv.trim()) warn.push('広告主未入力');
+  if (!(it.proj || '').trim()) warn.push('案件未入力');
+  if (!it.genre) warn.push('ジャンル未入力');
   if (it.sourceType === 'txt' && ccGarbled(it.text)) warn.push('文字化けの疑い');
   const nm = gmName(it);
   if (gm.items.some(x => x !== it && x.load === 'ok' && gmName(x) === nm)) warn.push('同じ名前の原稿があります');
@@ -3878,13 +4058,14 @@ function gmEnter() {
   if (ga.result && ga.resultReq) {
     const rq = ga.resultReq;
     const it = gmNewItem({ text: rq.manuscript.text || '', sourceType: rq.manuscript.sourceType, sourceFilename: rq.manuscript.sourceFilename, sourceRef: rq.manuscript.sourceRef,
-      docxLinks: ga.docxLinks, name: rq.manuscript.name, adv: rq.manuscript.advertiserName || '', edits: new Map(ga.edits), fileName: rq.manuscript.sourceFilename || (rq.manuscript.sourceType === 'gdoc' ? 'Googleドキュメント' : '貼り付け') });
+      docxLinks: ga.docxLinks, name: rq.manuscript.name, adv: rq.manuscript.advertiserName || '', proj: rq.manuscript.projectName || '', genre: rq.manuscript.genreCode || '', projManual: true, genreManual: true, edits: new Map(ga.edits), fileName: rq.manuscript.sourceFilename || (rq.manuscript.sourceType === 'gdoc' ? 'Googleドキュメント' : '貼り付け') });
     gmDetect(it);
     Object.assign(it, { status: 'done', result: ga.result, req: rq, snapLinks: ga.resultLinks, resultTexts: ga.resultTexts, requestId: ga.requestId, requestSig: ga.requestSig });
     gm.items.push(it);
   } else if (text.trim()) {
     const it = gmNewItem({ text, sourceType: ga.sourceType, sourceFilename: ga.sourceFilename, sourceRef: ga.sourceRef, enc: ga.fileBuf ? $('gaEncSel').value : null, fileBuf: ga.fileBuf,
       docxLinks: ga.docxLinks, name: ga.nameAuto, nameEdited: ga.nameEdited ? $('gaName').value.trim() : '', adv: $('gaAdv').value.trim(), edits: new Map(ga.edits),
+      proj: $('gaProj').value.trim(), projAuto: ga.projAuto, projManual: ga.projManual, genre: $('gaGenre').value, genreAuto: ga.genreAuto, genreManual: ga.genreManual,
       fileName: ga.sourceFilename || (ga.sourceType === 'gdoc' ? 'Googleドキュメント' : '貼り付け') });
     if (!it.nameAuto && !it.name) it.nameAuto = gmName(it);
     gmDetect(it);
@@ -3892,6 +4073,7 @@ function gmEnter() {
   }
   ccStopLpPoll();
   gmClearSingle();
+  ccClearSingleProj();
   gmApplyMode();
 }
 // 単一原稿の入力欄を空にする（確認なし。内容はリストに移し済み）
@@ -3915,6 +4097,7 @@ function gmApplyMode() {
   $('gaResultCard').style.display = on ? 'none' : '';
   if (on) $('gaLpCard').style.display = 'none';
   $('gaAdvBox').style.display = on ? 'none' : '';
+  $('gaProjRow').style.display = on ? 'none' : ''; // 複数原稿では②の原稿リストで原稿ごとに入れる
   $('gaCampRow').style.display = on ? 'none' : '';
   $('gaCard3Title').textContent = on ? '③ 出稿先（全原稿に共通）' : '③ 出稿先';
   $('gmBarExtra').style.display = on ? '' : 'none';
@@ -4088,7 +4271,7 @@ function gmBuildRequest(it) {
   return {
     errors,
     req: {
-      manuscript: { name, advertiserName: adv || null, sourceType: it.sourceType, sourceFilename: it.sourceFilename, sourceRef: it.sourceRef, text: it.text },
+      manuscript: { name, advertiserName: adv || null, projectName: (it.proj || '').trim() || null, genreCode: it.genre || null, sourceType: it.sourceType, sourceFilename: it.sourceFilename, sourceRef: it.sourceRef, text: it.text },
       campaignDefaults: { nameTemplate: '{date}_{advertiser}_{manuscript}_{media}', startAt: `${date}T00:00:00+09:00`, deliveryCount: null, costYen: null, costTax: 'excl', memo: '' },
       media, links,
       options: { captureLp: true, groupSameUrl: false, forceNew: false },
@@ -4167,6 +4350,7 @@ async function gmIssue(mode) {
     ccLsSet(CC_LAST_MEDIA_KEY, ga.selected.length ? ga.selected.slice() : [...ids]);
     const advs = [...new Set(done.map(it => it.adv.trim()).filter(Boolean))];
     if (advs.length) ccLsSet(CC_ADVERTISERS_KEY, [...advs, ...ccLs(CC_ADVERTISERS_KEY, []).filter(x => !advs.includes(x))].slice(0, 50));
+    advs.forEach(a => ga.projByAdv.delete(ccNorm(a))); // 前回の案件・ジャンルが変わったので読み直す
     ccRenderAdvList(); ccRenderSets();
     if (!gm.preview) { const f = done[0]; gm.preview = { id: f.id, idx: 0 }; }
   }
@@ -4441,6 +4625,8 @@ function gmRowVisible(it) {
 }
 function gmRenderList() {
   const items = gm.items;
+  gmAutoFillAll();
+  const plIds = gmProjDatalists();
   const multi = items.length >= 2;
   const nWarn = items.filter(gmNeedsCheck).length;
   const nErr = items.filter(it => it.status === 'error' || it.load === 'error').length;
@@ -4475,6 +4661,9 @@ function gmRenderList() {
       <td><input type="text" class="gm-name" data-fk="${it.id}:name" maxlength="60" value="${escHtml(it.name)}" placeholder="${escHtml(nm)}" aria-label="${escHtml(it.fileName || nm)} の原稿名" ${lock ? 'disabled' : ''}>
         <div class="ga-sub gm-fname" title="${escHtml(it.fileName)}">${escHtml(it.fileName || '—')}</div></td>
       <td><input type="text" class="gm-adv" data-fk="${it.id}:adv" maxlength="100" list="gaAdvList" autocomplete="off" value="${escHtml(it.adv)}" placeholder="未入力" aria-label="${escHtml(nm)} の広告主" ${lock ? 'disabled' : ''}></td>
+      <td><input type="text" class="gm-proj" data-fk="${it.id}:proj" maxlength="60" list="${plIds.get(ccNorm(it.adv)) || ''}" autocomplete="off" value="${escHtml(it.proj)}" placeholder="未入力" aria-label="${escHtml(nm)} の案件" ${lock ? 'disabled' : ''}>${it.projAuto && it.proj ? '<span class="gm-prev" title="前回の入力から自動で入れました">前回</span>' : ''}
+        ${lock ? '' : (h => h ? `<div class="ga-sub">${h}</div>` : '')(ccProjHintHtml(it.proj || '', ccProjInfo(it.adv), 'data-act="use-proj"'))}</td>
+      <td style="white-space:nowrap"><select class="gm-genre" data-fk="${it.id}:genre" aria-label="${escHtml(nm)} のジャンル" ${lock ? 'disabled' : ''}>${ccGenreOptionsHtml(it.genre)}</select>${it.genreAuto && it.genre ? '<span class="gm-prev" title="前回の入力から自動で入れました">前回</span>' : ''}</td>
       <td style="white-space:nowrap">${it.load === 'ok' ? (it.links.length ? `${gmTracked(it)} / ${it.links.length}` : '<span class="ga-warn-sm">URLなし</span>') : '—'}</td>
       <td>${it.override ? `<button type="button" class="badge badge-info gm-linkbtn" data-act="open">上書き</button><div class="ga-sub">${M}媒体</div>` : `共通<div class="ga-sub">${M}媒体</div>`}</td>
       <td>${gmCheckHtml(it)}</td>
@@ -4482,11 +4671,11 @@ function gmRenderList() {
       <td style="white-space:nowrap"><button type="button" class="btn-outline btn-sm" data-act="toggle" aria-expanded="${open}" aria-controls="gmd-${it.id}" aria-label="${escHtml(nm)}の詳細を${open ? '閉じる' : '開く'}">${open ? '閉じる ▲' : '開く ▼'}</button>
         <button type="button" class="btn-outline btn-sm" data-act="del" aria-label="${escHtml(nm)}を削除" ${dis}>削除</button></td>
     </tr>
-    <tr class="gm-detail" id="gmd-${it.id}" data-id="${it.id}" ${open ? '' : 'hidden'}><td colspan="8">${open ? gmDetailHtml(it) : ''}</td></tr>`;
+    <tr class="gm-detail" id="gmd-${it.id}" data-id="${it.id}" ${open ? '' : 'hidden'}><td colspan="10">${open ? gmDetailHtml(it) : ''}</td></tr>`;
   }).join('');
   $('gmList').innerHTML = items.length ? `<div class="ga-table-wrap"><table class="ga-table gm-table"><caption class="sr-only" style="position:absolute;left:-9999px">原稿リスト ${items.length}件、要確認${nWarn}件</caption>
-    <thead><tr><th scope="col"><input type="checkbox" id="gmSelAll" aria-label="全選択" ${nSel && nSel === items.length ? 'checked' : ''} ${dis}></th><th scope="col">原稿名（ファイル名）</th><th scope="col">広告主</th><th scope="col">計測/検出</th><th scope="col">出稿先</th><th scope="col">確認</th><th scope="col">状態</th><th scope="col">操作</th></tr></thead>
-    <tbody>${rows || '<tr><td colspan="8" class="text-muted">この条件に合う原稿はありません。</td></tr>'}</tbody></table></div>` : '<div class="text-muted">原稿を取り込むと、ここにリストが表示されます。</div>';
+    <thead><tr><th scope="col"><input type="checkbox" id="gmSelAll" aria-label="全選択" ${nSel && nSel === items.length ? 'checked' : ''} ${dis}></th><th scope="col">原稿名（ファイル名）</th><th scope="col">広告主</th><th scope="col">案件</th><th scope="col">ジャンル</th><th scope="col">計測/検出</th><th scope="col">出稿先</th><th scope="col">確認</th><th scope="col">状態</th><th scope="col">操作</th></tr></thead>
+    <tbody>${rows || '<tr><td colspan="10" class="text-muted">この条件に合う原稿はありません。</td></tr>'}</tbody></table></div>` : '<div class="text-muted">原稿を取り込むと、ここにリストが表示されます。</div>';
 }
 function gmUpdateBar() {
   const btn = $('gaIssueBtn');
@@ -4528,7 +4717,9 @@ function gmUpdateBar() {
     if (!ga.selected.length && pending.some(it => !it.override)) reason = '媒体を1つ以上選んでください';
     else if (!targets.length) reason = '発行できる原稿がありません（すべて要確認）';
     const noAdv = targets.filter(it => !it.adv.trim()).length;
-    if (!reason && noAdv) reason = `広告主未入力 ${noAdv}原稿を含みます`;
+    const noProj = targets.filter(it => !(it.proj || '').trim()).length;
+    const noGenre = targets.filter(it => !it.genre).length;
+    if (!reason && (noAdv || noProj || noGenre)) reason = [noAdv ? `広告主未入力 ${noAdv}原稿` : '', noProj ? `案件未入力 ${noProj}原稿` : '', noGenre ? `ジャンル未入力 ${noGenre}原稿` : ''].filter(Boolean).join('・') + 'を含みます（発行はできます）';
     const kv = targets.reduce((s, it) => s + gmTracked(it) * gmMediaIds(it).length, 0);
     if (!reason && kv > CC_KV_DAILY_WARN) reason = `計測URLが${kv.toLocaleString()}本になります。無料プランの1日の書込上限（約1,000回）を超えると、発行はできますが表示が遅くなる場合があります`;
   }
@@ -4666,17 +4857,65 @@ function gmDelete(ids) {
   gmShowUndo(label, restore);
   if (!gm.items.length) { const b = $('gaFileBtn'); if (b && b.offsetParent) b.focus(); }
 }
+/** 広告主を変えたら、前回の値で自動入力した案件・ジャンルは消して入れ直す */
+function gmSetAdv(it, v) {
+  if (ccNorm(v) !== ccNorm(it.adv)) {
+    if (it.projAuto) { it.proj = ''; it.projAuto = false; }
+    if (it.genreAuto) { it.genre = ''; it.genreAuto = false; }
+  }
+  it.adv = v;
+}
+/** 前回の値の自動入力（広告主の案件一覧を読み終えた原稿だけ。読んでいなければ読みに行く） */
+function gmAutoFillAll() {
+  for (const it of gm.items) {
+    if (it.status === 'done' || !it.adv.trim()) continue;
+    const info = ccProjInfo(it.adv);
+    if (!info) { ccLoadProjects(it.adv); continue; }
+    const t = { msName: gmName(it), proj: it.proj, genre: it.genre, projAuto: it.projAuto, genreAuto: it.genreAuto, projManual: it.projManual, genreManual: it.genreManual };
+    if (ccAutoFill(t, info)) Object.assign(it, { proj: t.proj, projAuto: t.projAuto, genre: t.genre, genreAuto: t.genreAuto });
+  }
+}
+/** 広告主ごとの案件の候補（datalist）。戻り値: 正規化した広告主名 → datalist の id */
+function gmProjDatalists() {
+  const ids = new Map();
+  const advs = [...new Set(gm.items.map(it => ccNorm(it.adv)).filter(Boolean))];
+  let html = '';
+  advs.forEach((k, i) => {
+    const e = ga.projByAdv.get(k);
+    if (!e || !e.loaded) return;
+    ids.set(k, 'gmpl-' + i);
+    html += `<datalist id="gmpl-${i}">${e.items.map(x => `<option value="${escHtml(x.name)}"></option>`).join('')}</datalist>`;
+  });
+  const box = $('gmProjLists');
+  if (box && box.innerHTML !== html) box.innerHTML = html;
+  return ids;
+}
 function gmApplyAdv() {
   if (gm.running) return;
   const v = $('gmAdvAll').value.trim();
-  if (!v) { toast('広告主を入力してください'); $('gmAdvAll').focus(); return; }
+  const pv = $('gmProjAll').value.trim();
+  const gv = $('gmGenreAll').value;
+  if (!v && !pv && !gv) { toast('広告主・案件・ジャンルのどれかを入力してください'); $('gmAdvAll').focus(); return; }
   const scope = (document.querySelector('input[name="gmAdvScope"]:checked') || {}).value || 'empty';
-  const targets = gm.items.filter(it => it.status !== 'done' && it.load !== 'error' && (gm.sel.size ? gm.sel.has(it.id) : (scope === 'all' || !it.adv.trim())));
+  // 空欄の項目は適用しない。既定は「未入力の原稿だけ」（項目ごとに判定）。選択チェックがあれば選択した原稿に適用
+  const sel = gm.sel.size > 0;
+  const editable = gm.items.filter(it => it.status !== 'done' && it.load !== 'error' && (!sel || gm.sel.has(it.id)));
+  const fill = (cur) => sel || scope === 'all' || !String(cur || '').trim();
+  const targets = editable.filter(it => (v && fill(it.adv)) || (pv && fill(it.proj)) || (gv && fill(it.genre)));
   if (!targets.length) { toast('対象の原稿がありません'); return; }
-  const before = targets.map(it => [it, it.adv]);
-  targets.forEach(it => { it.adv = v; });
+  const before = targets.map(it => [it, { adv: it.adv, proj: it.proj, projAuto: it.projAuto, projManual: it.projManual, genre: it.genre, genreAuto: it.genreAuto, genreManual: it.genreManual }]);
+  targets.forEach(it => {
+    if (v && fill(it.adv)) gmSetAdv(it, v);
+    if (pv && fill(it.proj)) { it.proj = pv; it.projAuto = false; it.projManual = true; if (it.genreAuto) { it.genre = ''; it.genreAuto = false; } }
+    if (gv && fill(it.genre)) { it.genre = gv; it.genreAuto = false; it.genreManual = true; }
+  });
   gmRender();
-  gmShowUndo(`${targets.length}件に広告主『${v}』を設定しました`, () => { before.forEach(([it, a]) => { it.adv = a; }); gmRender(); });
+  const what = [v ? `広告主『${v}』` : '', pv ? `案件『${pv}』` : '', gv ? `ジャンル『${ccGenreName(gv)}』` : ''].filter(Boolean).join('・');
+  gmShowUndo(`${targets.length}件に${what}を設定しました`, () => { before.forEach(([it, o]) => Object.assign(it, o)); gmRender(); });
+}
+function gmRenderBulkProj() {
+  const info = ccProjInfo($('gmAdvAll').value.trim());
+  $('gmProjAllList').innerHTML = (info ? info.items : []).map(x => `<option value="${escHtml(x.name)}"></option>`).join('');
 }
 function gmNextWarn() {
   const list = gm.items.filter(gmNeedsCheck);
@@ -4716,6 +4955,7 @@ function gmOnListEvent(e) {
       case 'del': gmDelete([it.id]); break;
       case 'refetch': gmFetchGdocInto(it).then(gmRender); gmRender(); break;
       case 'ov-reset': it.override = null; gmRender(); break;
+      case 'use-proj': it.proj = a.dataset.name || ''; it.projAuto = false; it.projManual = true; if (it.genreAuto) { it.genre = ''; it.genreAuto = false; } gmRender(); break;
     }
     return;
   }
@@ -4724,7 +4964,9 @@ function gmOnListEvent(e) {
   const c = t.classList;
   if (c.contains('gm-sel') && e.type === 'change') { if (t.checked) gm.sel.add(it.id); else gm.sel.delete(it.id); gmRender(); }
   else if (c.contains('gm-name')) { it.name = t.value; if (e.type === 'change') later(); else { gmRenderLightCounts(); } }
-  else if (c.contains('gm-adv')) { it.adv = t.value; if (e.type === 'change') later(); else gmRenderLightCounts(); }
+  else if (c.contains('gm-adv')) { gmSetAdv(it, t.value); if (e.type === 'change') later(); else gmRenderLightCounts(); }
+  else if (c.contains('gm-proj')) { if (it.proj !== t.value) { it.proj = t.value; it.projAuto = false; it.projManual = true; if (it.genreAuto) { it.genre = ''; it.genreAuto = false; } } if (e.type === 'change') later(); else gmRenderLightCounts(); }
+  else if (c.contains('gm-genre') && e.type === 'change') { it.genre = t.value; it.genreAuto = false; it.genreManual = true; gmRender(); }
   else if (l && c.contains('gm-track') && e.type === 'change') {
     const ed = it.edits.get(l.key) || {};
     gmEdit(it, l, { track: t.checked });
@@ -4875,6 +5117,12 @@ async function ccLoadRemoteHints() {
     ga.advertisersRemote = (d.items || []).map(x => x.name).filter(Boolean);
     ccRenderAdvList();
   } catch (e) {}
+  try {
+    const r = await ccApi('/genres');
+    const d = await r.json();
+    if (d && Array.isArray(d.items) && d.items.length) { ga.genres = { groups: d.groups || [], items: d.items }; ccRenderGenreSelect(); ccRenderBulkGenre(); if (gm.active) gmScheduleRender(); }
+  } catch (e) { /* 古いサーバ（ジャンルの API が無い）では既定の一覧を使う */ }
+  ccSingleAutoFill();
 }
 function ccOpenView() {
   showView('measure');
@@ -4882,6 +5130,7 @@ function ccOpenView() {
   if (!$('gaDate').value) $('gaDate').value = ccJstToday();
   ccUpdateConn();
   ccRenderMedia(); ccRenderMediaTable(); ccRenderAdvList(); ccUpdateCampDefault(); ccUpdateBar();
+  if (!$('gaGenre').options.length) { ccRenderGenreSelect(); ccRenderBulkGenre(); }
   gmUpdateGdocBtn();
   if (gm.active) gmRender();
   ccLoadRemoteHints();
@@ -4929,7 +5178,18 @@ function ccInitView() {
     ccDetect();
   }));
   $('gaGroupSame').addEventListener('change', () => { ccUpdateBar(); ccMarkStale(); });
-  $('gaAdv').addEventListener('input', () => { ccUpdateCampDefault(); ccMarkStale(); });
+  $('gaAdv').addEventListener('input', () => {
+    ccUpdateCampDefault(); ccMarkStale();
+    // 広告主を変えたら、前回の値で入れた案件・ジャンルは消して入れ直す
+    if (ga.projAuto) { $('gaProj').value = ''; ga.projAuto = false; }
+    if (ga.genreAuto) { $('gaGenre').value = ''; ga.genreAuto = false; }
+    clearTimeout(ga.advTimer); ga.advTimer = setTimeout(ccSingleAutoFill, 400);
+  });
+  $('gaProj').addEventListener('input', () => { ga.projAuto = false; ga.projManual = true; if (ga.genreAuto) { $('gaGenre').value = ''; ga.genreAuto = false; } ccRenderProjUi(); ccMarkStale(); });
+  $('gaProj').addEventListener('change', ccSingleAutoFill);
+  $('gaGenre').addEventListener('change', () => { ga.genreAuto = false; ga.genreManual = true; ccRenderProjUi(); ccMarkStale(); });
+  $('gaGenreQ').addEventListener('input', ccRenderGenreSelect);
+  $('gaProjNote').addEventListener('click', e => { const b = e.target.closest('[data-ga="use-proj"]'); if (!b) return; $('gaProj').value = b.dataset.name || ''; ga.projAuto = false; ga.projManual = true; ccSingleAutoFill(); ccMarkStale(); });
   $('gaDate').addEventListener('change', () => { ccUpdateCampDefault(); ccMarkStale(); });
   $('gaCampName').addEventListener('input', () => {
     ga.campNameEdited = !!$('gaCampName').value.trim();
@@ -5029,6 +5289,9 @@ function ccInitView() {
   $('gmNextWarn').addEventListener('click', gmNextWarn);
   $('gmAdvApply').addEventListener('click', gmApplyAdv);
   $('gmAdvAll').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); gmApplyAdv(); } });
+  $('gmAdvAll').addEventListener('change', () => { const v = $('gmAdvAll').value.trim(); if (v) ccLoadProjects(v).then(gmRenderBulkProj); gmRenderBulkProj(); });
+  $('gmProjAll').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); gmApplyAdv(); } });
+  $('gmGenreAllQ').addEventListener('input', ccRenderBulkGenre);
   $('gmDelAll').addEventListener('click', () => gmDelete(gm.items.map(it => it.id)));
   $('gmBulkDel').addEventListener('click', () => gmDelete([...gm.sel]));
   $('gmBulkClear').addEventListener('click', () => { gm.sel.clear(); gmRender(); });
