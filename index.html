@@ -261,7 +261,7 @@ a.btn-nav{text-decoration:none;display:inline-block;border-radius:7px}
 .ga-conn.ok{color:#166534}
 .ga-conn.ng{color:#92400e}
 .ga-textarea{height:220px}
-.ga-textarea.dragover,.ga-drop.dragover{border:2px dashed #4949FF !important;background:#f5f5ff}
+.ga-textarea.dragover,.ga-drop.dragover,.body-textarea.dragover{border:2px dashed #4949FF !important;background:#f5f5ff}
 .ga-drop{border:2px dashed #cfd2e6;border-radius:10px;padding:24px;text-align:center;color:#444;font-size:14px;line-height:2}
 .ga-msg{font-size:13px;margin-top:8px;min-height:1em;line-height:1.6}
 .ga-msg.ok{color:#166534}
@@ -453,6 +453,7 @@ a.btn-nav{text-decoration:none;display:inline-block;border-radius:7px}
             <option value="">-- タグを選択 --</option>
             <option data-kind="full" value="&lt;&lt;:氏名:&gt;&gt;">フルネーム　&lt;&lt;:氏名:&gt;&gt;</option>
             <option data-kind="last" value="&lt;&lt;:SETTINGITEM_名字:&gt;&gt;">名字のみ　&lt;&lt;:SETTINGITEM_名字:&gt;&gt;</option>
+            <option data-kind="email" value="" hidden disabled>アドレス</option>
           </select>
         </div>
         <div style="display:flex;flex-direction:column;gap:6px;padding-bottom:1px">
@@ -477,6 +478,7 @@ a.btn-nav{text-decoration:none;display:inline-block;border-radius:7px}
           <span class="toolbar-label">挿入</span>
           <button class="btn-tag" data-kind="full" data-tag="<<:氏名:>>">フルネーム</button>
           <button class="btn-tag" data-kind="last" data-tag="<<:SETTINGITEM_名字:>>">名字のみ</button>
+          <button class="btn-tag" data-kind="email" data-tag="" style="display:none">アドレス</button>
         </div>
         <div class="toolbar-sep"></div>
         <div class="toolbar-group">
@@ -510,6 +512,12 @@ a.btn-nav{text-decoration:none;display:inline-block;border-radius:7px}
           <button class="btn-outline btn-sm" id="hmTrackOpenBtn">他媒体入稿を開く</button>
         </div>
       </div>
+      <div id="bodyFileRow" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px">
+        <button class="btn-outline btn-sm" type="button" id="bodyFileBtn">原稿ファイルを取り込む</button>
+        <input type="file" id="bodyFileInput" accept=".txt,.docx" style="display:none">
+        <span class="text-muted" style="font-size:12px">.txt / .docx（5MBまで）。本文欄へのドロップでも取り込めます</span>
+      </div>
+      <div id="bodyFileNote" style="display:none;font-size:12px;line-height:1.7;background:#fff8e1;border:1px solid #ffe082;border-radius:8px;padding:8px 10px;margin-bottom:8px"></div>
       <textarea class="body-textarea" id="bodyText" placeholder="本文を入力してください"></textarea>
     </div>
   </div>
@@ -898,7 +906,7 @@ const DELIVERY_SYSTEMS = {
 const MM_NAMETAGS = { full: '<<:氏名:>>', last: '<<:SETTINGITEM_名字:>>' };
 const NAMETAGS = {
   MM: MM_NAMETAGS,
-  haihai: MM_NAMETAGS,
+  haihai: { full: '##__prop_2__##', last: '##__prop_1__##', email: '##__prop_0__##' },
   clickmailer: { full: '[$c_U_FULLNAME$]', last: '[$c_U_LASTNAME$]' },
 };
 function getNametags(ds) { return NAMETAGS[ds] || MM_NAMETAGS; }
@@ -2316,9 +2324,10 @@ function convertNametags(text, toDs) {
 // 挿入ボタン・置換タグの選択肢を、現在の配信機のタグに切り替える
 function applyNametagUI() {
   const tags = getNametags(currentDeliverySystem);
-  const labels = { full: 'フルネーム', last: currentDeliverySystem === 'clickmailer' ? '姓のみ' : '名字のみ' };
+  const labels = { full: 'フルネーム', last: currentDeliverySystem === 'MM' ? '名字のみ' : '姓のみ', email: 'アドレス' };
   document.querySelectorAll('.btn-tag[data-kind]').forEach(btn => {
     const kind = btn.dataset.kind;
+    btn.style.display = tags[kind] ? '' : 'none'; // アドレスのタグは配配メールだけ
     if (!tags[kind]) return;
     btn.dataset.tag = tags[kind];
     btn.title = tags[kind];
@@ -2326,7 +2335,8 @@ function applyNametagUI() {
   });
   el.replaceTag.querySelectorAll('option[data-kind]').forEach(o => {
     const kind = o.dataset.kind;
-    if (!tags[kind]) return;
+    o.hidden = o.disabled = !tags[kind];
+    if (!tags[kind]) { if (o.selected) el.replaceTag.value = ''; return; }
     o.value = tags[kind];
     o.textContent = `${labels[kind]}　${tags[kind]}`;
   });
@@ -3037,6 +3047,30 @@ async function ccReadManuscriptFile(file) {
   }
   const r = ccDecodeText(buf);
   return { text: r.text, sourceType: 'txt', sourceFilename: file.name, name: base, enc: r.enc, fileBuf: buf };
+}
+// メイン画面の本文欄に .txt / .docx を取り込む（読み取りは他媒体入稿と共通の ccReadManuscriptFile）
+async function bodyImportFile(file) {
+  if (!file) return false;
+  const note = $('bodyFileNote');
+  note.style.display = 'none';
+  note.innerHTML = '';
+  const ext = ccFileExt(file.name);
+  if (ext !== 'txt' && ext !== 'docx') { toast('このファイルは取り込めません。.txt または .docx を選んでください。（.doc はWordで『名前を付けて保存』から .docx にしてください）', 6000); return false; }
+  if (file.size > CC_LIMITS.fileBytes) { toast('長すぎるため取り込めません（上限 5MB）', 6000); return false; }
+  let r;
+  try { r = await ccReadManuscriptFile(file); } catch (e) { toast('ファイルを読み込めませんでした。別のファイルでお試しください。（' + (e && e.message ? e.message : e) + '）', 6000); return false; }
+  const cur = el.bodyText.value;
+  if (cur.trim() && cur !== r.text && !confirm('本文に入力中の内容があります。「' + file.name + '」の内容で置き換えますか？')) return false;
+  el.bodyText.value = r.text;
+  el.bodyText.dispatchEvent(new Event('input', { bubbles: true }));
+  // Wordのハイパーリンクは本文に表示文字だけが入るので、リンク先を別枠で知らせる
+  const hidden = (r.docxLinks || []).filter(l => l.url && !r.text.includes(l.url));
+  if (hidden.length) {
+    note.innerHTML = '<strong>Wordのハイパーリンクが ' + hidden.length + ' 件あります。本文には表示文字だけが入っているので、必要ならURLを本文に入れてください。</strong><br>' + hidden.map(l => escHtml(l.display || '（表示文字なし）') + ' → ' + escHtml(l.url)).join('<br>');
+    note.style.display = 'block';
+  }
+  toast('「' + file.name + '」を取り込みました');
+  return true;
 }
 async function ccImportFile(file) {
   if (!file) return;
@@ -5581,6 +5615,11 @@ async function init() {
 
   // Body text
   el.bodyText.addEventListener('input', handleBodyChange);
+  $('bodyFileBtn').addEventListener('click', () => $('bodyFileInput').click());
+  $('bodyFileInput').addEventListener('change', e => { bodyImportFile(e.target.files[0]); e.target.value = ''; });
+  ['dragenter', 'dragover'].forEach(ev => el.bodyText.addEventListener(ev, e => { if (e.dataTransfer && [...e.dataTransfer.types].includes('Files')) { e.preventDefault(); el.bodyText.classList.add('dragover'); } }));
+  ['dragleave', 'drop'].forEach(ev => el.bodyText.addEventListener(ev, () => el.bodyText.classList.remove('dragover')));
+  el.bodyText.addEventListener('drop', e => { const fs = e.dataTransfer && e.dataTransfer.files; if (fs && fs.length) { e.preventDefault(); if (fs.length > 1) toast('本文に取り込めるのは1件だけです。最初のファイルを取り込みます', 4000); bodyImportFile(fs[0]); } });
 
   // Replace
   el.replaceAllBtn.addEventListener('click', replaceAll);
